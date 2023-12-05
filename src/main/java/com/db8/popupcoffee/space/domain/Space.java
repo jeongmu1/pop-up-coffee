@@ -1,4 +1,4 @@
-package space.domain;
+package com.db8.popupcoffee.space.domain;
 
 import com.db8.popupcoffee.global.domain.BaseEntity;
 import jakarta.persistence.Column;

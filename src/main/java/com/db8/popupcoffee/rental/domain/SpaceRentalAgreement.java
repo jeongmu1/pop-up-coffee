@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import space.domain.Space;
+import com.db8.popupcoffee.space.domain.Space;
 
 @Entity
 @Data
