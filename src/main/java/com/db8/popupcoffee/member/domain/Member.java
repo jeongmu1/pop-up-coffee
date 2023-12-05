@@ -39,6 +39,7 @@ public class Member extends BaseTimeEntity {
     private String email;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MemberGrade memberGrade;
 
     @Column(nullable = false)
