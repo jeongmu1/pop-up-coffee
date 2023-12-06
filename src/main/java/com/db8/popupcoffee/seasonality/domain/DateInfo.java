@@ -7,11 +7,15 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import java.time.LocalDate;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DateInfo extends BaseEntity {
 

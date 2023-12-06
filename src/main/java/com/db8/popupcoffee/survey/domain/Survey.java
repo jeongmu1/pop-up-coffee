@@ -9,17 +9,22 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Survey extends BaseTimeEntity {
 
     @Embedded
     private EmbeddableYearMonth yearMonthOf;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "survey", fetch = FetchType.LAZY)
     private List<SurveyItem> items = new ArrayList<>();
 }

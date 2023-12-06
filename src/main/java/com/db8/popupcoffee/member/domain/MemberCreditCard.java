@@ -7,14 +7,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberCreditCard extends BaseTimeEntity {
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 

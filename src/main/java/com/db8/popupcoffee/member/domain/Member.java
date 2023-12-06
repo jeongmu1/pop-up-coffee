@@ -17,12 +17,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
+@Getter
+@Setter
+@ToString
 public class Member extends BaseTimeEntity {
 
     @Embedded
@@ -46,13 +50,16 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime lastSurveyed;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member recommendingMember;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<PointHistory> pointHistoryList = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberCreditCard> memberCreditCards = new ArrayList<>();
 }
