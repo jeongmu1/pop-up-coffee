@@ -3,6 +3,7 @@ package com.db8.popupcoffee.contract.domain;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.merchant.domain.Merchant;
+import com.db8.popupcoffee.settlement.domain.SettlementAccount;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -31,9 +32,6 @@ public class MerchantContract extends BaseTimeEntity {
     @Embedded
     private Contact contact;
 
-    @Column(nullable = false)
-    private String account;
-
-    @Column(nullable = false)
-    private String accountBank;
+    @Embedded
+    private SettlementAccount settlementAccount;
 }
