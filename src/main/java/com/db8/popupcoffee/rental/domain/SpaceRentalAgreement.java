@@ -2,9 +2,11 @@ package com.db8.popupcoffee.rental.domain;
 
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
+import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -42,11 +44,8 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
     @Column(nullable = false)
     private long remainingRentalDeposit;
 
-    @Column(nullable = false)
-    private String contact;
-
-    @Column(nullable = false)
-    private String contactPhone;
+    @Embedded
+    private Contact contact;
 
     @Column(nullable = false)
     private String creditCartNumber;

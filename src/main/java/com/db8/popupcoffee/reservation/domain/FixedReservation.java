@@ -2,10 +2,12 @@ package com.db8.popupcoffee.reservation.domain;
 
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
+import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.space.domain.Space;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -50,4 +52,7 @@ public class FixedReservation extends BaseTimeEntity {
 
     @Column(nullable = false)
     private boolean fromFlexibleReservation;
+
+    @Embedded
+    private Contact contact;
 }

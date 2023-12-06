@@ -1,9 +1,11 @@
 package com.db8.popupcoffee.contract.domain;
 
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
+import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -26,11 +28,8 @@ public class MerchantContract extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate expireAt;
 
-    @Column(nullable = false)
-    private String contact; // 담당자
-
-    @Column(nullable = false)
-    private String contactPhone;
+    @Embedded
+    private Contact contact;
 
     @Column(nullable = false)
     private String account;
