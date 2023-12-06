@@ -1,7 +1,8 @@
 package com.db8.popupcoffee.member.domain;
 
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
-import jakarta.persistence.Column;
+import com.db8.popupcoffee.global.domain.CreditCard;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -17,12 +18,6 @@ public class MemberCreditCard extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(nullable = false)
-    private String creditCartNumber;
-
-    @Column(nullable = false)
-    private String expireAt;
-
-    @Column(nullable = false)
-    private String cvc;
+    @Embedded
+    private CreditCard creditCard;
 }
