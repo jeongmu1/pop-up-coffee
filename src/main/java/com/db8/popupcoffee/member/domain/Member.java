@@ -1,8 +1,10 @@
 package com.db8.popupcoffee.member.domain;
 
+import com.db8.popupcoffee.global.domain.AuthenticationInfo;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,11 +25,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class Member extends BaseTimeEntity {
 
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+    @Embedded
+    private AuthenticationInfo authenticationInfo;
 
     @Column(nullable = false)
     private String nickname;

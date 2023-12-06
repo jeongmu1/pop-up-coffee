@@ -1,8 +1,10 @@
 package com.db8.popupcoffee.merchant.domain;
 
+import com.db8.popupcoffee.global.domain.AuthenticationInfo;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -46,8 +48,6 @@ public class Merchant extends BaseTimeEntity {
     @Column(nullable = false)
     private int rentCount = 0;
 
-    @Column(nullable = false)
-    private String username;
-
-    private String password;
+    @Embedded
+    private AuthenticationInfo authenticationInfo;
 }
