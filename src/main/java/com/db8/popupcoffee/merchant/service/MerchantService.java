@@ -6,6 +6,7 @@ import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,10 @@ public class MerchantService {
 
     private final MerchantRepository merchantRepository;
     private final BusinessTypeRepository businessTypeRepository;
+
+    public List<BusinessType> findBusinessTypes() {
+        return businessTypeRepository.findAll();
+    }
 
     @Transactional
     public void createMerchant(CreateMerchantRequest form) {
