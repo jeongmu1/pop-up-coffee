@@ -7,10 +7,14 @@ import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleRese
 import com.db8.popupcoffee.reservation.service.ReservationService;
 import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
+import com.db8.popupcoffee.seasonality.domain.DateInfo;
+import com.db8.popupcoffee.seasonality.service.DateInfoService;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,6 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final DateInfoService dateInfoService;
+
+    @ModelAttribute("dateInfos")
+    public List<DateInfo> getDateInfos() {
+        return dateInfoService.findDateInfos();
+    }
+
 
     @GetMapping("/fixed")
     public String getFixedReservationForm() {
