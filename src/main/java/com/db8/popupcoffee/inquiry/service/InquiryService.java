@@ -12,6 +12,7 @@ import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class InquiryService {
         return inquiryRepository.findByFaqTrue();
     }
 
+    @Transactional
     public void writeInquiry(InquiryRequest form, Long categoryId, Long merchantId) {
         InquiryCategory category = inquiryCategoryRepository.findById(categoryId).orElseThrow();
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
@@ -38,6 +40,7 @@ public class InquiryService {
         inquiryRepository.save(inquiry);
     }
 
+    @Transactional
     public void writeComment(Long inquiryId, InquiryCommentRequest form) {
         Inquiry inquiry = getInquiryById(inquiryId);
 

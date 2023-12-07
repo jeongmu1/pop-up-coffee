@@ -8,13 +8,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SurveyResponse extends BaseTimeEntity {
 
@@ -27,4 +26,12 @@ public class SurveyResponse extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Survey survey;
+
+    // 팩토리 메서드 추가
+    public static SurveyResponse createSurveyResponse(Member member, Survey survey) {
+        SurveyResponse surveyResponse = new SurveyResponse();
+        surveyResponse.setMember(member);
+        surveyResponse.setSurvey(survey);
+        return surveyResponse;
+    }
 }
