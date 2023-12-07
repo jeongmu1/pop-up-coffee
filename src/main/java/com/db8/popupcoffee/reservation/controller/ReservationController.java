@@ -7,7 +7,7 @@ import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleRese
 import com.db8.popupcoffee.reservation.service.ReservationService;
 import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
-import com.db8.popupcoffee.seasonality.domain.DateInfo;
+import com.db8.popupcoffee.seasonality.controller.dto.response.DatePriceInfo;
 import com.db8.popupcoffee.seasonality.service.DateInfoService;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
@@ -27,7 +27,7 @@ public class ReservationController {
     private final DateInfoService dateInfoService;
 
     @ModelAttribute("dateInfos")
-    public List<DateInfo> getDateInfos() {
+    public List<DatePriceInfo> getDateInfos() {
         return dateInfoService.findDateInfos();
     }
 
