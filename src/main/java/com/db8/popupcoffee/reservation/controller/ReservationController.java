@@ -2,6 +2,8 @@ package com.db8.popupcoffee.reservation.controller;
 
 import com.db8.popupcoffee.global.util.SessionKeys;
 import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
+import com.db8.popupcoffee.merchant.domain.BusinessType;
+import com.db8.popupcoffee.merchant.service.MerchantService;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFixedReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleReservationRequest;
 import com.db8.popupcoffee.reservation.service.ReservationService;
@@ -25,12 +27,17 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final DateInfoService dateInfoService;
+    private final MerchantService merchantService;
 
     @ModelAttribute("dateInfos")
     public List<DatePriceInfo> getDateInfos() {
         return dateInfoService.findDateInfos();
     }
 
+    @ModelAttribute("businessTypes")
+    public List<BusinessType> getBusinessTypes() {
+        return merchantService.findBusinessTypes();
+    }
 
     @GetMapping("/fixed")
     public String getFixedReservationForm() {
