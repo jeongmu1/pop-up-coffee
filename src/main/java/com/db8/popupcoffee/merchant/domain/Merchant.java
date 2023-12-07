@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,7 +47,7 @@ public class Merchant extends BaseTimeEntity {
     private int warningCount = 0;
 
     @Column(nullable = false)
-    private boolean blacklist;
+    private boolean blacklist = false;
 
     private LocalDateTime lastGradeScoreChanged;
 
@@ -55,4 +56,19 @@ public class Merchant extends BaseTimeEntity {
 
     @Embedded
     private AuthenticationInfo authenticationInfo;
+
+    @Builder
+    public Merchant(
+        String name,
+        String address,
+        String phone,
+        BusinessType businessType,
+        String username,
+        String password) {
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.businessType = businessType;
+        this.authenticationInfo = new AuthenticationInfo(username, password);
+    }
 }
