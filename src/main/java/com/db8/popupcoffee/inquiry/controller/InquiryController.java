@@ -18,7 +18,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/inquiry")
+@RequestMapping("/inquiries")
 public class InquiryController {
     private final InquiryService inquiryService;
 
@@ -27,7 +27,7 @@ public class InquiryController {
         List<Inquiry> faqList = inquiryService.getFaqList();
         model.addAttribute("faqList", faqList);
 
-        return "inquiry/faqList";
+        return "inquiries/faqList";
     }
 
     @GetMapping("/write")
@@ -35,14 +35,14 @@ public class InquiryController {
         List<InquiryCategory> categories = inquiryService.getCategories();
         model.addAttribute("categories", categories);
 
-        return "inquiry/write";
+        return "inquiries/write";
     }
 
     @PostMapping("/write")
     public String writeInquiry(InquiryRequest inquiryForm, Long categoryId) {
         inquiryService.writeInquiry(inquiryForm, categoryId);
 
-        return "inquiry/list";
+        return "inquiries/list";
     }
 
     @GetMapping("/{inquiryId}")
@@ -52,14 +52,14 @@ public class InquiryController {
         model.addAttribute("inquiry", inquiry);
         model.addAttribute("inquiryComments", inquiryComments);
 
-        return "inquiry/detail";
+        return "inquiries/detail";
     }
 
     @PostMapping("/{inquiryId}/comment")
     public String writeComment(@PathVariable Long inquiryId, InquiryCommentRequest inquiryCommentRequest) {
         inquiryService.writeComment(inquiryId, inquiryCommentRequest);
 
-        return "redirect:/inquiry/" + inquiryId;
+        return "redirect:/inquiries/" + inquiryId;
     }
 
 
