@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,11 +40,11 @@ public class FlexibleReservation extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate availabilityEndDate;
 
-    private long duration; // null 시 기간 무관
+    private Long duration; // null 시 기간 무관
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FlexibleReservationStatus status;
+    private FlexibleReservationStatus status = FlexibleReservationStatus.WAITING;
 
     private Long pendingPaymentAmount;
 
@@ -62,8 +63,25 @@ public class FlexibleReservation extends BaseTimeEntity {
     private FixedReservation fixedReservation;
 
     @Column(nullable = false)
-    private LocalDate deadLine;
+    private LocalDate deadline;
 
     @Embedded
     private Contact contact;
+
+    @Builder
+    public FlexibleReservation(
+        MerchantContract merchantContract,
+        LocalDate availabilityStartDate,
+        LocalDate availabilityEndDate,
+        Long duration,
+        LocalDate deadline,
+        Contact contact
+    ) {
+        this.merchantContract = merchantContract;
+        this.availabilityStartDate = availabilityStartDate;
+        this.availabilityEndDate = availabilityEndDate;
+        this.duration = duration;
+        this.deadline = deadline;
+        this.contact = contact;
+    }
 }
