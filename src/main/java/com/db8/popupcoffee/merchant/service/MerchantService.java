@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MerchantService {
 
-    private MerchantRepository merchantRepository;
-    private BusinessTypeRepository businessTypeRepository;
+    private final MerchantRepository merchantRepository;
+    private final BusinessTypeRepository businessTypeRepository;
 
     @Transactional
     public void createMerchant(CreateMerchantRequest form) {

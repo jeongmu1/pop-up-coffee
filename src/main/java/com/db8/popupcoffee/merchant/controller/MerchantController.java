@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class MerchantController {
 
-    private MerchantService merchantService;
+    private final MerchantService merchantService;
 
     @GetMapping("/form")
     public String getMerchantCreatingForm() {
