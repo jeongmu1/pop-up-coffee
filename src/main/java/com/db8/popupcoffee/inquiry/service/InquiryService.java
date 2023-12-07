@@ -8,6 +8,8 @@ import com.db8.popupcoffee.inquiry.dto.request.InquiryRequest;
 import com.db8.popupcoffee.inquiry.repository.InquiryCategoryRepository;
 import com.db8.popupcoffee.inquiry.repository.InquiryCommentRepository;
 import com.db8.popupcoffee.inquiry.repository.InquiryRepository;
+import com.db8.popupcoffee.merchant.domain.Merchant;
+import com.db8.popupcoffee.merchant.repository.MerchantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +21,27 @@ public class InquiryService {
     private final InquiryRepository inquiryRepository;
     private final InquiryCategoryRepository inquiryCategoryRepository;
     private final InquiryCommentRepository inquiryCommentRepository;
+    private final MerchantRepository merchantRepository;
 
     public List<Inquiry> getFaqList() {
         return inquiryRepository.findByFaqTrue();
     }
 
-    public void writeInquiry(InquiryRequest inquiryForm, Long categoryId) {
+    public void writeInquiry(InquiryRequest form, Long categoryId, Long merchantId) {
         InquiryCategory category = inquiryCategoryRepository.findById(categoryId).orElseThrow();
+        Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
 
-        Inquiry inquiry = inquiryForm.toEntity();
+        Inquiry inquiry = form.toEntity();
         inquiry.setCategory(category);
+        inquiry.setMerchant(merchant);
 
         inquiryRepository.save(inquiry);
     }
 
-    public void writeComment(Long inquiryId, InquiryCommentRequest inquiryCommentForm) {
+    public void writeComment(Long inquiryId, InquiryCommentRequest form) {
         Inquiry inquiry = getInquiryById(inquiryId);
 
-        InquiryComment inquiryComment = inquiryCommentForm.toEntity();
+        InquiryComment inquiryComment = form.toEntity();
         inquiryComment.setInquiry(inquiry);
 
         inquiryCommentRepository.save(inquiryComment);

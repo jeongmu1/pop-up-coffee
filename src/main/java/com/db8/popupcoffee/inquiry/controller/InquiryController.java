@@ -39,8 +39,8 @@ public class InquiryController {
     }
 
     @PostMapping("/write")
-    public String writeInquiry(InquiryRequest inquiryForm, Long categoryId) {
-        inquiryService.writeInquiry(inquiryForm, categoryId);
+    public String writeInquiry(InquiryRequest form, Long categoryId, Long merchantId) {
+        inquiryService.writeInquiry(form, categoryId, merchantId);
 
         return "inquiries/list";
     }
@@ -56,8 +56,8 @@ public class InquiryController {
     }
 
     @PostMapping("/{inquiryId}/comment")
-    public String writeComment(@PathVariable Long inquiryId, InquiryCommentRequest inquiryCommentRequest) {
-        inquiryService.writeComment(inquiryId, inquiryCommentRequest);
+    public String writeComment(@PathVariable Long inquiryId, InquiryCommentRequest form) {
+        inquiryService.writeComment(inquiryId, form);
 
         return "redirect:/inquiries/" + inquiryId;
     }
