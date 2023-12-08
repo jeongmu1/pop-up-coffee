@@ -3,6 +3,7 @@ package com.db8.popupcoffee.reservation.domain;
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import com.db8.popupcoffee.global.domain.Contact;
+import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.space.domain.Space;
 import jakarta.persistence.Column;
@@ -17,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,10 +43,10 @@ public class FixedReservation extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FixedReservationStatus status;
+    private FixedReservationStatus status = FixedReservationStatus.SPACE_AWAITING;
 
     @Column(nullable = false)
-    private LocalDate startingDate;
+    private LocalDate startDate;
 
     @Column(nullable = false)
     private LocalDate endDate;
@@ -58,8 +60,28 @@ public class FixedReservation extends BaseTimeEntity {
     private Space temporalSpace;
 
     @Column(nullable = false)
-    private boolean fromFlexibleReservation;
+    private boolean fromFlexibleReservation = false;
 
     @Embedded
     private Contact contact;
+
+    @Embedded
+    private CreditCard creditCard;
+
+    @Builder
+    public FixedReservation(
+        MerchantContract merchantContract,
+        LocalDate startDate,
+        LocalDate endDate,
+        long paymentAmount,
+        Contact contact,
+        CreditCard creditCard
+    ) {
+        this.merchantContract = merchantContract;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.paymentAmount = paymentAmount;
+        this.contact = contact;
+        this.creditCard = creditCard;
+    }
 }

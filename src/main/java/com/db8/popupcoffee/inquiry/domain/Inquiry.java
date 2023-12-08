@@ -1,6 +1,7 @@
 package com.db8.popupcoffee.inquiry.domain;
 
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
+import com.db8.popupcoffee.merchant.domain.Merchant;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -8,13 +9,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @ToString
@@ -25,6 +24,11 @@ public class Inquiry extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private InquiryCategory category;
+
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Merchant merchant;
 
     @Column(nullable = false)
     private String title;

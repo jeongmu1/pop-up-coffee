@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>FLIP COFFEE</title>
+  <link rel="stylesheet" th:href="@{/admins/merchantsRegistration.css}">
+</head>
+<body>
+<header class="header">
+  <nav class="nav">
+    <div class="container">
+      <a href="/home" class="left">FLIP COFFEE</a>
+      <div class="center">
+        <a href="/about" class="menu">ABOUT</a>
+        <a href="/menu" class="menu">MENU</a>
+        <a href="/store" class="menu">STORE</a>
+        <a href="/community" class="menu">COMMUNITY</a>
+<!--        <a th:href="@{/menu/manage}" class="menu">MANAGER</a> &lt;!&ndash;관리자 로그인시 나타나는 메뉴&ndash;&gt;-->
+
+      </div>
+      <div class="right">
+        <a href="" class="login">로그인</a>
+        <a href="" class="mypage">마이페이지</a>
+      </div>
+      <div>
+        <!--다음 등급 까지 ???점 남았습니다 표시-->
+      </div>
+    </div>
+  </nav>
+</header>
+<main class="main">
+  <div class="sidebar">
+    <ul>
+      <li><a href="#" class="big">ABOUT US</a></li>
+      <li><a href="#" class="small">FLIP COFFEE IS</a></li>
+      <li><a href="#" class="small">BI</a></li>
+      <li><a href="#" class="small">오시는 길</a></li>
+      <li><a href="#" class="big">Menu</a></li>
+      <li><a href="#" class="small">NEW</a></li>
+      <li><a href="#" class="small">COFFEE</a></li>
+      <li><a href="#" class="small">CLOD BREW</a></li>
+      <li><a href="#" class="small">BEVERAGE</a></li>
+      <li><a href="#" class="small">FRAPRE</a></li>
+      <li><a href="#" class="small">ADE & MOJITO</a></li>
+      <li><a href="#" class="small">TEA & JUICE</a></li>
+      <li><a href="#" class="small">DESSSERT</a></li>
+      <li><a href="#" class="big">STORE</a></li>
+      <li><a href="#" class="small">확정예약</a></li>
+      <li><a href="#" class="small">유동예약</a></li>
+      <li><a href="#" class="small">신청 조회</a></li>
+      <li><a href="#" class="big">COMMUNITY</a></li>
+      <li><a href="#" class="small">공지 사항</a></li>
+      <li><a href="#" class="small">자주하는 질문</a></li>
+      <li><a href="#" class="small">고객 상담</a></li>
+      <li><a href="#" class="small">설문 조사</a></li>
+      <!-- 관리자가 로그인할 경우 생기는 부분-->
+      <li><a href="#" class="big">관리자</a></li>
+      <li><a href="#" class="small">공간 관리</a></li>
+      <li><a href="#" class="small">정책 관리</a></li>
+      <li><a href="#" class="small">경고 관리</a></li>
+      <li><a href="#" class="small">업체 관리</a></li>
+      <li><a href="#" class="small">성수기 지정</a></li>
+      <li><a href="#" class="small">통계 관리</a></li>
+      <li><a href="#" class="small">이의 신청 관리</a></li>
+      <li><a href="#" class="small">설문 관리</a></li>
+    </ul>
+  </div>
+  <div class="container"> <!--업체 정보 등록-->
+    <form th:action="@{/merchants}" method="post">
+      <div class="form-group">
+        <h1>업체 등록</h1>
+        <ul>
+          <li>
+            <label for="name">업체명</label>
+            <input type="text" id="name" name="name">
+          </li>
+          <li>
+            <label for="address">주소</label>
+            <input type="text" id="address" name="address">
+          </li>
+          <li>
+            <label for="businessTypeId">업종명</label>
+            <select id="businessTypeId" name="businessTypeId">
+              <option th:each="businessType : ${businessTypes}" th:value="${businessType.id}" th:text="${businessType.name}"></option>
+            </select>
+          </li>
+          <li>
+            <label for="contactPhone">연락처</label>
+            <input type="tel" id="contactPhone" name="contactPhone">
+          </li>
+          <li>
+            <label for="username">이름</label>
+            <input type="text" id="username" name="username">
+          </li>
+          <li>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password">
+          </li>
+          <li>
+            <button type="submit">등록</button>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div>
+</main>
+<footer>
+  <div class="footer-container">
+    <div class="footer-group">
+      <div class="footer-section">
+        <div class='company-info'>
+          <h3>FLIP COFFEE</h3>
+          <p>(주)DB컴퍼니 | 대표자 : DB8조</p>
+          <p>부산광역시 해운대구 달맞이길 35</p>
+          <p>사업자등록번호 : 509-82-01524</p>
+          <p>대표번호 : 1811-5821 | FAX : 02-432-1421</p>
+          <P>________________________________________</P>
+          <P>2023 플립커피 All rights reserved.</P>
+        </div>
+        <div class="footer-links">
+          <p href="#">이용약관</p>
+          <p href="#">개인정보처리방침</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

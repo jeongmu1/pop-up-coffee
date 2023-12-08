@@ -4,6 +4,7 @@ import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.space.domain.Space;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -14,12 +15,18 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @Entity
 @Getter
@@ -39,11 +46,11 @@ public class FlexibleReservation extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate availabilityEndDate;
 
-    private long duration; // null 시 기간 무관
+    private Long duration; // null 시 기간 무관
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FlexibleReservationStatus status;
+    private FlexibleReservationStatus status = FlexibleReservationStatus.WAITING;
 
     private Long pendingPaymentAmount;
 
@@ -57,13 +64,34 @@ public class FlexibleReservation extends BaseTimeEntity {
     private LocalDate temporalRentalEndDate;
 
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private FixedReservation fixedReservation;
 
     @Column(nullable = false)
-    private LocalDate deadLine;
+    private LocalDate deadline;
 
     @Embedded
     private Contact contact;
+
+    @OneToMany(mappedBy = "flexibleReservation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @Exclude
+    private List<DesiredDate> desiredDates = new ArrayList<>();
+
+    @Builder
+    public FlexibleReservation(
+        MerchantContract merchantContract,
+        LocalDate availabilityStartDate,
+        LocalDate availabilityEndDate,
+        Long duration,
+        LocalDate deadline,
+        Contact contact
+    ) {
+        this.merchantContract = merchantContract;
+        this.availabilityStartDate = availabilityStartDate;
+        this.availabilityEndDate = availabilityEndDate;
+        this.duration = duration;
+        this.deadline = deadline;
+        this.contact = contact;
+    }
 }
