@@ -7,6 +7,9 @@ import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
+import com.db8.popupcoffee.reservation.domain.DesiredDate;
+import com.db8.popupcoffee.reservation.domain.DesiredDateRepository;
+import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationRepository;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
@@ -25,6 +28,7 @@ public class ReservationService {
     private final MerchantRepository merchantRepository;
     private final FeeCalculator feeCalculator;
     private final FlexibleReservationRepository flexibleReservationRepository;
+    private final DesiredDateRepository desiredDateRepository;
 
     @Transactional
     public void progressFixedReservation(CreateFixedReservationDto dto) {
@@ -36,7 +40,10 @@ public class ReservationService {
     @Transactional
     public void progressFlexibleReservation(CreateFlexibleReservationDto dto) {
         MerchantContract contract = findActivatedMerchantContract(dto.merchantId());
-        flexibleReservationRepository.save(dto.toEntity(contract));
+        FlexibleReservation reservation = flexibleReservationRepository.save(
+            dto.toEntity(contract));
+        desiredDateRepository.saveAll(
+            dto.desiredDates().stream().map(date -> new DesiredDate(date, reservation)).toList());
     }
 
     @Transactional(readOnly = true)

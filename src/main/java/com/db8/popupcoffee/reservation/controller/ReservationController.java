@@ -44,7 +44,7 @@ public class ReservationController {
         return merchantService.findBusinessTypes();
     }
 
-    @GetMapping("/fixed")
+    @GetMapping("/fixed/form")
     public String getFixedReservationForm() {
         return "reservations/fixed/form";
     }
