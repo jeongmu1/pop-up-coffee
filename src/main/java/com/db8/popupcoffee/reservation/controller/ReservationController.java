@@ -6,12 +6,12 @@ import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.service.MerchantService;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFixedReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleReservationRequest;
+import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.service.ReservationService;
 import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.FixedDatesInfoDto;
-import com.db8.popupcoffee.seasonality.controller.dto.response.DatePriceInfo;
 import com.db8.popupcoffee.seasonality.service.DateInfoService;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
@@ -35,7 +35,7 @@ public class ReservationController {
     private final MerchantService merchantService;
 
     @ModelAttribute("dateInfos")
-    public List<DatePriceInfo> getDateInfos() {
+    public List<DateInfoResponse> getDateInfos() {
         return dateInfoService.findDateInfos();
     }
 

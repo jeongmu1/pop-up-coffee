@@ -5,16 +5,19 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record DatePriceInfo(
+public record DateInfoResponse(
     LocalDate date,
     String seasonalityLevel,
-    long rentalPrice) {
+    long rentalPrice,
+    int availableSpaces
+) {
 
-    public static DatePriceInfo of(DateInfo dateInfo) {
-        return DatePriceInfo.builder()
+    public static DateInfoResponse of(DateInfo dateInfo, int availableSpaces) {
+        return DateInfoResponse.builder()
             .date(dateInfo.getDate())
             .seasonalityLevel(dateInfo.getSeasonalityLevel().name())
             .rentalPrice(dateInfo.getSeasonalityLevel().calculateDailyFee())
+            .availableSpaces(availableSpaces)
             .build();
     }
 }
