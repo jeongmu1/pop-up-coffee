@@ -4,6 +4,7 @@ import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.space.domain.Space;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -14,7 +15,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -67,6 +71,9 @@ public class FlexibleReservation extends BaseTimeEntity {
 
     @Embedded
     private Contact contact;
+
+    @OneToMany(mappedBy = "flexibleReservation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<DesiredDate> desiredDates = new ArrayList<>();
 
     @Builder
     public FlexibleReservation(
