@@ -7,9 +7,7 @@ import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.seasonality.domain.DateInfo;
 import com.db8.popupcoffee.seasonality.repository.DateInfoRepository;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +45,6 @@ public class DateInfoService {
     private List<LocalDate> getAllDatesInYear(int year) {
         LocalDate startOfYear = LocalDate.of(year, 1, 1);
         LocalDate endOfYear = LocalDate.of(year, 12, 31);
-
-        return Stream.iterate(startOfYear, date -> date.plusDays(1))
-            .limit(Period.between(startOfYear, endOfYear).getDays() + 1L)
-            .toList();
+        return startOfYear.datesUntil(endOfYear).toList();
     }
 }
