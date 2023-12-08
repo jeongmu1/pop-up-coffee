@@ -15,7 +15,7 @@
                 <a href="/menu" class ="menu">MENU</a>
                 <a href="/store" class ="menu">STORE</a>
                 <a href="/community" class ="menu">COMMUNITY</a>
-                <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
+                <a th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
 
             </div>
             <div class ="right">

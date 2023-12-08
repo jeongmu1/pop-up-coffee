@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>FLIP COFFEE</title>
-  <link rel="stylesheet" href="/static/css/fixForm.css">
+  <link rel="stylesheet" href="/css/seasonality.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-  <script src="/static.script/common.js"></script>
+  <script src="/script/seasonality.js"></script>
 </head>
 <body>
 <header class="header">
@@ -114,36 +114,49 @@
       <div class="checkInOutInfo">
         <div>
           <p>
-            <span>대여 시작일</span>
+            <span>시작일</span>
             <label id="check_in_day"></label>
           </p>
           <p class="space">~</p>
           <p>
-            <span>대여 종료일</span>
+            <span>종료일</span>
             <label id="check_out_day"></label>
           </p>
         </div>
       </div>
     </div>
     <div>
-      <form action="/check_period" method="post">
+      <form th:action="@{/seasons}" method="post">
         <select name="type" class="selectBox" style="width: 200px">
-          <option>업종 선택</option>
-          <option value="ring">반지</option>
-          <option value="necklace">목걸이</option>
-          <option value="lecture">강연</option>
-          <option value="handicraft">수공예</option>
+          <option>기간 지정</option>
+          <option th:each="seasonalityLevel : ${seasonalityLevels}" th:value="${seasonalityLevel.name}" th:text="${seasonalityLevel.explain}"></option>
         </select>
-        <input type="hidden" id="hidden_check_in_day" name="check_in_day">
-        <input type="hidden" id="hidden_check_out_day" name="check_out_day">
-        <input type="submit" value="예약하기">
+        <input type="hidden" id="hidden_check_in_day" name="startDate">
+        <input type="hidden" id="hidden_check_out_day" name="endDate">
+        <input type="submit" value="지정하기">
       </form>
 
       <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-          document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
-          document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
-        });
+          document.querySelector('form').addEventListener('submit', function(e) {
+              e.preventDefault(); // 기본 제출 동작 방지
+
+              // 드롭다운에서 선택한 성수기 수준 가져오기
+              var selectedSeasonalityLevel = document.querySelector('.selectBox').value;
+
+              // 숨겨진 입력 필드를 선택한 날짜 범위로 업데이트
+              document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
+              document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
+
+              // 선택한 성수기 수준을 담을 숨겨진 입력 필드 추가
+              var seasonalityLevelInput = document.createElement('input');
+              seasonalityLevelInput.type = 'hidden';
+              seasonalityLevelInput.name = 'seasonalityLevel';
+              seasonalityLevelInput.value = selectedSeasonalityLevel;
+              document.querySelector('form').appendChild(seasonalityLevelInput);
+
+              // 이제 폼 제출
+              document.querySelector('form').submit();
+          });
       </script>
     </div>
   </div>
