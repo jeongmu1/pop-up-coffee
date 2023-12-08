@@ -28,12 +28,15 @@ public class SurveyController {
         List<SurveyItem> previousItems = surveyService.getPreviousSurveyItems();
         model.addAttribute("previousItems", previousItems);
 
+        List<String> additionalComments = surveyService.getAdditionalComments();
+        model.addAttribute("additionalComments", additionalComments);
+
         return "surveys/setting";
     }
 
     @PostMapping("/setting")
-    public String surveySetting(SurveySettingRequest surveySettingRequest) {
-        surveyService.surveySetting(surveySettingRequest);
+    public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems, List<String> selectedaAdditionalComment) {
+        surveyService.surveySetting(surveySettingRequest, selectedItems, selectedaAdditionalComment);
 
         return "";
     }
@@ -48,11 +51,15 @@ public class SurveyController {
     @GetMapping("/{surveyId}")
     public String showSurvey(@PathVariable Long surveyId, Model model) {
         Survey survey = surveyService.getSurvey(surveyId);
+        List<Integer> selectedItemCounts = surveyService.countSelectedItems(survey);
+
         model.addAttribute("survey", survey);
         model.addAttribute("items", survey.getItems());
+        model.addAttribute("selectedItemCounts", selectedItemCounts);
 
         return "surveys/show";
     }
+
 
     @PostMapping("/{surveyId}/responses")
     public String submitResponse(@PathVariable Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest, @RequestParam List<Long> selectedItems) {
@@ -60,7 +67,5 @@ public class SurveyController {
 
         return "redirect:/surveys/";
     }
-
-
 
 }
