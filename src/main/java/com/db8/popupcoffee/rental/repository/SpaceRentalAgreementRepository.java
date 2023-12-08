@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface SpaceRentalAgreementRepository extends CrudRepository<SpaceRentalAgreement, Long>,
     SpaceRentalAgreementCustomRepository {
 
+
 }
