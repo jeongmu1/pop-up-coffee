@@ -1,8 +1,13 @@
 package com.db8.popupcoffee.space.domain;
 
 import com.db8.popupcoffee.global.domain.BaseEntity;
+import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +23,8 @@ public class Space extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String number;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "space", fetch = FetchType.LAZY)
+    private List<SpaceRentalAgreement> spaceRentalAgreements = new ArrayList<>();
 }

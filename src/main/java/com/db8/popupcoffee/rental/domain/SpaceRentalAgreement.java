@@ -52,6 +52,9 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
     private long remainingRentalDeposit;
 
     @Embedded
+    private Duration rentalDuration;
+
+    @Embedded
     private Contact contact;
 
     @Embedded
