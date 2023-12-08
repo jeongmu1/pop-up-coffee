@@ -41,6 +41,13 @@ public class DateInfo extends BaseEntity {
         this.holiday = isWeekend(date);
     }
 
+    @Builder
+    public DateInfo(LocalDate date, SeasonalityLevel seasonalityLevel) {
+        this.date = date;
+        this.seasonalityLevel = seasonalityLevel;
+        this.holiday = isWeekend(date);
+    }
+
     private boolean isWeekend(LocalDate date) {
         List<DayOfWeek> weekends = List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
         return weekends.stream().anyMatch(date.getDayOfWeek()::equals);

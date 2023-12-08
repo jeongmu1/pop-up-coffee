@@ -3,6 +3,7 @@ package com.db8.popupcoffee.merchant.service;
 import com.db8.popupcoffee.merchant.controller.dto.request.CreateMerchantRequest;
 import com.db8.popupcoffee.merchant.controller.dto.request.MerchantLoginForm;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
+import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
@@ -34,4 +35,36 @@ public class MerchantService {
         return merchantRepository.findMerchantByAuthenticationInfo(form.toAuthenticationInfo())
             .orElseThrow();
     }
+
+    @Transactional
+    public Merchant getMerchantInfo(Long merchantId) {
+        return merchantRepository.findById(merchantId).orElseThrow(null);
+    }
+
+    @Transactional
+    public int getScoreForNextGrade(Long merchantId) {
+        Merchant merchant = merchantRepository.findById(merchantId).orElseThrow(null);
+        Grade currentGrade = Grade.from(merchant.getGradeScore());
+
+        return currentGrade.scoreForNextGrade(merchant.getGradeScore());
+    }
+
+    @Transactional
+    public int getCurrentGradeMinScore(Long merchantId) {
+        Merchant merchant = merchantRepository.findById(merchantId).orElseThrow(null);
+        Grade currentGrade = Grade.from(merchant.getGradeScore());
+
+        return currentGrade.getMinimumScore();
+    }
+
+    @Transactional
+    public int getNextGradeMinScore(Long merchantId) {
+        Merchant merchant = merchantRepository.findById(merchantId).orElseThrow(null);
+        Grade currentGrade = Grade.from(merchant.getGradeScore());
+
+        return currentGrade.getNextGradeMinScore();
+    }
+
+
+
 }

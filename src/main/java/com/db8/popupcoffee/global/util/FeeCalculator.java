@@ -14,7 +14,7 @@ public class FeeCalculator {
     public long calculateRentalFee(LocalDate startDay, LocalDate endDay) {
         return dateInfoRepository.findByDateBetween(startDay, endDay)
             .stream()
-            .mapToLong(info -> info.getSeasonalityLevel().calculateDailyFee())
+            .mapToLong(info -> info.getSeasonalityLevel().calculateDailyFee(info.isHoliday()))
             .sum();
     }
 }

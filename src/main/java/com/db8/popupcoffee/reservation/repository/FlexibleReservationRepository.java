@@ -6,8 +6,11 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface FlexibleReservationRepository extends CrudRepository<FlexibleReservation, Long> {
+@Repository
+public interface FlexibleReservationRepository extends CrudRepository<FlexibleReservation, Long>,
+    FlexibleReservationCustomRepository {
 
     List<FlexibleReservation> findByStatusIn(Collection<FlexibleReservationStatus> status);
 

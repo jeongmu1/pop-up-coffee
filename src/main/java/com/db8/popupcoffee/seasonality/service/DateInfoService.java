@@ -38,8 +38,12 @@ public class DateInfoService {
     public void inputDateInfos(InputDateInfoRequest request) {
         dateInfoRepository.deleteByDateBetween(request.startDate(), request.endDate());
         dateInfoRepository.saveAll(request.startDate().datesUntil(request.endDate()).map(
-            date -> DateInfo.builder().date(date).seasonalityLevel(request.seasonalityLevel())
-                .build()).toList());
+            date -> request.holiday() == null ? DateInfo.builder().date(date)
+                .seasonalityLevel(request.seasonalityLevel())
+                .build()
+                : DateInfo.builder().date(date).seasonalityLevel(request.seasonalityLevel())
+                    .holiday(request.holiday())
+                    .build()).toList());
     }
 
     private List<LocalDate> getAllDatesInYear(int year) {

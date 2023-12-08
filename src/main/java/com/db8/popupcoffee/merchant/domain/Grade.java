@@ -52,7 +52,7 @@ public enum Grade {
         int rest = scoreForNextGrade(gradeScore) % SCORE_CHANGES_PER_DAY;
 
         if (rest > 0) {
-            return scoreForNextGrade(gradeScore) / SCORE_CHANGES_PER_DAY + 1;
+            return scoreForNextGrade(gradeScore) / SCORE_CHANGES_PER_DAY + 1L;
         }
         return scoreForNextGrade(gradeScore) / SCORE_CHANGES_PER_DAY;
     }
@@ -62,5 +62,17 @@ public enum Grade {
             return 0;
         }
         return (long) scoreForNextGrade(gradeScore) * REVENUE_FOR_ONE_SCORE;
+    }
+
+    public int getMinimumScore() {
+        return this.minimumScore;
+    }
+
+    public int getNextGradeMinScore() {
+        if (this.nextGrade() != null) {
+            return this.nextGrade().getMinimumScore();
+        } else {
+            throw new IllegalArgumentException("다음 등급이 없습니다.");
+        }
     }
 }

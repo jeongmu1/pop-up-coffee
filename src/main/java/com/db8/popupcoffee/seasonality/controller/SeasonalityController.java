@@ -38,7 +38,7 @@ public class SeasonalityController {
 
     @GetMapping("/form")
     public String getDateInfosForm() {
-        return "seasonality/form";
+        return "seasons/form";
     }
 
     @PostMapping()
