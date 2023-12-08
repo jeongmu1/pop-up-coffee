@@ -8,13 +8,14 @@ import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.service.MerchantService;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/merchants")
@@ -30,7 +31,7 @@ public class MerchantController {
 
     @GetMapping("/form")
     public String getMerchantCreatingForm() {
-        return "merchants/form";
+        return "admins/merchantsRegistration";
     }
 
     @PostMapping

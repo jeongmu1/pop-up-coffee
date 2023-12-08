@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>FLIP COFFEE</title>
+  <link rel="stylesheet" th:href="@{/admins/merchantsRegistration.css}">
+</head>
+<body>
+<header class="header">
+  <nav class ="nav">
+    <div class="container">
+      <a href="/home" class ="left">FLIP COFFEE</a>
+      <div class ="center">
+        <a href="/about" class ="menu">ABOUT</a>
+        <a href="/menu" class ="menu">MENU</a>
+        <a href="/store" class ="menu">STORE</a>
+        <a href="/community" class ="menu">COMMUNITY</a>
+        <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
+
+      </div>
+      <div class ="right">
+        <a href="" class ="login">로그인</a>
+        <a href="" class ="mypage">마이페이지</a>
+      </div>
+      <div>
+        <!--다음 등급 까지 ???점 남았습니다 표시-->
+      </div>
+    </div>
+  </nav>
+</header>
+<main class="main">
+  <div class="sidebar">
+    <ul>
+      <li><a href="#" class="big">ABOUT US</a></li>
+      <li><a href="#" class="small">FLIP COFFEE IS</a></li>
+      <li><a href="#" class="small">BI</a></li>
+      <li><a href="#" class="small">오시는 길</a></li>
+      <li><a href="#" class="big">Menu</a></li>
+      <li><a href="#" class="small">NEW</a></li>
+      <li><a href="#" class="small">COFFEE</a></li>
+      <li><a href="#" class="small">CLOD BREW</a></li>
+      <li><a href="#" class="small">BEVERAGE</a></li>
+      <li><a href="#" class="small">FRAPRE</a></li>
+      <li><a href="#" class="small">ADE & MOJITO</a></li>
+      <li><a href="#" class="small">TEA & JUICE</a></li>
+      <li><a href="#" class="small">DESSSERT</a></li>
+      <li><a href="#" class="big">STORE</a></li>
+      <li><a href="#" class="small">확정예약</a></li>
+      <li><a href="#" class="small">유동예약</a></li>
+      <li><a href="#" class="small">신청 조회</a></li>
+      <li><a href="#" class="big">COMMUNITY</a></li>
+      <li><a href="#" class="small">공지 사항</a></li>
+      <li><a href="#" class="small">자주하는 질문</a></li>
+      <li><a href="#" class="small">고객 상담</a></li>
+      <li><a href="#" class="small">설문 조사</a></li>
+      <!-- 관리자가 로그인할 경우 생기는 부분-->
+      <li><a href="#" class="big">관리자</a></li>
+      <li><a href="#" class="small">공간 관리</a></li>
+      <li><a href="#" class="small">정책 관리</a></li>
+      <li><a href="#" class="small">경고 관리</a></li>
+      <li><a href="#" class="small">업체 관리</a></li>
+      <li><a href="#" class="small">성수기 지정</a></li>
+      <li><a href="#" class="small">통계 관리</a></li>
+      <li><a href="#" class="small">정산 관리</a></li>
+      <li><a href="#" class="small">이의 신청 관리</a></li>
+      <li><a href="#" class="small">설문 관리</a></li>
+    </ul>
+  </div>
+  <div>
+    <h1>정책 설정</h1>
+    <div>
+      <h2>하루 공간 대여 비용</h2>
+      <form th:action="@{/changeOffSeason}" method="post">
+        <label for="offSeason">비성수기 할인금: </label>
+        <span th:text="${offSeason}"></span>
+        <input type="text" th:field="@{offSeason}" id="offSeason" name="offSeason">
+        <button type="submit">변경하기</button>
+      </form>
+
+      <form th:action="@{/changePeakSeason}" method="post">
+        <label for="peakSeason">성수기 할증금: </label>
+        <span th:text="${peakSeason}"></span>
+        <input type="text" th:field="@{peakSeason}" id="peakSeason" name="peakSeason">
+        <button type="submit">변경하기</button>
+      </form>
+
+      <form th:action="@{/changeSuperPeakSeason}" method="post">
+        <label for="superPeakSeason">최성수기 할증금: </label>
+        <span th:text="${superPeakSeason}"></span>
+        <input type="text" th:field="@{superPeakSeason}" id="superPeakSeason" name="superPeakSeason">
+        <button type="submit">변경하기</button>
+      </form>
+    </div><br><br><br>
+    <div>
+      <h2>포인트 적립률</h2>
+      <form th:action="@{/changeBronze}" method="post">
+        <label for="bronze">브론즈 적립률: </label>
+        <span th:text="${BRONZE}"></span>
+        <input type="text" th:field="@{BRONZE}" id="BRONZE" name="BRONZE">
+        <button type="submit">변경하기</button>
+      </form>
+
+      <form th:action="@{/changeSilver}" method="post">
+        <label for="silver">실버 적립률: </label>
+        <span th:text="${SILVER}"></span>
+        <input type="text" th:field="@{SILVER}" id="SILVER" name="SILVER">
+        <button type="submit">변경하기</button>
+      </form>
+
+      <form th:action="@{/changeGold}" method="post">
+        <label for="gold">골드 적립률: </label>
+        <span th:text="${GOLD}"></span>
+        <input type="text" th:field="@{GOLD}" id="GOLD" name="GOLD">
+        <button type="submit">변경하기</button>
+      </form>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-container">
+    <div class="footer-group">
+      <div class="footer-section">
+        <div class='company-info'>
+          <h3>FLIP COFFEE</h3>
+          <p >(주)DB컴퍼니 | 대표자 : DB8조</p>
+          <p>부산광역시 해운대구 달맞이길 35</p>
+          <p>사업자등록번호 : 509-82-01524</p>
+          <p>대표번호 : 1811-5821 | FAX : 02-432-1421</p>
+          <P>________________________________________</P>
+          <P>2023 플립커피 All rights reserved.</P>
+        </div>
+        <div class="footer-links">
+          <p href="#">이용약관</p>
+          <p href="#">개인정보처리방침</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
