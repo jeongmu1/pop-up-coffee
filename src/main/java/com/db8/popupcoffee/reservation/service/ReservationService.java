@@ -7,14 +7,17 @@ import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
+import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
 import com.db8.popupcoffee.reservation.domain.DesiredDate;
-import com.db8.popupcoffee.reservation.domain.DesiredDateRepository;
+import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
+import com.db8.popupcoffee.reservation.repository.DesiredDateRepository;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
-import com.db8.popupcoffee.reservation.domain.FlexibleReservationRepository;
+import com.db8.popupcoffee.reservation.repository.FlexibleReservationRepository;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.FixedDatesInfoDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +55,14 @@ public class ReservationService {
         int gradeScore = merchant.getGradeScore();
         long fee = feeCalculator.calculateRentalFee(dto.start(), dto.end());
         return new FeeInfo(fee, Grade.from(gradeScore).getDaysForNextGrade(gradeScore));
+    }
+
+    @Transactional(readOnly = true)
+    public List<FlexibleReservationInfo> findNonFixedFlexibleRepositories() {
+        return flexibleReservationRepository.findByStatusIn(
+                List.of(FlexibleReservationStatus.WAITING,
+                    FlexibleReservationStatus.SPACE_TEMPORARY_FIXED)).stream()
+            .map(FlexibleReservationInfo::from).toList();
     }
 
     private MerchantContract findActivatedMerchantContract(long merchantId) {
