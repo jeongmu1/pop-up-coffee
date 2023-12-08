@@ -1,6 +1,6 @@
 package com.db8.popupcoffee.merchant.controller;
 
-import com.db8.popupcoffee.global.util.SessionKeys;
+import com.db8.popupcoffee.global.util.SessionUtil;
 import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.merchant.controller.dto.request.CreateMerchantRequest;
 import com.db8.popupcoffee.merchant.controller.dto.request.MerchantLoginForm;
@@ -48,13 +48,13 @@ public class MerchantController {
     @PostMapping("/login")
     public String progressLogin(MerchantLoginForm form, HttpSession session) {
         Merchant merchant = merchantService.findMerchant(form);
-        session.setAttribute(SessionKeys.MERCHANT_SESSION_KEY, MerchantSessionInfo.from(merchant));
+        session.setAttribute(SessionUtil.MERCHANT_SESSION_KEY, MerchantSessionInfo.from(merchant));
         return "redirect:/";
     }
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.setAttribute(SessionKeys.MERCHANT_SESSION_KEY, null);
+        session.setAttribute(SessionUtil.MERCHANT_SESSION_KEY, null);
         return "redirect:/";
     }
 }

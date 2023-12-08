@@ -1,6 +1,6 @@
 package com.db8.popupcoffee.reservation.controller;
 
-import com.db8.popupcoffee.global.util.SessionKeys;
+import com.db8.popupcoffee.global.util.SessionUtil;
 import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.service.MerchantService;
@@ -58,8 +58,7 @@ public class ReservationController {
     @GetMapping("/fixed/fee")
     public String getFeeOfDates(@RequestParam LocalDate start, @RequestParam LocalDate end,
         HttpSession session, Model model) {
-        MerchantSessionInfo sessionInfo = (MerchantSessionInfo) session.getAttribute(
-            SessionKeys.MERCHANT_SESSION_KEY);
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
         FeeInfo feeInfo = reservationService.getFeeInfo(
             new FixedDatesInfoDto(sessionInfo.id(), start, end));
         model.addAttribute("feeInfo", feeInfo);
@@ -68,8 +67,7 @@ public class ReservationController {
 
     @PostMapping("/fixed")
     public String createFixedReservation(CreateFixedReservationRequest form, HttpSession session) {
-        MerchantSessionInfo sessionInfo = (MerchantSessionInfo) session.getAttribute(
-            SessionKeys.MERCHANT_SESSION_KEY);
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
         reservationService.progressFixedReservation(
             CreateFixedReservationDto.of(sessionInfo.id(), form));
         return "redirect:/reservations";
@@ -78,8 +76,7 @@ public class ReservationController {
     @PostMapping("/flexible")
     public String createFlexibleReservation(CreateFlexibleReservationRequest form,
         HttpSession session) {
-        MerchantSessionInfo sessionInfo = (MerchantSessionInfo) session.getAttribute(
-            SessionKeys.MERCHANT_SESSION_KEY);
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
         reservationService.progressFlexibleReservation(
             CreateFlexibleReservationDto.of(sessionInfo.id(), form));
         return "redirect:/reservations";
