@@ -303,7 +303,6 @@ function lastCheckInDate() {
     // 날짜 비교를 위해 시간값을 초기화 하기위해 체크인 날짜 다시 셋팅
     let thisCheckDate = new Date(conversion_date(checkInDate, 1));
     thisCheckDate = new Date(thisCheckDate.getFullYear(), thisCheckDate.getMonth(), thisCheckDate.getDate());
-
     // 예약 가능한 마지막달의 마지막 날짜 셋팅
     let thisLastDate = new Date(today.getFullYear(), ((today.getMonth() + 1) + limitMonth), 0);
 
@@ -390,18 +389,26 @@ function zf(num) {
 
     return num;
 }
+dates = [];
+for (var i = 0; i < dateInfos.length; i++) {
+    let date = dateInfos[i].date.replace(/-/g, '');
+    let rentalPrice = dateInfos[i].rentalPrice;
+    dates.push([date, rentalPrice]);
+}
 
-function getDailyRate(date) {
-    return Math.floor(Math.random() * 100) + 50;
+for(var j=0; j<dates.length; j++){
+    dates[j][0] = parseInt(dates[j][0]);
 }
 
 function updateDailyRates() {
     $('.day.current').each(function () {
         const date = $(this).data('day');
-        const rate = getDailyRate(date);
-
-        // 일일 요금을 날짜 아래에 추가
-        $(this).find('span').after('<p class="daily-rate">₩ ' + rate + '</p>');
+        const found = dates.find(function(element) {
+            return element[0] === date;
+        });
+        if (found) {
+            $(this).find('span').after('<p class="daily-rate">' + found[1] + '원</p>');
+        }
     });
 }
 
