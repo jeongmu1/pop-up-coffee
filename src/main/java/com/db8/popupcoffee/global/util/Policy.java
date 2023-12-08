@@ -17,4 +17,5 @@ public class Policy {
     public static final int GREEN_MIN_SCORE = 250;
     public static final int PURPLE_MIN_SCORE = 500;
     public static final int VIP_MIN_SCORE = 1000;
+    public static final int SURVEY_REWARD = 500;
 }
