@@ -6,7 +6,8 @@ import java.time.LocalDate;
 public record InputDateInfoRequest(
     SeasonalityLevel seasonalityLevel,
     LocalDate startDate,
-    LocalDate endDate
+    LocalDate endDate,
+    Boolean holiday
 ) {
 
 }
