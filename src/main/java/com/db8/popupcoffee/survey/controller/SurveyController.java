@@ -1,11 +1,15 @@
 package com.db8.popupcoffee.survey.controller;
 
+import com.db8.popupcoffee.global.util.SessionUtil;
+import com.db8.popupcoffee.member.service.MemberService;
+import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.survey.domain.Survey;
 import com.db8.popupcoffee.survey.domain.SurveyItem;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
 import com.db8.popupcoffee.survey.service.SurveyService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +22,16 @@ import java.util.List;
 @RequestMapping("/surveys")
 public class SurveyController {
     private final SurveyService surveyService;
+    private final MemberService memberService;
+    // last survey, 포인트 올라가는거 되게
 
     @GetMapping("/setting")
-    public String surveySetting(Model model) {
+    public String surveySetting(Model model, HttpSession session) {
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        if(sessionInfo == null) {
+            return "redirect:/login";
+        }
+
         List<SurveyItem> surveyItemList = surveyService.findAll();
         model.addAttribute("surveyItemList", surveyItemList);
 
@@ -35,21 +46,36 @@ public class SurveyController {
     }
 
     @PostMapping("/setting")
-    public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems, List<String> selectedaAdditionalComment) {
+    public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems, List<String> selectedaAdditionalComment, HttpSession session) {
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        if(sessionInfo == null) {
+            return "redirect:/login";
+        }
+
         surveyService.surveySetting(surveySettingRequest, selectedItems, selectedaAdditionalComment);
 
         return "";
     }
 
     @PostMapping("/addSurveyItem")
-    public String addSurveyItem(SurveyItemRequest form) {
+    public String addSurveyItem(SurveyItemRequest form, HttpSession session) {
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        if(sessionInfo == null) {
+            return "redirect:/login";
+        }
+
         surveyService.addSurveyItem(form);
 
         return "";
     }
 
     @GetMapping("/{surveyId}")
-    public String showSurvey(@PathVariable Long surveyId, Model model) {
+    public String showSurvey(@PathVariable Long surveyId, Model model, HttpSession session) {
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        if(sessionInfo == null) {
+            return "redirect:/login";
+        }
+
         Survey survey = surveyService.getSurvey(surveyId);
         List<Integer> selectedItemCounts = surveyService.countSelectedItems(survey);
 
@@ -62,8 +88,13 @@ public class SurveyController {
 
 
     @PostMapping("/{surveyId}/responses")
-    public String submitResponse(@PathVariable Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest, @RequestParam List<Long> selectedItems) {
+    public String submitResponse(@PathVariable Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest, @RequestParam List<Long> selectedItems, HttpSession session) {
+        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        if(sessionInfo == null) {
+            return "redirect:/login";
+        }
         surveyService.submitResponse(surveyId, memberId, surveyResponseRequest, selectedItems);
+        memberService.increasePointAndSetLastSurveyed(memberId);
 
         return "redirect:/surveys/";
     }

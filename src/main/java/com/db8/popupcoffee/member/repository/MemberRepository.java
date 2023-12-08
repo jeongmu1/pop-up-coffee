@@ -1,4 +1,4 @@
-package com.db8.popupcoffee.member.domain.repository;
+package com.db8.popupcoffee.member.repository;
 
 import com.db8.popupcoffee.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

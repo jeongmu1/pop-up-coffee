@@ -2,7 +2,7 @@ package com.db8.popupcoffee.survey.service;
 
 import com.db8.popupcoffee.global.domain.EmbeddableYearMonth;
 import com.db8.popupcoffee.member.domain.Member;
-import com.db8.popupcoffee.member.domain.repository.MemberRepository;
+import com.db8.popupcoffee.member.repository.MemberRepository;
 import com.db8.popupcoffee.survey.domain.Survey;
 import com.db8.popupcoffee.survey.domain.SurveyItem;
 import com.db8.popupcoffee.survey.domain.SurveyItemSelected;
