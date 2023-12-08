@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record SurveyResponseRequest(
-        List<Long> selectedItems,
         String additionalComment
 ) {
     public SurveyResponse toSurveyResponse(Member member, Survey survey) {
@@ -21,8 +20,8 @@ public record SurveyResponseRequest(
                 .build();
     }
 
-    public List<SurveyItemSelected> toSurveyItemSelecteds(SurveyResponse surveyResponse, SurveyItemRepository surveyItemRepository) {
-        return this.selectedItems.stream()
+    public List<SurveyItemSelected> toSurveyItemSelecteds(List<Long> selectedItems, SurveyResponse surveyResponse, SurveyItemRepository surveyItemRepository) {
+        return selectedItems.stream()
                 .map(itemId -> {
                     SurveyItem item = surveyItemRepository.findById(itemId).orElseThrow(null);
                     return SurveyItemSelected.builder()
@@ -33,4 +32,6 @@ public record SurveyResponseRequest(
                 })
                 .collect(Collectors.toList());
     }
+
+
 }

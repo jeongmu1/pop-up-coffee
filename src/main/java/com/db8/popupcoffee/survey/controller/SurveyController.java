@@ -55,11 +55,12 @@ public class SurveyController {
     }
 
     @PostMapping("/{surveyId}/responses")
-    public String submitResponse(@PathVariable Long surveyId, @RequestParam Long memberId, @RequestBody SurveyResponseRequest surveyResponseRequest) {
-        surveyService.submitResponse(surveyId, memberId, surveyResponseRequest);
+    public String submitResponse(@PathVariable Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest, @RequestParam List<Long> selectedItems) {
+        surveyService.submitResponse(surveyId, memberId, surveyResponseRequest, selectedItems);
 
         return "redirect:/surveys/";
     }
+
 
 
 }
