@@ -63,4 +63,16 @@ public enum Grade {
         }
         return (long) scoreForNextGrade(gradeScore) * REVENUE_FOR_ONE_SCORE;
     }
+
+    public int getMinimumScore() {
+        return this.minimumScore;
+    }
+
+    public int getNextGradeMinScore() {
+        if (this.nextGrade() != null) {
+            return this.nextGrade().getMinimumScore();
+        } else {
+            throw new IllegalArgumentException("다음 등급이 없습니다.");
+        }
+    }
 }
