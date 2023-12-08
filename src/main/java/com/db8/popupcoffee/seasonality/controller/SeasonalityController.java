@@ -1,6 +1,7 @@
 package com.db8.popupcoffee.seasonality.controller;
 
 import com.db8.popupcoffee.seasonality.controller.dto.request.CreateNormalDatesRequest;
+import com.db8.popupcoffee.seasonality.controller.dto.request.InputDateInfoRequest;
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.seasonality.controller.dto.response.SimpleSeasonalityLevel;
 import com.db8.popupcoffee.seasonality.service.DateInfoService;
@@ -32,11 +33,17 @@ public class SeasonalityController {
     @PostMapping("/year")
     public String createNormalDateInfos(CreateNormalDatesRequest request) {
         dateInfoService.createDatesOfYear(request);
-        return "seasonality/form";
+        return "redirect:/seasons/form";
     }
 
     @GetMapping("/form")
     public String getDateInfosForm() {
         return "seasonality/form";
+    }
+
+    @PostMapping()
+    public String inputDateInfos(InputDateInfoRequest request) {
+        dateInfoService.inputDateInfos(request);
+        return "redirect:/seasons/form";
     }
 }

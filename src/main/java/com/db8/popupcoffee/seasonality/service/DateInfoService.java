@@ -2,6 +2,7 @@ package com.db8.popupcoffee.seasonality.service;
 
 import com.db8.popupcoffee.rental.service.RentalService;
 import com.db8.popupcoffee.seasonality.controller.dto.request.CreateNormalDatesRequest;
+import com.db8.popupcoffee.seasonality.controller.dto.request.InputDateInfoRequest;
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.seasonality.domain.DateInfo;
 import com.db8.popupcoffee.seasonality.repository.DateInfoRepository;
@@ -33,6 +34,14 @@ public class DateInfoService {
         dateInfoRepository.deleteAll(dateInfosOfYear);
         dateInfoRepository.saveAll(
             getAllDatesInYear(request.year()).stream().map(DateInfo::new).toList());
+    }
+
+    @Transactional
+    public void inputDateInfos(InputDateInfoRequest request) {
+        dateInfoRepository.deleteByDateBetween(request.startDate(), request.endDate());
+        dateInfoRepository.saveAll(request.startDate().datesUntil(request.endDate()).map(
+            date -> DateInfo.builder().date(date).seasonalityLevel(request.seasonalityLevel())
+                .build()).toList());
     }
 
     private List<LocalDate> getAllDatesInYear(int year) {

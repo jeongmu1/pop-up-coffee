@@ -8,4 +8,6 @@ import org.springframework.data.repository.ListCrudRepository;
 public interface DateInfoRepository extends ListCrudRepository<DateInfo, Long> {
 
     List<DateInfo> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
+    void deleteByDateBetween(LocalDate start, LocalDate end);
 }

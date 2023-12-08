@@ -25,7 +25,7 @@ import lombok.ToString;
 @Builder
 public class DateInfo extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
