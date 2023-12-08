@@ -52,7 +52,7 @@ public enum Grade {
         int rest = scoreForNextGrade(gradeScore) % SCORE_CHANGES_PER_DAY;
 
         if (rest > 0) {
-            return scoreForNextGrade(gradeScore) / SCORE_CHANGES_PER_DAY + 1;
+            return scoreForNextGrade(gradeScore) / SCORE_CHANGES_PER_DAY + 1L;
         }
         return scoreForNextGrade(gradeScore) / SCORE_CHANGES_PER_DAY;
     }
