@@ -2,6 +2,8 @@ package com.db8.popupcoffee.space.domain;
 
 import com.db8.popupcoffee.global.domain.BaseEntity;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
+import com.db8.popupcoffee.reservation.domain.FixedReservation;
+import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,4 +29,12 @@ public class Space extends BaseEntity {
     @ToString.Exclude
     @OneToMany(mappedBy = "space", fetch = FetchType.LAZY)
     private List<SpaceRentalAgreement> spaceRentalAgreements = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "temporalSpace", fetch = FetchType.LAZY)
+    private List<FlexibleReservation> flexibleReservations = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "temporalSpace", fetch = FetchType.LAZY)
+    private List<FixedReservation> fixedReservations = new ArrayList<>();
 }
