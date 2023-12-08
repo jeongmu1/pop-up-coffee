@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>FLIP COFFEE</title>
+  <link rel="stylesheet" href="static/css/main.css">
+</head>
+<body>
+<header class="header">
+  <nav class ="nav">
+    <div class="container">
+      <a href="/home" class ="left">FLIP COFFEE</a>
+      <div class ="center">
+        <a href="/about" class ="menu">ABOUT</a>
+        <a href="/menu" class ="menu">MENU</a>
+        <a href="/store" class ="menu">STORE</a>
+        <a href="/community" class ="menu">COMMUNITY</a>
+        <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
+
+      </div>
+      <div class ="right">
+        <a href="" class ="login">로그인</a>
+        <a href="" class ="mypage">마이페이지</a>
+      </div>
+      <div>
+        <!--다음 등급 까지 ???점 남았습니다 표시-->
+      </div>
+    </div>
+  </nav>
+</header>
+<main class="main">
+<!--메인 화면 상단 이미지-->
+  <div class="popup">
+    <img src="static/css/static.image/popupscreen.jpg" alt="팝업 이미지." width=80% height="400">
+  </div>
+  <div class="rank">
+<!--    현재 월 데이터 필요 -->
+    <span>??월 매출 순위</span>
+    <table>
+      <tr id ="explain">
+        <th>업체명</th>
+        <th>등급 점수</th>
+        <th>매출액</th>
+        <th>순위</th>
+      </tr>
+      <tr id ="rank-scroll"> <!-- 반복으로 업체명 띄어주어야 함 -->
+        <td th:text="${업체명}"></td>
+        <td th:text="${등급점수}"></td>
+        <td th:text="${매출액}"></td>
+        <td th:text="${순위}"></td>
+      </tr>
+    </table>
+  </div>
+</main>
+<footer>
+  <div class="footer-container">
+    <div class="footer-group">
+      <div class="footer-section">
+        <div class='company-info'>
+          <h3>FLIP COFFEE</h3>
+          <p >(주)DB컴퍼니 | 대표자 : DB8조</p>
+          <p>부산광역시 해운대구 달맞이길 35</p>
+          <p>사업자등록번호 : 509-82-01524</p>
+          <p>대표번호 : 1811-5821 | FAX : 02-432-1421</p>
+          <P>________________________________________</P>
+          <P>2023 플립커피 All rights reserved.</P>
+        </div>
+        <div class="footer-links">
+          <p href="#">이용약관</p>
+          <p href="#">개인정보처리방침</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
