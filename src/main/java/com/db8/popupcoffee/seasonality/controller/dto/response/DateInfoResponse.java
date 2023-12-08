@@ -9,7 +9,8 @@ public record DateInfoResponse(
     LocalDate date,
     String seasonalityLevel,
     long rentalPrice,
-    int availableSpaces
+    int availableSpaces,
+    boolean rentableSpace
 ) {
 
     public static DateInfoResponse of(DateInfo dateInfo, int availableSpaces) {
@@ -18,6 +19,7 @@ public record DateInfoResponse(
             .seasonalityLevel(dateInfo.getSeasonalityLevel().name())
             .rentalPrice(dateInfo.getSeasonalityLevel().calculateDailyFee())
             .availableSpaces(availableSpaces)
+            .rentableSpace(availableSpaces > 0)
             .build();
     }
 }
