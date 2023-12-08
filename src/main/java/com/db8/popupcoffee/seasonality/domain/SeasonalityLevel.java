@@ -21,7 +21,8 @@ public enum SeasonalityLevel {
     @Getter
     private final String explain;
 
-    public long calculateDailyFee() {
-        return calculation.calculateDailyFee();
+    public long calculateDailyFee(boolean holiday) {
+        long holidayExtraFee = holiday ? HOLIDAY_EXTRA_FEE : 0L;
+        return calculation.calculateDailyFee() + holidayExtraFee;
     }
 }

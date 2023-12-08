@@ -17,7 +17,7 @@ public record DateInfoResponse(
         return DateInfoResponse.builder()
             .date(dateInfo.getDate())
             .seasonalityLevel(dateInfo.getSeasonalityLevel().name())
-            .rentalPrice(dateInfo.getSeasonalityLevel().calculateDailyFee())
+            .rentalPrice(dateInfo.getSeasonalityLevel().calculateDailyFee(dateInfo.isHoliday()))
             .availableSpaces(availableSpaces)
             .rentableSpace(availableSpaces > 0)
             .build();
