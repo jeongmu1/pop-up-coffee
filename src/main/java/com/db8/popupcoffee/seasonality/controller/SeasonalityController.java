@@ -2,6 +2,7 @@ package com.db8.popupcoffee.seasonality.controller;
 
 import com.db8.popupcoffee.seasonality.controller.dto.request.CreateNormalDatesRequest;
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
+import com.db8.popupcoffee.seasonality.controller.dto.response.SimpleSeasonalityLevel;
 import com.db8.popupcoffee.seasonality.service.DateInfoService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SeasonalityController {
 
     private final DateInfoService dateInfoService;
+
+    @ModelAttribute("seasonalityLevels")
+    public List<SimpleSeasonalityLevel> getSimpleSeasonalityLevels() {
+        return SimpleSeasonalityLevel.simpleSeasonalityLevels();
+    }
 
     @ModelAttribute("dateInfos")
     public List<DateInfoResponse> getDateInfos() {
