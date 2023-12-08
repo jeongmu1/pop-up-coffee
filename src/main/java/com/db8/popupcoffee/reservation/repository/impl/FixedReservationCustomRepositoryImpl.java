@@ -37,6 +37,19 @@ public class FixedReservationCustomRepositoryImpl implements FixedReservationCus
             .fetch();
     }
 
+    @Override
+    public List<FixedReservation> findByMerchant(Merchant merchant) {
+        QFixedReservation qFixedReservation = QFixedReservation.fixedReservation;
+        QMerchantContract qMerchantContract = QMerchantContract.merchantContract;
+        QMerchant qMerchant = QMerchant.merchant;
+
+        return jpaQueryFactory.selectFrom(qFixedReservation)
+            .join(qFixedReservation.merchantContract, qMerchantContract)
+            .join(qMerchantContract.merchant, qMerchant)
+            .where(qMerchant.eq(merchant))
+            .fetch();
+    }
+
     private Predicate eqOrIsNull(QSpaceRentalAgreement qSpaceRentalAgreement,
         SpaceRentalAgreement spaceRentalAgreement) {
         if (spaceRentalAgreement == null) {

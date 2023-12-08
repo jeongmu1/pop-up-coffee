@@ -8,4 +8,5 @@ import java.util.List;
 public interface FlexibleReservationCustomRepository {
 
     List<FlexibleReservation> findByMerchantAndFixedReservation(Merchant merchant, FixedReservation fixedReservation);
+    List<FlexibleReservation> findByMerchant(Merchant merchant);
 }
