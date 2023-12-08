@@ -5,8 +5,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +21,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class DateInfo extends BaseEntity {
 
     @Column(nullable = false)
@@ -28,4 +34,15 @@ public class DateInfo extends BaseEntity {
 
     @Column(nullable = false)
     private boolean holiday;
+
+    public DateInfo(LocalDate date) {
+        this.date = date;
+        this.seasonalityLevel = SeasonalityLevel.NORMAL;
+        this.holiday = isWeekend(date);
+    }
+
+    private boolean isWeekend(LocalDate date) {
+        List<DayOfWeek> weekends = List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+        return weekends.stream().anyMatch(date.getDayOfWeek()::equals);
+    }
 }
