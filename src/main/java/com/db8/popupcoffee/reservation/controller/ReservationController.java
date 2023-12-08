@@ -6,6 +6,7 @@ import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.service.MerchantService;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFixedReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleReservationRequest;
+import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.service.ReservationService;
@@ -44,7 +45,12 @@ public class ReservationController {
         return merchantService.findBusinessTypes();
     }
 
-    @GetMapping("/fixed")
+    @ModelAttribute("nonFixedFlexibles")
+    public List<FlexibleReservationInfo> getNonFixedFlexibleReservations() {
+        return reservationService.findNonFixedFlexibleRepositories();
+    }
+
+    @GetMapping("/fixed/form")
     public String getFixedReservationForm() {
         return "reservations/fixed/form";
     }
