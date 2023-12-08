@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>FLIP COFFEE</title>
-  <link rel="stylesheet" href="/static/css/fixForm.css">
+  <link rel="stylesheet" th:href="@{/css/fixForm.css}">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-  <script src="/static.script/common.js"></script>
+  <script type="text/javascript" th:inline="javascript">
+    let dateInfos = $.parseJSON('[[ ${dateInfos} ]]');
+  </script>
+  <script type="text/javascript"  th:src="@{/script/common.js}"></script>
 </head>
 <body>
 <header class="header">
@@ -18,7 +21,7 @@
         <a href="/menu" class ="menu">MENU</a>
         <a href="/store" class ="menu">STORE</a>
         <a href="/community" class ="menu">COMMUNITY</a>
-        <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
+        <a href="/admin" class ="menu">MANAGER</a>
 
       </div>
       <div class ="right">
@@ -136,6 +139,8 @@
         </select>
         <input type="hidden" id="hidden_check_in_day" name="check_in_day">
         <input type="hidden" id="hidden_check_out_day" name="check_out_day">
+        <input type="text" name="cardNames" value="cardName">
+        <input type="text" name="cardNumbers" value="cardNumber">
         <input type="submit" value="예약하기">
       </form>
 
@@ -145,7 +150,6 @@
           document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
         });
       </script>
-    </div>
   </div>
 </main>
 <footer>
