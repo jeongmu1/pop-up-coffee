@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 @Entity
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,12 +27,4 @@ public class SurveyResponse extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Survey survey;
-
-    // 팩토리 메서드 추가
-    public static SurveyResponse createSurveyResponse(Member member, Survey survey) {
-        SurveyResponse surveyResponse = new SurveyResponse();
-        surveyResponse.setMember(member);
-        surveyResponse.setSurvey(survey);
-        return surveyResponse;
-    }
 }

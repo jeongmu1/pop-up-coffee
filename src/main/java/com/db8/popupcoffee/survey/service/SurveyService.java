@@ -2,12 +2,13 @@ package com.db8.popupcoffee.survey.service;
 
 import com.db8.popupcoffee.global.domain.EmbeddableYearMonth;
 import com.db8.popupcoffee.member.domain.Member;
+import com.db8.popupcoffee.member.domain.repository.MemberRepository;
 import com.db8.popupcoffee.survey.domain.Survey;
 import com.db8.popupcoffee.survey.domain.SurveyItem;
 import com.db8.popupcoffee.survey.domain.SurveyItemSelected;
 import com.db8.popupcoffee.survey.domain.SurveyResponse;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
-import com.db8.popupcoffee.survey.dto.request.SurveyItemSelectedRequest;
+import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
 import com.db8.popupcoffee.survey.repository.SurveyItemRepository;
 import com.db8.popupcoffee.survey.repository.SurveyItemSelectedRepository;
@@ -28,6 +29,7 @@ public class SurveyService {
     private final SurveyItemRepository surveyItemRepository;
     private final SurveyResponseRepository surveyResponseRepository;
     private final SurveyItemSelectedRepository surveyItemSelectedRepository;
+    private final MemberRepository memberRepository;
 
     public List<SurveyItem> findAll() {
         return surveyItemRepository.findAll();
@@ -71,15 +73,19 @@ public class SurveyService {
     }
 
 
+
     @Transactional
-    public void saveResponse(Long surveyId, Member member, SurveyItemSelectedRequest request) {
-        Survey survey = surveyRepository.findById(surveyId).orElseThrow(null);
-        SurveyResponse surveyResponse = SurveyResponse.createSurveyResponse(member, survey);
+    public void submitResponse(Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest) {
+        Member member = memberRepository.findById(memberId).orElseThrow(null);
+        Survey survey = getSurvey(surveyId);
+
+        // 설문응답 생성
+        SurveyResponse surveyResponse = surveyResponseRequest.toSurveyResponse(member, survey);
         surveyResponseRepository.save(surveyResponse);
 
-        SurveyItemSelected surveyItemSelected = request.toEntity();
-        surveyItemSelected.setSurveyResponse(surveyResponse);
-        surveyItemSelectedRepository.save(surveyItemSelected);
+        // 선택된 항목 저장
+        List<SurveyItemSelected> selectedItems = surveyResponseRequest.toSurveyItemSelecteds(surveyResponse, surveyItemRepository);
+        surveyItemSelectedRepository.saveAll(selectedItems);
     }
 
 }

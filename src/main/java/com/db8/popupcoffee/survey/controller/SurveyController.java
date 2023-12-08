@@ -1,18 +1,15 @@
 package com.db8.popupcoffee.survey.controller;
 
-import com.db8.popupcoffee.member.domain.Member;
 import com.db8.popupcoffee.survey.domain.Survey;
 import com.db8.popupcoffee.survey.domain.SurveyItem;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
-import com.db8.popupcoffee.survey.dto.request.SurveyItemSelectedRequest;
+import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
 import com.db8.popupcoffee.survey.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,19 +46,19 @@ public class SurveyController {
     }
 
     @GetMapping("/{surveyId}")
-    public String showSurvey(Long surveyId, Model model) {
+    public String showSurvey(@PathVariable Long surveyId, Model model) {
         Survey survey = surveyService.getSurvey(surveyId);
         model.addAttribute("survey", survey);
+        model.addAttribute("items", survey.getItems());
 
         return "surveys/show";
     }
 
     @PostMapping("/{surveyId}/responses")
-    public String submitResponse(Long surveyId,
-                                 SurveyItemSelectedRequest form,
-                                 Member member) {
-        surveyService.saveResponse(surveyId, member, form);
-        return "redirect:/surveys/" + surveyId;
+    public String submitResponse(@PathVariable Long surveyId, @RequestParam Long memberId, @RequestBody SurveyResponseRequest surveyResponseRequest) {
+        surveyService.submitResponse(surveyId, memberId, surveyResponseRequest);
+
+        return "redirect:/surveys/";
     }
 
 
