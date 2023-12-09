@@ -1,6 +1,7 @@
 package com.db8.popupcoffee.survey.controller;
 
 import com.db8.popupcoffee.global.util.SessionUtil;
+import com.db8.popupcoffee.member.controller.dto.MemberSessionInfo;
 import com.db8.popupcoffee.member.service.MemberService;
 import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.survey.domain.Survey;
@@ -23,11 +24,10 @@ import java.util.List;
 public class SurveyController {
     private final SurveyService surveyService;
     private final MemberService memberService;
-    // last survey, 포인트 올라가는거 되게
 
     @GetMapping("/setting")
     public String surveySetting(Model model, HttpSession session) {
-        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if(sessionInfo == null) {
             return "redirect:/login";
         }
@@ -47,7 +47,7 @@ public class SurveyController {
 
     @PostMapping("/setting")
     public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems, List<String> selectedaAdditionalComment, HttpSession session) {
-        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if(sessionInfo == null) {
             return "redirect:/login";
         }
@@ -59,7 +59,7 @@ public class SurveyController {
 
     @PostMapping("/addSurveyItem")
     public String addSurveyItem(SurveyItemRequest form, HttpSession session) {
-        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if(sessionInfo == null) {
             return "redirect:/login";
         }
@@ -71,7 +71,7 @@ public class SurveyController {
 
     @GetMapping("/{surveyId}")
     public String showSurvey(@PathVariable Long surveyId, Model model, HttpSession session) {
-        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if(sessionInfo == null) {
             return "redirect:/login";
         }
@@ -89,7 +89,7 @@ public class SurveyController {
 
     @PostMapping("/{surveyId}/responses")
     public String submitResponse(@PathVariable Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest, @RequestParam List<Long> selectedItems, HttpSession session) {
-        MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
+        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if(sessionInfo == null) {
             return "redirect:/login";
         }
