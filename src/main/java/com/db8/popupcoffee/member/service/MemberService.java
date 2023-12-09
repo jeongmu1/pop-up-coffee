@@ -6,7 +6,6 @@ import com.db8.popupcoffee.member.domain.Member;
 import com.db8.popupcoffee.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

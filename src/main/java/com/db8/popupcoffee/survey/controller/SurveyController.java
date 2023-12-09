@@ -3,7 +3,6 @@ package com.db8.popupcoffee.survey.controller;
 import com.db8.popupcoffee.global.util.SessionUtil;
 import com.db8.popupcoffee.member.controller.dto.MemberSessionInfo;
 import com.db8.popupcoffee.member.service.MemberService;
-import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.survey.domain.Survey;
 import com.db8.popupcoffee.survey.domain.SurveyItem;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
