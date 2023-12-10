@@ -508,11 +508,11 @@ form input[type="number"] {
     padding: 10px;
 }
 
-.dates {
-    display: flex;
-    flex-direction: column; /* Align children in a column */
-    gap: 10px; /* Add some gap between the pieces */
-}
+/*.dates {*/
+/*    display: flex;*/
+/*    flex-direction: column; !* Align children in a column *!*/
+/*    gap: 10px; !* Add some gap between the pieces *!*/
+/*}*/
 
 .piece {
     display: flex;
