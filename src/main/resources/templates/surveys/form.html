@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FLIP COFFEE</title>
-    <link rel="stylesheet" href="/static/css/survey.css">
+    <link rel="stylesheet" href="/css/survey.css">
 </head>
 <body>
 <header class="header">
@@ -77,16 +77,10 @@
             </div>
             <div class="survey-form">
                 <form action="/submit">
-                    <input type="checkbox" name="type" value="ring"> 반지
-                    <span class="counts" th:if="${ringCount}" th:text="' ' + ${ringCount} + '회 선택됨'"></span> <br>
-                    <input type="checkbox" name="type" value="necklace"> 목걸이
-                    <span class="counts" th:if="${necklaceCount}" th:text="' ' + ${necklaceCount} + '회 선택됨'"></span> <br>
-                    <input type="checkbox" name="type" value="book"> 책
-                    <span class="counts" th:if="${bookCount}" th:text="' ' + ${bookCount} + '회 선택됨'"></span><br>
-                    <input type="checkbox" name="type" value="nail"> 네일
-                    <span class="counts" th:if="${nailCount}" th:text="' ' + ${nailCount} + '회 선택됨'"></span><br>
-                    <input type="checkbox" name="type" value="lecture"> 강연
-                    <span class="counts" th:if="${lectureCount}" th:text="' ' + ${lectureCount} + '회 선택됨'"></span><br>
+                    <div th:each="item, stat : ${items}">
+                        <input type="checkbox" name="type" th:value="${item.name}"> <span th:text="${item.name}"></span>
+                        <span class="counts" th:if="${selectedItemCounts[stat.index]}" th:text="' ' + ${selectedItemCounts[stat.index]} + '회 선택됨'"></span> <br>
+                    </div>
                     <input type="checkbox" name="type" value="other" id="otherCheckbox"> 기타
                     <textarea id="otherText" name="otherText" rows="4" cols="30" style="display: none;" placeholder="기타 업체 종류를 입력해주세요"></textarea><br>
                     <input type="reset">
@@ -95,27 +89,13 @@
             </div>
 
             <script>
-                <!-- 기타 입력란 보여지는 스크립트        -->
+                <!-- 기타 입력란 보여지는 스크립트 -->
                 const otherCheckbox = document.getElementById('otherCheckbox');
                 const otherText = document.getElementById('otherText');
 
                 otherCheckbox.addEventListener('change', function() {
                     otherText.style.display = otherCheckbox.checked ? 'block' : 'none';
                 });
-                // -----------------------------------------------------------------------------
-                window.onload = function() {
-                    var checkboxes = document.querySelectorAll("input[type='checkbox']");
-                    checkboxes.forEach(function(checkbox) {
-                        checkbox.addEventListene ('change', function() {
-                            var span = this.nextElementSibling;
-                            if (this.checked) {
-                                span.classList.remove('hidden');
-                            } else {
-                                span.classList.add('hidden');
-                            }
-                        });
-                    });
-                }
             </script>
         </div>
     </div>
