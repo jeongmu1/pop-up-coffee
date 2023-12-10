@@ -27,8 +27,6 @@ public record CreateFlexibleReservationDto(
             .availabilityEndDate(form.availabilityEndDate())
             .duration(form.duration())
             .deadline(form.deadline())
-            .contact(Contact.builder().contactManager(form.contactManager()).contactPhone(
-                form.contactPhone()).build())
             .desiredDates(form.desiredDates())
             .build();
     }
@@ -40,7 +38,6 @@ public record CreateFlexibleReservationDto(
             .availabilityEndDate(availabilityEndDate)
             .duration(duration)
             .deadline(deadline)
-            .contact(contact)
             .build();
     }
 }

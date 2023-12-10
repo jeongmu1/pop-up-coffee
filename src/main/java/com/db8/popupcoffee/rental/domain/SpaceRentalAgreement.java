@@ -2,7 +2,6 @@ package com.db8.popupcoffee.rental.domain;
 
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
-import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import jakarta.persistence.Column;
@@ -53,9 +52,6 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
 
     @Embedded
     private Duration rentalDuration;
-
-    @Embedded
-    private Contact contact;
 
     @Embedded
     private CreditCard creditCard;

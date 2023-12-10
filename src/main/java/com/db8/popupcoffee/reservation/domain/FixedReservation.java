@@ -2,7 +2,6 @@ package com.db8.popupcoffee.reservation.domain;
 
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
-import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.space.domain.Space;
@@ -63,9 +62,6 @@ public class FixedReservation extends BaseTimeEntity {
     private boolean fromFlexibleReservation = false;
 
     @Embedded
-    private Contact contact;
-
-    @Embedded
     private CreditCard creditCard;
 
     @Builder
@@ -74,14 +70,12 @@ public class FixedReservation extends BaseTimeEntity {
         LocalDate startDate,
         LocalDate endDate,
         long paymentAmount,
-        Contact contact,
         CreditCard creditCard
     ) {
         this.merchantContract = merchantContract;
         this.startDate = startDate;
         this.endDate = endDate;
         this.paymentAmount = paymentAmount;
-        this.contact = contact;
         this.creditCard = creditCard;
     }
 }

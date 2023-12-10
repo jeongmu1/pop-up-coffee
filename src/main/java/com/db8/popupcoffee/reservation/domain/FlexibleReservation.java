@@ -2,12 +2,10 @@ package com.db8.popupcoffee.reservation.domain;
 
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
-import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.space.domain.Space;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -71,9 +69,6 @@ public class FlexibleReservation extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate deadline;
 
-    @Embedded
-    private Contact contact;
-
     @OneToMany(mappedBy = "flexibleReservation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Exclude
     private List<DesiredDate> desiredDates = new ArrayList<>();
@@ -84,14 +79,12 @@ public class FlexibleReservation extends BaseTimeEntity {
         LocalDate availabilityStartDate,
         LocalDate availabilityEndDate,
         Long duration,
-        LocalDate deadline,
-        Contact contact
+        LocalDate deadline
     ) {
         this.merchantContract = merchantContract;
         this.availabilityStartDate = availabilityStartDate;
         this.availabilityEndDate = availabilityEndDate;
         this.duration = duration;
         this.deadline = deadline;
-        this.contact = contact;
     }
 }
