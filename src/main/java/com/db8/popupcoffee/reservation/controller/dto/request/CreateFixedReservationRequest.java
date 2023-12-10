@@ -7,7 +7,8 @@ public record CreateFixedReservationRequest(
     LocalDate endDate,
     String creditCardNumber,
     String creditCardExpireAt,
-    String creditCardCvc
+    String creditCardCvc,
+    Long businessTypeId
 ) {
 
 }

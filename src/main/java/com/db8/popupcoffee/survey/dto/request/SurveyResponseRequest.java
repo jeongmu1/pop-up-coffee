@@ -7,11 +7,13 @@ import com.db8.popupcoffee.survey.domain.SurveyItemSelected;
 import com.db8.popupcoffee.survey.domain.SurveyResponse;
 import com.db8.popupcoffee.survey.repository.SurveyItemRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public record SurveyResponseRequest(
-        String additionalComment
+        String additionalComment,
+        List<Long> selectedItems
 ) {
     public SurveyResponse toSurveyResponse(Member member, Survey survey) {
         return SurveyResponse.builder()
@@ -20,18 +22,28 @@ public record SurveyResponseRequest(
                 .build();
     }
 
-    public List<SurveyItemSelected> toSurveyItemSelecteds(List<Long> selectedItems, SurveyResponse surveyResponse, SurveyItemRepository surveyItemRepository) {
+    public List<SurveyItemSelected> toSurveyItemSelecteds(SurveyResponse surveyResponse, SurveyItemRepository surveyItemRepository) {
+        if (this.selectedItems == null) {
+            return new ArrayList<>();
+        }
+
         return selectedItems.stream()
                 .map(itemId -> {
                     SurveyItem item = surveyItemRepository.findById(itemId).orElseThrow(null);
-                    return SurveyItemSelected.builder()
+                    SurveyItemSelected surveyItemSelected = SurveyItemSelected.builder()
                             .item(item)
                             .surveyResponse(surveyResponse)
-                            .additionalComment(this.additionalComment)
                             .build();
+
+                    if ("기타".equals(item.getName())) {
+                        surveyItemSelected.setAdditionalComment(this.additionalComment);
+                    }
+
+                    return surveyItemSelected;
                 })
                 .collect(Collectors.toList());
     }
 
 
 }
+

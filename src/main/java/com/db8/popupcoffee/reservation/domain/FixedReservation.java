@@ -3,6 +3,7 @@ package com.db8.popupcoffee.reservation.domain;
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import com.db8.popupcoffee.global.domain.CreditCard;
+import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.space.domain.Space;
 import jakarta.persistence.Column;
@@ -64,18 +65,25 @@ public class FixedReservation extends BaseTimeEntity {
     @Embedded
     private CreditCard creditCard;
 
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private BusinessType businessType;
+
     @Builder
     public FixedReservation(
         MerchantContract merchantContract,
         LocalDate startDate,
         LocalDate endDate,
         long paymentAmount,
-        CreditCard creditCard
+        CreditCard creditCard,
+        BusinessType businessType
     ) {
         this.merchantContract = merchantContract;
         this.startDate = startDate;
         this.endDate = endDate;
         this.paymentAmount = paymentAmount;
         this.creditCard = creditCard;
+        this.businessType = businessType;
     }
 }

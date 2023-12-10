@@ -76,27 +76,31 @@
                 감사하겠습니다.</span>
             </div>
             <div class="survey-form">
-                <form action="/submit">
+                <form th:action="@{'/surveys/' + ${survey.id} + '/responses'}" method="post" id="surveyForm">
                     <div th:each="item, stat : ${items}">
-                        <input type="checkbox" name="type" th:value="${item.name}"> <span th:text="${item.name}"></span>
+                        <input type="checkbox" name="selectedItems" th:value="${item.id}" th:id="${'checkbox-' + item.id}" th:attr="data-name=${item.name}"> <span th:text="${item.name}"></span>
                         <span class="counts" th:if="${selectedItemCounts[stat.index]}" th:text="' ' + ${selectedItemCounts[stat.index]} + '회 선택됨'"></span> <br>
+                        <input type="text" th:id="${'textarea-' + item.id.toString()}" name="noAdditionalComment" style="display: none;" placeholder="기타 업체 종류를 입력해주세요"></input>
+
                     </div>
-                    <input type="checkbox" name="type" value="other" id="otherCheckbox"> 기타
-                    <textarea id="otherText" name="otherText" rows="4" cols="30" style="display: none;" placeholder="기타 업체 종류를 입력해주세요"></textarea><br>
                     <input type="reset">
                     <input id="" type="submit" value="제출">
                 </form>
             </div>
 
             <script>
-                <!-- 기타 입력란 보여지는 스크립트 -->
-                const otherCheckbox = document.getElementById('otherCheckbox');
-                const otherText = document.getElementById('otherText');
-
-                otherCheckbox.addEventListener('change', function() {
-                    otherText.style.display = otherCheckbox.checked ? 'block' : 'none';
+                document.getElementById('surveyForm').addEventListener('change', function(e) {
+                    if (e.target.name === 'selectedItems') {
+                        let textarea = document.getElementById('textarea-' + e.target.value);
+                        let itemName = e.target.dataset.name;
+                        if (itemName === '기타') {
+                            textarea.style.display = e.target.checked ? 'block' : 'none';
+                            document.getElementById('textarea-' + e.target.value).setAttribute('name', 'additionalComment');
+                        }
+                    }
                 });
             </script>
+
         </div>
     </div>
 </main>

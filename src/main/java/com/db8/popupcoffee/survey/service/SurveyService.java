@@ -87,18 +87,19 @@ public class SurveyService {
     }
 
     @Transactional
-    public void submitResponse(Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest, List<Long> selectedItems) {
+    public void submitResponse(Long surveyId, Long memberId, SurveyResponseRequest form) {
         Member member = memberRepository.findById(memberId).orElseThrow(null);
         Survey survey = getSurvey(surveyId);
 
         // 설문응답 생성
-        SurveyResponse surveyResponse = surveyResponseRequest.toSurveyResponse(member, survey);
+        SurveyResponse surveyResponse = form.toSurveyResponse(member, survey);
         surveyResponseRepository.save(surveyResponse);
 
         // 선택된 항목 저장
-        List<SurveyItemSelected> surveyItemSelecteds = surveyResponseRequest.toSurveyItemSelecteds(selectedItems, surveyResponse, surveyItemRepository);
+        List<SurveyItemSelected> surveyItemSelecteds = form.toSurveyItemSelecteds(surveyResponse, surveyItemRepository);
         surveyItemSelectedRepository.saveAll(surveyItemSelecteds);
     }
+
 
 
 }
