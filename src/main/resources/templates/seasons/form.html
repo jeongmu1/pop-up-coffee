@@ -125,8 +125,15 @@
         </div>
       </div>
     </div>
+
+    <form th:action="@{/seasons/year}" method="post">
+      <label>
+        <input type="number" name="year" min="2000" max="2099" step="1" value="2023" required />
+      </label>
+      <button type="submit">제출</button>
+    </form>
     <div>
-      <form th:action="@{/seasons}" method="post">
+      <form id="real_form" th:action="@{/seasons}" method="post">
         <label>
           <select name="holiday" class="selectBox" style="width: 200px">
             <option th:value="${false}">평일</option>
@@ -144,11 +151,10 @@
         <input type="hidden" id="hidden_check_out_day" name="endDate">
         <input type="submit" value="지정하기">
         </div>
-
       </form>
 
       <script>
-          document.querySelector('form').addEventListener('submit', function(e) {
+          document.getElementById('real_form').addEventListener('submit', function(e) {
               e.preventDefault(); // 기본 제출 동작 방지
 
               // 드롭다운에서 선택한 성수기 수준 가져오기
@@ -164,10 +170,10 @@
               seasonalityLevelInput.type = 'hidden';
               seasonalityLevelInput.name = 'seasonalityLevel';
               seasonalityLevelInput.value = selectedSeasonalityLevel;
-              document.querySelector('form').appendChild(seasonalityLevelInput);
+              document.getElementById('real_form').appendChild(seasonalityLevelInput);
 
               // 이제 폼 제출
-              document.querySelector('form').submit();
+              document.getElementById('real_form').submit();
           });
       </script>
     </div>
