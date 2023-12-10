@@ -80,6 +80,11 @@ public class ReservationController {
         return "redirect:/reservations";
     }
 
+    @GetMapping("/flexible/form")
+    public String getFlexibleReservationForm() {
+        return "reservations/flexible/form";
+    }
+
     @PostMapping("/flexible")
     public String createFlexibleReservation(CreateFlexibleReservationRequest form,
         HttpSession session) {
