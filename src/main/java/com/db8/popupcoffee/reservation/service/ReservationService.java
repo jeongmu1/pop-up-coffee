@@ -3,8 +3,10 @@ package com.db8.popupcoffee.reservation.service;
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.contract.service.ContractService;
 import com.db8.popupcoffee.global.util.FeeCalculator;
+import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
+import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
@@ -35,11 +37,14 @@ public class ReservationService {
     private final FeeCalculator feeCalculator;
     private final FlexibleReservationRepository flexibleReservationRepository;
     private final DesiredDateRepository desiredDateRepository;
+    private final BusinessTypeRepository businessTypeRepository;
 
     @Transactional
     public void progressFixedReservation(CreateFixedReservationDto dto) {
         MerchantContract contract = findActivatedMerchantContract(dto.merchantId());
-        fixedReservationRepository.save(dto.toEntity(contract,
+        BusinessType businessType = businessTypeRepository.findById(dto.businessTypeId())
+            .orElseThrow();
+        fixedReservationRepository.save(dto.toEntity(contract, businessType,
             feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate())));
     }
 
