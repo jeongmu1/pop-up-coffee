@@ -8,6 +8,7 @@ import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
+import com.db8.popupcoffee.reservation.controller.dto.response.ReservationHistory;
 import com.db8.popupcoffee.reservation.domain.DesiredDate;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.DesiredDateRepository;
@@ -17,7 +18,9 @@ import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.FixedDatesInfoDto;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +66,19 @@ public class ReservationService {
                 List.of(FlexibleReservationStatus.WAITING,
                     FlexibleReservationStatus.SPACE_TEMPORARY_FIXED)).stream()
             .map(FlexibleReservationInfo::from).toList();
+    }
+
+    public List<ReservationHistory> getReservationHistories(long merchantId) {
+        Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
+        Stream<ReservationHistory> onlyFixeds =
+            fixedReservationRepository.findByMerchantAndFromFlexible(merchant, false).stream()
+                .map(ReservationHistory::from);
+        Stream<ReservationHistory> fromFlexibles =
+            flexibleReservationRepository.findByMerchant(merchant).stream()
+                .map(ReservationHistory::from);
+
+        return Stream.concat(onlyFixeds, fromFlexibles)
+            .sorted(Comparator.comparing(ReservationHistory::reservedDate).reversed()).toList();
     }
 
     private MerchantContract findActivatedMerchantContract(long merchantId) {
