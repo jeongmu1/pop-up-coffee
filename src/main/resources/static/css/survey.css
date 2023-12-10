@@ -118,7 +118,8 @@ td {
 }
 
 .counts{
-    display: none;
+    font-size: 10px;
+    color: rgb(128, 128, 128);
 }
 .survey-form label {
     display: block;

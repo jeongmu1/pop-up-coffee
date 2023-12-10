@@ -72,7 +72,7 @@ public class SurveyController {
     public String showSurvey(@PathVariable Long surveyId, Model model, HttpSession session) {
         MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if(sessionInfo == null) {
-            return "redirect:/login";
+            return "redirect:/merchants/login";
         }
 
         Survey survey = surveyService.getSurvey(surveyId);
@@ -82,20 +82,21 @@ public class SurveyController {
         model.addAttribute("items", survey.getItems());
         model.addAttribute("selectedItemCounts", selectedItemCounts);
 
-        return "surveys/show";
+        return "surveys/form";
     }
 
 
     @PostMapping("/{surveyId}/responses")
-    public String submitResponse(@PathVariable Long surveyId, Long memberId, SurveyResponseRequest surveyResponseRequest, @RequestParam List<Long> selectedItems, HttpSession session) {
+    public String submitResponse(@PathVariable Long surveyId, @ModelAttribute SurveyResponseRequest form, HttpSession session) {
         MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if(sessionInfo == null) {
-            return "redirect:/login";
+            return "redirect:/merchants/login";
         }
-        surveyService.submitResponse(surveyId, memberId, surveyResponseRequest, selectedItems);
-        memberService.increasePointAndSetLastSurveyed(memberId);
+        surveyService.submitResponse(surveyId, sessionInfo.id(), form);
+        memberService.increasePointAndSetLastSurveyed(sessionInfo.id());
 
-        return "redirect:/surveys/";
+        return "";
     }
+
 
 }
