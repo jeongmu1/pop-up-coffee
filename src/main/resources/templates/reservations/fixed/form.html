@@ -125,31 +125,36 @@
             <span>대여 종료일</span>
             <label id="check_out_day"></label>
           </p>
+          <p>
+            <span>총 금액</span>
+            <label id="totalRentalPrice"></label>
+          </p>
         </div>
       </div>
     </div>
     <div>
-      <form action="/check_period" method="post">
+      <form th:action="@{/reservations/fixed}" method="post">
         <select name="type" class="selectBox" style="width: 200px">
           <option>업종 선택</option>
-          <option value="ring">반지</option>
-          <option value="necklace">목걸이</option>
-          <option value="lecture">강연</option>
-          <option value="handicraft">수공예</option>
+          <option th:each="businessType : ${businessTypes}" th:value="${businessType.id}" th:text="${businessType.name}"></option>
         </select>
-        <input type="hidden" id="hidden_check_in_day" name="check_in_day">
-        <input type="hidden" id="hidden_check_out_day" name="check_out_day">
-        <input type="text" name="cardNames" value="cardName">
-        <input type="text" name="cardNumbers" value="cardNumber">
+        <input type="hidden" id="hidden_check_in_day" name="startDate">
+        <input type="hidden" id="hidden_check_out_day" name="endDate">
+        <input type="text" name="creditCardNumber" value="creditCardNumber">
+        <input type="text" name="creditCardExpireAt" value="creditCardExpireAt">
+        <input type="text" name="creditCardCvc" value="cvc" placeholder="cvc번호 입력">
         <input type="submit" value="예약하기">
       </form>
 
       <script>
         document.querySelector('form').addEventListener('submit', function(e) {
-          document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
-          document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
+          a = document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
+          b = document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
+          console.log(a)
+          console.log(b)
         });
       </script>
+  </div>
   </div>
 </main>
 <footer>

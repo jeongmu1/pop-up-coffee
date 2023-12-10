@@ -16,7 +16,8 @@ let currentMonth = thisMonth.getMonth();
 let checkInDate = "";
 // 체크아웃 날짜
 let checkOutDate = "";
-
+// 대여 요금 총액
+let totalRentalPrice = 0;
 $(document).ready(function () {
     // 달력 만들기
     calendarInit(thisMonth);
@@ -195,21 +196,42 @@ function calendarInit(thisMonth) {
     addClassSelectDay();
 }
 
-// 대여 시작 종료 기간 안에 날짜 선택 처리
+// 대여 시작 종료 기간 안에 날짜 선택 처리,예상 요금 계산
 function addClassSelectDay() {
-    if (checkInDate !== "" && checkOutDate != "") {
+    if (checkInDate !== "" && checkOutDate !== "") {
+        let total_price = 0;
+        let selected_dates = []; // 선택된 날짜를 저장할 배열을 만듭니다.
+
         $('.day').each(function () {
             const data_day = $(this).data('day');
 
             if (data_day !== undefined && data_day >= checkInDate && data_day <= checkOutDate) {
                 $(this).addClass('selectDay');
+                selected_dates.push(data_day);
             }
+        });
+
+        selected_dates.forEach(function(date) {
+            dates.forEach(function(date_price_pair) {
+                if (date_price_pair.includes(date)) {
+                    total_price += date_price_pair[1];
+                }
+            });
         });
 
         $('.checkIn').find('.check_in_out_p').html('대여 시작일');
         $('.checkOut').find('.check_in_out_p').html('대여 종료일');
+
+        // 총 가격을 HTML에 표시합니다.
+        $('#totalRentalPrice').html(total_price + '원');
+
+        // 선택된 날짜를 콘솔에 출력합니다. 필요에 따라 이 부분을 수정하시면 됩니다.
+        console.log(selected_dates);
     }
 }
+
+
+
 
 // 달력 날짜 클릭
 function selectDay(obj) {
@@ -285,17 +307,16 @@ function selectDay(obj) {
         }
     }
 }
-
 // 대여시작일 날짜 표기
 function getCheckIndateHtml() {
     checkInDate = checkInDate.toString();
-    return checkInDate.substring('0', '4') + "-" + checkInDate.substring('4', '6') + "-" + checkInDate.substring('6', '8') + " ( " + strWeekDay(weekday(checkInDate)) + " )";
+    return checkInDate.substring('0', '4') + "-" + checkInDate.substring('4', '6') + "-" + checkInDate.substring('6', '8');
 }
 
-// 체크아웃 날짜 표기
+// 대여종료일 날짜 표기
 function getCheckOutdateHtml() {
     checkOutDate = checkOutDate.toString();
-    return checkOutDate.substring('0', '4') + "-" + checkOutDate.substring('4', '6') + "-" + checkOutDate.substring('6', '8') + " ( " + strWeekDay(weekday(checkOutDate)) + " )";
+    return checkOutDate.substring('0', '4') + "-" + checkOutDate.substring('4', '6') + "-" + checkOutDate.substring('6', '8');
 }
 
 // 체크인 날짜 클릭시 예약 가능한 마지막 날인지 체크 마지막날 일경우 체크아웃 날짜 자동 선택
@@ -400,6 +421,7 @@ for(var j=0; j<dates.length; j++){
     dates[j][0] = parseInt(dates[j][0]);
 }
 
+// 각 날짜별로 1일 대여 금액 나타낸 부분
 function updateDailyRates() {
     $('.day.current').each(function () {
         const date = $(this).data('day');
@@ -411,6 +433,28 @@ function updateDailyRates() {
         }
     });
 }
+
+
+// getDateRange 함수 정의
+function getDateRange(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dateRange = [];
+
+    // 날짜 차이 계산
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // 시작일부터 종료일까지의 날짜를 배열에 추가
+    for (let i = 0; i <= diffDays; i++) {
+        const currentDate = new Date(start);
+        currentDate.setDate(start.getDate() + i);
+        dateRange.push(formatDate(currentDate));
+    }
+
+    return dateRange;
+}
+
 
 $(document).ready(function () {
     // Your existing code for calendar initialization
