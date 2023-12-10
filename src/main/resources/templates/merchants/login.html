@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>FLIP COFFEE</title>
-  <link rel="stylesheet" th:href="@{/static/css/merchantsRegistration.css}">
+  <link rel="stylesheet" th:href="@{/css/merchantsRegistration.css}">
 </head>
 <body>
 <header class="header">
@@ -66,24 +66,37 @@
     </ul>
   </div>
   <div class="container"> <!--업체 정보 등록-->
-    <form th:action="@{/merchants/login}" method="post">
+    <form id="login-form" onsubmit="return checkLoginType()" method="post">
       <div class="form-group">
-        <h1>업체 등록</h1>
+        <h1>로그인</h1>
         <ul>
           <li>
             <label for="username">아이디</label>
             <input type="text" id="username" name="username">
           </li>
           <li>
-            <label for="password">주소</label>
+            <label for="password">비밀번호</label>
             <input type="password" id="password" name="password">
           </li>
           <li>
+            <input type="checkbox" id="merchant-check"> 업체 로그인
             <input type="submit">
           </li>
         </ul>
       </div>
     </form>
+
+    <script>
+      function checkLoginType() {
+        var checkBox = document.getElementById("merchant-check");
+
+        if (checkBox.checked == true){
+          document.getElementById('login-form').action = '/merchants/login';
+        } else {
+          document.getElementById('login-form').action = '/members/login';
+        }
+      }
+    </script>
   </div>
 </main>
 <footer>
