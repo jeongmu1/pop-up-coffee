@@ -23,8 +23,6 @@ public record CreateFixedReservationDto(
             .merchantId(merchantId)
             .startDate(request.startDate())
             .endDate(request.endDate())
-            .contact(Contact.builder().contactManager(request.contactManager()).contactPhone(
-                request.contactPhone()).build())
             .creditCard(CreditCard.builder().creditCardNumber(request.creditCardNumber())
                 .creditCardExpireAt(
                     request.creditCardExpireAt()).creditCardCvc(request.creditCardCvc()).build())
@@ -37,7 +35,6 @@ public record CreateFixedReservationDto(
             .startDate(startDate)
             .endDate(endDate)
             .paymentAmount(paymentAmount)
-            .contact(contact)
             .creditCard(creditCard)
             .build();
     }

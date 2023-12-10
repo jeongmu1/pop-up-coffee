@@ -9,8 +9,6 @@ public record CreateFlexibleReservationRequest(
     LocalDate availabilityEndDate,
     Long duration,
     LocalDate deadline,
-    String contactManager,
-    String contactPhone,
     List<LocalDate> desiredDates
 ) {
 

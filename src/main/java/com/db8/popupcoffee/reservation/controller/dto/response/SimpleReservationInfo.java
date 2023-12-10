@@ -11,8 +11,6 @@ public record SimpleReservationInfo(
     LocalDate startDate,
     LocalDate endDate,
     String merchantName,
-    String contactManager,
-    String contactPhone,
 
     // 유동 관련
     boolean fromFlexible,
@@ -26,8 +24,6 @@ public record SimpleReservationInfo(
             .startDate(flexibleReservation.getTemporalRentalStartDate())
             .endDate(flexibleReservation.getTemporalRentalEndDate())
             .merchantName(flexibleReservation.getMerchantContract().getMerchant().getName())
-            .contactManager(flexibleReservation.getContact().getContactManager())
-            .contactPhone(flexibleReservation.getContact().getContactPhone())
             .fromFlexible(true)
             .fixedDate(status.equals(FlexibleReservationStatus.SPACE_FIXED) || status.equals(
                 FlexibleReservationStatus.RESERVATION_FIXED))
@@ -40,8 +36,6 @@ public record SimpleReservationInfo(
             .startDate(fixedReservation.getStartDate())
             .endDate(fixedReservation.getEndDate())
             .merchantName(fixedReservation.getMerchantContract().getMerchant().getName())
-            .contactManager(fixedReservation.getContact().getContactManager())
-            .contactPhone(fixedReservation.getContact().getContactPhone())
             .fromFlexible(false)
             .build();
     }
