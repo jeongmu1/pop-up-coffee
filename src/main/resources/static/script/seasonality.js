@@ -130,19 +130,35 @@ function calendarInit(thisMonth) {
         //     }
         // }
 
+        // for (let i = 1; i <= nextDate; i++) {
+        //     // 이번달이 현재 년도와 월이 같을경우
+        //     if (currentYear === today.getFullYear() && currentMonth === today.getMonth()) {
+        //         // 지난 날짜는 disable 처리
+        //         if (i < today.getDate()) {
+        //             start_calendar += pervDisableDay(i)
+        //         } else {
+        //             start_calendar += dailyDay(currentYear, currentMonth, i, convertedDateInfos[currentYear][currentMonth][i]);
+        //         }
+        //     } else {
+        //         start_calendar += dailyDay(currentYear, currentMonth, i, convertedDateInfos[currentYear][currentMonth][i]);
+        //     }
+        // }
         for (let i = 1; i <= nextDate; i++) {
-            // 이번달이 현재 년도와 월이 같을경우
+            let yearData = convertedDateInfos[currentYear];
+            let monthData = yearData ? yearData[currentMonth] : undefined;
+            let dateData = monthData ? monthData[i] : undefined;
+
             if (currentYear === today.getFullYear() && currentMonth === today.getMonth()) {
-                // 지난 날짜는 disable 처리
                 if (i < today.getDate()) {
                     start_calendar += pervDisableDay(i)
                 } else {
-                    start_calendar += dailyDay(currentYear, currentMonth, i, convertedDateInfos[currentYear][currentMonth][i]);
+                    start_calendar += dailyDay(currentYear, currentMonth, i, dateData);
                 }
             } else {
-                start_calendar += dailyDay(currentYear, currentMonth, i, convertedDateInfos[currentYear][currentMonth][i]);
+                start_calendar += dailyDay(currentYear, currentMonth, i, dateData);
             }
         }
+
 
         // 다음달 7 일 표시
         for (let i = 1; i <= (6 - nextDay); i++) {
@@ -183,18 +199,34 @@ function calendarInit(thisMonth) {
 
         // 이번달
         for (let i = 1; i <= nextDate; i++) {
-            // 이번달이 현재 년도와 월이 같을경우
+            let yearData = convertedDateInfos[tempCurrentYear];
+            let monthData = yearData ? yearData[tempCurrentMonth] : undefined;
+            let dateData = monthData ? monthData[i] : undefined;
+
             if (tempCurrentYear === today.getFullYear() && tempCurrentMonth === today.getMonth()) {
-                // 지난 날짜는 disable 처리
                 if (i < today.getDate()) {
                     last_calendar += pervDisableDay(i)
                 } else {
-                    last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, convertedDateInfos[tempCurrentYear][tempCurrentMonth][i]);
+                    last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, dateData);
                 }
             } else {
-                last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, convertedDateInfos[tempCurrentYear][tempCurrentMonth][i]);
+                last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, dateData);
             }
         }
+
+        // for (let i = 1; i <= nextDate; i++) {
+        //     // 이번달이 현재 년도와 월이 같을경우
+        //     if (tempCurrentYear === today.getFullYear() && tempCurrentMonth === today.getMonth()) {
+        //         // 지난 날짜는 disable 처리
+        //         if (i < today.getDate()) {
+        //             last_calendar += pervDisableDay(i)
+        //         } else {
+        //             last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, convertedDateInfos[tempCurrentYear][tempCurrentMonth][i]);
+        //         }
+        //     } else {
+        //         last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, convertedDateInfos[tempCurrentYear][tempCurrentMonth][i]);
+        //     }
+        // }
 
         // 다음달 7 일 표시
         for (let i = 1; i <= (6 - nextDay); i++) {
@@ -224,24 +256,53 @@ function calendarInit(thisMonth) {
     //         return '<div class="day current" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p><p>' + '</div>';
     //     }
     // }
+    // function dailyDay(currentYear, currentMonth, day, level) {
+    //     const date = currentYear + '' + zf((currentMonth + 1)) + '' + zf(day);
+    //     let color;
+    //
+    //     console.log("level" + level);
+    //
+    //     switch (level.seasonalityLevel) {
+    //         case 'HIGHEST':
+    //             color = 'red';
+    //             break;
+    //         case 'HIGH':
+    //             color = 'yellow';
+    //             break;
+    //         case 'LOW':
+    //             color = 'green';
+    //             break;
+    //     }
+    //     console.log("holiday : " + level.holiday);
+    //
+    //     if (checkInDate === date) {
+    //         return '<div class="day current checkIn" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
+    //     } else if (checkOutDate === date) {
+    //         return '<div class="day current checkOut" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
+    //     } else {
+    //         return '<div class="day current" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
+    //     }
+    // }
     function dailyDay(currentYear, currentMonth, day, level) {
         const date = currentYear + '' + zf((currentMonth + 1)) + '' + zf(day);
         let color;
 
-        console.log("level" + level);
+        if (level) {
+            console.log("level" + level);
 
-        switch (level.seasonalityLevel) {
-            case 'HIGHEST':
-                color = 'red';
-                break;
-            case 'HIGH':
-                color = 'yellow';
-                break;
-            case 'LOW':
-                color = 'green';
-                break;
+            switch (level.seasonalityLevel) {
+                case 'HIGHEST':
+                    color = 'red';
+                    break;
+                case 'HIGH':
+                    color = 'yellow';
+                    break;
+                case 'LOW':
+                    color = 'green';
+                    break;
+            }
+            console.log("holiday : " + level.holiday);
         }
-        console.log("holiday : " + level.holiday);
 
         if (checkInDate === date) {
             return '<div class="day current checkIn" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
@@ -251,6 +312,7 @@ function calendarInit(thisMonth) {
             return '<div class="day current" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
         }
     }
+
 
     // 다음달 미리 보기
     function nextDisableDay(day) {
