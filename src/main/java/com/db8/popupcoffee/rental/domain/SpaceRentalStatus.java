@@ -15,4 +15,13 @@ public enum SpaceRentalStatus {
     SpaceRentalStatus(String message) {
         this.message = message;
     }
+
+    public SpaceRentalStatus next() {
+        return switch (this) {
+            case BEFORE_USE -> IN_USE;
+            case IN_USE -> BEFORE_SETTLEMENT;
+            case BEFORE_SETTLEMENT -> COMPLETED;
+            default -> null;
+        };
+    }
 }
