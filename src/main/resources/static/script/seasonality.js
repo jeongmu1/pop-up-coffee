@@ -289,13 +289,13 @@ function selectDay(obj) {
 // 대여시작일 날짜 표기
 function getCheckIndateHtml() {
     checkInDate = checkInDate.toString();
-    return checkInDate.substring('0', '4') + "-" + checkInDate.substring('4', '6') + "-" + checkInDate.substring('6', '8') + " ( " + strWeekDay(weekday(checkInDate)) + " )";
+    return checkInDate.substring('0', '4') + "-" + checkInDate.substring('4', '6') + "-" + checkInDate.substring('6', '8');
 }
 
 // 체크아웃 날짜 표기
 function getCheckOutdateHtml() {
     checkOutDate = checkOutDate.toString();
-    return checkOutDate.substring('0', '4') + "-" + checkOutDate.substring('4', '6') + "-" + checkOutDate.substring('6', '8') + " ( " + strWeekDay(weekday(checkOutDate)) + " )";
+    return checkOutDate.substring('0', '4') + "-" + checkOutDate.substring('4', '6') + "-" + checkOutDate.substring('6', '8');
 }
 
 // 체크인 날짜 클릭시 예약 가능한 마지막 날인지 체크 마지막날 일경우 체크아웃 날짜 자동 선택

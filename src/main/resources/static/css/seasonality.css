@@ -125,6 +125,23 @@ ul {
 
 
 /* Calendar ---------------------------------------------------- */
+
+.calendar-wrap .cal_wrap .day.peak {
+    background-color: #ed2a61; /* 성수기에 대한 빨간색 배경 */
+    color: #fff; /* 흰색 텍스트로 빨간색 배경에 대한 가시성 향상 */
+}
+
+.calendar-wrap .cal_wrap .day.off-peak {
+    background-color: #ffea00; /* 비수기에 대한 노란색 배경 */
+    color: #000; /* 노란색 배경에 대한 가시성 향상을 위한 검은색 텍스트 */
+}
+
+.calendar-wrap .cal_wrap .day.regular {
+    background-color: #4caf50; /* 일반 시즌에 대한 초록색 배경 */
+    color: #fff; /* 흰색 텍스트로 초록색 배경에 대한 가시성 향상 */
+}
+
+
 .calendar-wrap {
     margin-top: 10%;
     max-width: 1175px;
