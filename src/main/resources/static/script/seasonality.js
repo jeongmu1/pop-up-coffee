@@ -75,8 +75,31 @@ function calendarInit(thisMonth) {
     makeStartCalendar();
     makeLastCalendar();
 
+    function convertDateInfos(dateInfos) {
+        let converted = {};
+        dateInfos.forEach(info => {
+            let date = new Date(info.date);
+            let year = date.getFullYear();
+            let month = date.getMonth();
+            let day = date.getDate();
+            if (!converted[year]) {
+                converted[year] = {};
+            }
+            if (!converted[year][month]) {
+                converted[year][month] = {};
+            }
+            converted[year][month][day] = {
+                seasonalityLevel: info.seasonalityLevel,
+                holiday: info.holiday
+            };
+        });
+        return converted;
+    }
+
     // start_calendar
     function makeStartCalendar() {
+        let convertedDateInfos = convertDateInfos(dateInfos);
+
         // 이전 달의 마지막 날 날짜와 요일 구하기
         const startDay = new Date(currentYear, currentMonth, 0);
         const prevDate = startDay.getDate();
@@ -93,6 +116,20 @@ function calendarInit(thisMonth) {
         }
 
         // 이번달
+        // for (let i = 1; i <= nextDate; i++) {
+        //     // 이번달이 현재 년도와 월이 같을경우
+        //     if (currentYear === today.getFullYear() && currentMonth === today.getMonth()) {
+        //         // 지난 날짜는 disable 처리
+        //         if (i < today.getDate()) {
+        //             start_calendar += pervDisableDay(i)
+        //         } else {
+        //             start_calendar += dailyDay(currentYear, currentMonth, i);
+        //         }
+        //     } else {
+        //         start_calendar += dailyDay(currentYear, currentMonth, i);
+        //     }
+        // }
+
         for (let i = 1; i <= nextDate; i++) {
             // 이번달이 현재 년도와 월이 같을경우
             if (currentYear === today.getFullYear() && currentMonth === today.getMonth()) {
@@ -100,10 +137,10 @@ function calendarInit(thisMonth) {
                 if (i < today.getDate()) {
                     start_calendar += pervDisableDay(i)
                 } else {
-                    start_calendar += dailyDay(currentYear, currentMonth, i);
+                    start_calendar += dailyDay(currentYear, currentMonth, i, convertedDateInfos[currentYear][currentMonth][i]);
                 }
             } else {
-                start_calendar += dailyDay(currentYear, currentMonth, i);
+                start_calendar += dailyDay(currentYear, currentMonth, i, convertedDateInfos[currentYear][currentMonth][i]);
             }
         }
 
@@ -119,6 +156,8 @@ function calendarInit(thisMonth) {
 
     // last_calendar
     function makeLastCalendar() {
+        let convertedDateInfos = convertDateInfos(dateInfos);
+
         let tempCurrentYear = currentYear;
         let tempCurrentMonth = currentMonth + 1;
 
@@ -150,12 +189,11 @@ function calendarInit(thisMonth) {
                 if (i < today.getDate()) {
                     last_calendar += pervDisableDay(i)
                 } else {
-                    last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i);
+                    last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, convertedDateInfos[tempCurrentYear][tempCurrentMonth][i]);
                 }
             } else {
-                last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i);
+                last_calendar += dailyDay(tempCurrentYear, tempCurrentMonth, i, convertedDateInfos[tempCurrentYear][tempCurrentMonth][i]);
             }
-
         }
 
         // 다음달 7 일 표시
@@ -175,15 +213,42 @@ function calendarInit(thisMonth) {
     }
 
     // 이번달
-    function dailyDay(currentYear, currentMonth, day) {
+    // function dailyDay(currentYear, currentMonth, day) {
+    //     const date = currentYear + '' + zf((currentMonth + 1)) + '' + zf(day);
+    //
+    //     if (checkInDate === date) {
+    //         return '<div class="day current checkIn" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p><p>' + '</div>';
+    //     } else if (checkOutDate === date) {
+    //         return '<div class="day current checkOut" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p><p>' + '</div>';
+    //     } else {
+    //         return '<div class="day current" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p><p>' + '</div>';
+    //     }
+    // }
+    function dailyDay(currentYear, currentMonth, day, level) {
         const date = currentYear + '' + zf((currentMonth + 1)) + '' + zf(day);
+        let color;
+
+        console.log("level" + level);
+
+        switch (level.seasonalityLevel) {
+            case 'HIGHEST':
+                color = 'red';
+                break;
+            case 'HIGH':
+                color = 'yellow';
+                break;
+            case 'LOW':
+                color = 'green';
+                break;
+        }
+        console.log("holiday : " + level.holiday);
 
         if (checkInDate === date) {
-            return '<div class="day current checkIn" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p><p>' + '</div>';
+            return '<div class="day current checkIn" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
         } else if (checkOutDate === date) {
-            return '<div class="day current checkOut" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p><p>' + '</div>';
+            return '<div class="day current checkOut" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
         } else {
-            return '<div class="day current" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p><p>' + '</div>';
+            return '<div class="day current" style="background-color: ' + color + ';" data-day="' + date + '" onclick="selectDay(this)"><span>' + day + '</span><p class="check_in_out_p"></p></div>';
         }
     }
 
@@ -257,6 +322,7 @@ function selectDay(obj) {
             $('.checkOut').find('.check_in_out_p').html('대여 종료일');
 
             checkOutDate = $(obj).data('day');
+            console.log("checkOutDate : " + checkOutDate)
 
             $('#check_out_day').html(getCheckOutdateHtml());
 
@@ -363,19 +429,26 @@ function weekday(YYYYMMDD) {
 // 요일 리턴
 function strWeekDay(weekday) {
     switch (weekday) {
-        case 0: return "일"
+        case 0:
+            return "일"
             break;
-        case 1: return "월"
+        case 1:
+            return "월"
             break;
-        case 2: return "화"
+        case 2:
+            return "화"
             break;
-        case 3: return "수"
+        case 3:
+            return "수"
             break;
-        case 4: return "목"
+        case 4:
+            return "목"
             break;
-        case 5: return "금"
+        case 5:
+            return "금"
             break;
-        case 6: return "토"
+        case 6:
+            return "토"
             break;
     }
 }
@@ -389,6 +462,38 @@ function zf(num) {
     }
 
     return num;
+}
+
+dates = [];
+for (var i = 0; i < dateInfos.length; i++) {
+    let date = dateInfos[i].date.replace(/-/g, '');
+    let rentalPrice = dateInfos[i].rentalPrice;
+    dates.push([date, rentalPrice]);
+}
+
+for (var j = 0; j < dates.length; j++) {
+    dates[j][0] = parseInt(dates[j][0]);
+}
+
+
+// getDateRange 함수 정의
+function getDateRange(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dateRange = [];
+
+    // 날짜 차이 계산
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // 시작일부터 종료일까지의 날짜를 배열에 추가
+    for (let i = 0; i <= diffDays; i++) {
+        const currentDate = new Date(start);
+        currentDate.setDate(start.getDate() + i);
+        dateRange.push(formatDate(currentDate));
+    }
+
+    return dateRange;
 }
 
 function getDailyRate(date) {
