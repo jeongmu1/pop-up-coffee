@@ -2,16 +2,22 @@ package com.db8.popupcoffee.merchant.domain;
 
 import static com.db8.popupcoffee.global.util.Policy.*;
 
+import lombok.Getter;
+
+@Getter
 public enum Grade {
-    WHITE(0),
-    GREEN(GREEN_MIN_SCORE),
-    PURPLE(PURPLE_MIN_SCORE),
-    VIP(VIP_MIN_SCORE);
+    WHITE(0, WHITE_SHARE_PERCENTAGE),
+    GREEN(GREEN_MIN_SCORE, GREEN_SHARE_PERCENTAGE),
+    PURPLE(PURPLE_MIN_SCORE, PURPLE_SHARE_PERCENTAGE),
+    VIP(VIP_MIN_SCORE, VIP_SHARE_PERCENTAGE);
 
+    @Getter
     private final int minimumScore;
+    private final double sharingPercentage;
 
-    Grade(int minimumScore) {
+    Grade(int minimumScore, double sharingPercentage) {
         this.minimumScore = minimumScore;
+        this.sharingPercentage = sharingPercentage;
     }
 
     public static Grade from(int gradeScore) {
@@ -62,10 +68,6 @@ public enum Grade {
             return 0;
         }
         return (long) scoreForNextGrade(gradeScore) * REVENUE_FOR_ONE_SCORE;
-    }
-
-    public int getMinimumScore() {
-        return this.minimumScore;
     }
 
     public int getNextGradeMinScore() {

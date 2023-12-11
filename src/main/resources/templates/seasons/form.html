@@ -125,23 +125,41 @@
         </div>
       </div>
     </div>
+
+    <form th:action="@{/seasons/year}" method="post">
+      <label>
+        <input type="number" name="year" min="2000" max="2099" step="1" value="2023" required />
+      </label>
+      <button type="submit">제출</button>
+    </form>
     <div>
-      <form th:action="@{/seasons}" method="post">
-        <select name="type" class="selectBox" style="width: 200px">
-          <option>기간 지정</option>
-          <option th:each="seasonalityLevel : ${seasonalityLevels}" th:value="${seasonalityLevel.name}" th:text="${seasonalityLevel.explain}"></option>
-        </select>
+      <form id="real_form" th:action="@{/seasons}" method="post">
+        <label>
+          <select name="holiday" class="selectBox" style="width: 200px">
+            <option th:value="${false}">평일</option>
+            <option th:value="${true}">공휴일</option>
+          </select>
+        </label>
+        <div>
+        <label>
+          <select id="seasonLevel" name="type" class="selectBox" style="width: 200px">
+            <option>기간 지정</option>
+            <option th:each="seasonalityLevel : ${seasonalityLevels}" th:value="${seasonalityLevel.name}" th:text="${seasonalityLevel.explain}"></option>
+          </select>
+        </label>
         <input type="hidden" id="hidden_check_in_day" name="startDate">
         <input type="hidden" id="hidden_check_out_day" name="endDate">
         <input type="submit" value="지정하기">
+        </div>
       </form>
 
       <script>
-          document.querySelector('form').addEventListener('submit', function(e) {
+          document.getElementById('real_form').addEventListener('submit', function(e) {
               e.preventDefault(); // 기본 제출 동작 방지
 
               // 드롭다운에서 선택한 성수기 수준 가져오기
-              var selectedSeasonalityLevel = document.querySelector('.selectBox').value;
+              // var selectedSeasonalityLevel = document.querySelector('.selectBox').value;
+              var selectedSeasonalityLevel = document.getElementById('seasonLevel').value;
 
               // 숨겨진 입력 필드를 선택한 날짜 범위로 업데이트
               document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
@@ -152,10 +170,10 @@
               seasonalityLevelInput.type = 'hidden';
               seasonalityLevelInput.name = 'seasonalityLevel';
               seasonalityLevelInput.value = selectedSeasonalityLevel;
-              document.querySelector('form').appendChild(seasonalityLevelInput);
+              document.getElementById('real_form').appendChild(seasonalityLevelInput);
 
               // 이제 폼 제출
-              document.querySelector('form').submit();
+              document.getElementById('real_form').submit();
           });
       </script>
     </div>

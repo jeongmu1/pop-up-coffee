@@ -134,7 +134,7 @@
     </div>
     <div>
       <form th:action="@{/reservations/fixed}" method="post">
-        <select name="type" class="selectBox" style="width: 200px">
+        <select name="businessTypeId" class="selectBox" style="width: 200px">
           <option>업종 선택</option>
           <option th:each="businessType : ${businessTypes}" th:value="${businessType.id}" th:text="${businessType.name}"></option>
         </select>

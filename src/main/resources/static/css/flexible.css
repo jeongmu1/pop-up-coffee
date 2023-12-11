@@ -125,23 +125,6 @@ ul {
 
 
 /* Calendar ---------------------------------------------------- */
-
-.calendar-wrap .cal_wrap .day.peak {
-    background-color: #ed2a61; /* 성수기에 대한 빨간색 배경 */
-    color: #fff; /* 흰색 텍스트로 빨간색 배경에 대한 가시성 향상 */
-}
-
-.calendar-wrap .cal_wrap .day.off-peak {
-    background-color: #ffea00; /* 비수기에 대한 노란색 배경 */
-    color: #000; /* 노란색 배경에 대한 가시성 향상을 위한 검은색 텍스트 */
-}
-
-.calendar-wrap .cal_wrap .day.regular {
-    background-color: #4caf50; /* 일반 시즌에 대한 초록색 배경 */
-    color: #fff; /* 흰색 텍스트로 초록색 배경에 대한 가시성 향상 */
-}
-
-
 .calendar-wrap {
     margin-top: 10%;
     max-width: 1175px;
@@ -462,13 +445,21 @@ ul {
     font-size: 6px;
 }
 
+.oneLine{
+    margin-left: 50%;
+}
+.option{
+    display: flex;
+    padding: 20px;
+}
+
 .selectBox {
     margin-left: 25%;
     font-size: 16px;
     color: #000000;
     background-color: #ffffff;
     border: 1px solid #cccccc;
-    padding: 10px;
+    padding: 5px;
     border-radius: 5px;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -486,12 +477,49 @@ input[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-left: 50%;
 }
 
 input[type="submit"]:hover {
     background-color: #007BFF;
 }
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center; /* 폼 내용을 가운데 정렬합니다 */
+}
+.oneLine{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.dead{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+form select {
+    width: 200px;
+    padding: 10px;
+}
+form input[type="number"] {
+    width: 200px;
+    padding: 10px;
+}
 
+/*.dates {*/
+/*    display: flex;*/
+/*    flex-direction: column; !* Align children in a column *!*/
+/*    gap: 10px; !* Add some gap between the pieces *!*/
+/*}*/
+
+.piece {
+    display: flex;
+    flex-direction: row; /* Align children in a row */
+    align-items: center; /* Center-align items vertically */
+    gap: 10px; /* Add some gap between the items */
+}
 
 /* ----------------------------- */
 .footer-container {

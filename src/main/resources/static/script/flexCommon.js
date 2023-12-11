@@ -4,7 +4,7 @@ const regexDate = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
 const thisDate = new Date();
 // 오늘 날짜 (yyyy-mm-dd 00:00:00)
 const today = new Date();
-// 달력이동 최대 개월 수
+// 달력이도 최대 개월 수
 const limitMonth = 4;
 // 달력에서 표기하는 날짜 객체
 let thisMonth = today;
@@ -16,7 +16,8 @@ let currentMonth = thisMonth.getMonth();
 let checkInDate = "";
 // 체크아웃 날짜
 let checkOutDate = "";
-
+// 대여 요금 총액
+let totalRentalPrice = 0;
 $(document).ready(function () {
     // 달력 만들기
     calendarInit(thisMonth);
@@ -37,7 +38,6 @@ $(document).ready(function () {
 
         // 년도와 월이 업데이트된 날짜로 캘린더 다시 초기화
         calendarInit(thisMonth);
-        updateDailyRates();
     });
 
     // 다음달로 이동
@@ -57,7 +57,6 @@ $(document).ready(function () {
 
         thisMonth = new Date(currentYear, currentMonth + 1, 1);
         calendarInit(thisMonth);
-        updateDailyRates();
     });
 });
 
@@ -195,21 +194,39 @@ function calendarInit(thisMonth) {
     addClassSelectDay();
 }
 
-// 대여 시작 종료 기간 안에 날짜 선택 처리
+// 대여 시작 종료 기간 안에 날짜 선택 처리,예상 요금 계산
 function addClassSelectDay() {
-    if (checkInDate !== "" && checkOutDate != "") {
+    if (checkInDate !== "" && checkOutDate !== "") {
+        let total_price = 0;
+        let selected_dates = []; // 선택된 날짜를 저장할 배열을 만듭니다.
+
         $('.day').each(function () {
             const data_day = $(this).data('day');
 
             if (data_day !== undefined && data_day >= checkInDate && data_day <= checkOutDate) {
                 $(this).addClass('selectDay');
+                selected_dates.push(data_day);
             }
+        });
+
+        selected_dates.forEach(function(date) {
+            dates.forEach(function(date_price_pair) {
+                if (date_price_pair.includes(date)) {
+                    total_price += date_price_pair[1];
+                }
+            });
         });
 
         $('.checkIn').find('.check_in_out_p').html('대여 시작일');
         $('.checkOut').find('.check_in_out_p').html('대여 종료일');
+
+        // 총 가격을 HTML에 표시합니다.
+        $('#totalRentalPrice').html(total_price + '원');
     }
 }
+
+
+
 
 // 달력 날짜 클릭
 function selectDay(obj) {
@@ -285,14 +302,13 @@ function selectDay(obj) {
         }
     }
 }
-
 // 대여시작일 날짜 표기
 function getCheckIndateHtml() {
     checkInDate = checkInDate.toString();
     return checkInDate.substring('0', '4') + "-" + checkInDate.substring('4', '6') + "-" + checkInDate.substring('6', '8');
 }
 
-// 체크아웃 날짜 표기
+// 대여종료일 날짜 표기
 function getCheckOutdateHtml() {
     checkOutDate = checkOutDate.toString();
     return checkOutDate.substring('0', '4') + "-" + checkOutDate.substring('4', '6') + "-" + checkOutDate.substring('6', '8');
@@ -303,7 +319,6 @@ function lastCheckInDate() {
     // 날짜 비교를 위해 시간값을 초기화 하기위해 체크인 날짜 다시 셋팅
     let thisCheckDate = new Date(conversion_date(checkInDate, 1));
     thisCheckDate = new Date(thisCheckDate.getFullYear(), thisCheckDate.getMonth(), thisCheckDate.getDate());
-
     // 예약 가능한 마지막달의 마지막 날짜 셋팅
     let thisLastDate = new Date(today.getFullYear(), ((today.getMonth() + 1) + limitMonth), 0);
 
@@ -390,17 +405,43 @@ function zf(num) {
 
     return num;
 }
-
-function getDailyRate(date) {
-    return Math.floor(Math.random() * 100) + 50;
+dates = [];
+for (var i = 0; i < dateInfos.length; i++) {
+    let date = dateInfos[i].date.replace(/-/g, '');
+    let rentalPrice = dateInfos[i].rentalPrice;
+    dates.push([date, rentalPrice]);
 }
+
+for(var j=0; j<dates.length; j++){
+    dates[j][0] = parseInt(dates[j][0]);
+}
+
+
+
+// getDateRange 함수 정의
+function getDateRange(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dateRange = [];
+
+    // 날짜 차이 계산
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // 시작일부터 종료일까지의 날짜를 배열에 추가
+    for (let i = 0; i <= diffDays; i++) {
+        const currentDate = new Date(start);
+        currentDate.setDate(start.getDate() + i);
+        dateRange.push(formatDate(currentDate));
+    }
+
+    return dateRange;
+}
+
 
 $(document).ready(function () {
     // Your existing code for calendar initialization
 
     calendarInit(thisMonth);
-
-    // Ensure that the calendar is initialized before updating daily rates
-    updateDailyRates();
 });
 
