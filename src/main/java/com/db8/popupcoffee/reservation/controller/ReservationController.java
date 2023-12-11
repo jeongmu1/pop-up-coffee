@@ -7,6 +7,7 @@ import com.db8.popupcoffee.merchant.service.MerchantService;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFixedReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
+import com.db8.popupcoffee.reservation.controller.dto.response.ReservationHistory;
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.service.ReservationService;
@@ -48,6 +49,11 @@ public class ReservationController {
     @ModelAttribute("nonFixedFlexibles")
     public List<FlexibleReservationInfo> getNonFixedFlexibleReservations() {
         return reservationService.findNonFixedFlexibleRepositories();
+    }
+
+    @ModelAttribute("notRentedFixeds")
+    public List<ReservationHistory> getNotRentedFixedReservations() {
+        return reservationService.findNotRentedFixedReservations();
     }
 
     @GetMapping("/histories")

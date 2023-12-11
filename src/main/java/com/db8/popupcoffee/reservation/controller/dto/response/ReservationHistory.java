@@ -8,6 +8,7 @@ import lombok.Builder;
 
 @Builder
 public record ReservationHistory(
+    Long id,
     LocalDate reservedDate,
     String status,
     LocalDate rentalStartDate,
@@ -23,6 +24,7 @@ public record ReservationHistory(
 
     public static ReservationHistory from(FixedReservation fixedReservation) {
         return ReservationHistory.builder()
+            .id(fixedReservation.getId())
             .reservedDate(fixedReservation.getCreatedAt().toLocalDate())
             .status(fixedReservation.getStatus().name())
             .rentalStartDate(fixedReservation.getStartDate())
@@ -37,6 +39,7 @@ public record ReservationHistory(
     public static ReservationHistory from(FlexibleReservation flexibleReservation) {
         ReservationHistoryBuilder historyBuilder = ReservationHistory.builder();
         historyBuilder.reservedDate(flexibleReservation.getCreatedAt().toLocalDate())
+            .id(flexibleReservation.getId())
             .status(flexibleReservation.getStatus().name())
             .flexible(true)
             .availableStartDate(flexibleReservation.getAvailabilityStartDate())
