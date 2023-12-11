@@ -93,4 +93,9 @@ public class ReservationController {
             CreateFlexibleReservationDto.of(sessionInfo.id(), form));
         return "redirect:/reservations";
     }
+
+    @GetMapping("/space")
+    public String getSpaceAssignmentForm() {
+        return "admins/spaceManagement";
+    }
 }
