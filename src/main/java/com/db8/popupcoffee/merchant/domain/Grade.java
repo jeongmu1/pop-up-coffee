@@ -35,7 +35,7 @@ public enum Grade {
 
     public Grade nextGrade() {
         return switch (this) {
-            case VIP -> null;
+            case VIP -> VIP;
             case PURPLE -> VIP;
             case GREEN -> PURPLE;
             case WHITE -> GREEN;
@@ -44,7 +44,7 @@ public enum Grade {
 
     public int scoreForNextGrade(int gradeScore) {
         return switch (nextGrade()) {
-            case VIP -> 0;
+            case VIP -> VIP_MIN_SCORE- gradeScore;
             case PURPLE -> PURPLE.minimumScore - gradeScore;
             case GREEN -> GREEN.minimumScore - gradeScore;
             case WHITE -> throw new IllegalArgumentException("다음 등급이 WHITE 가 될 수 없습니다.");

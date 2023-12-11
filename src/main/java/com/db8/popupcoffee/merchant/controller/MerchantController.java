@@ -4,9 +4,11 @@ import com.db8.popupcoffee.global.util.SessionUtil;
 import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.merchant.controller.dto.request.CreateMerchantRequest;
 import com.db8.popupcoffee.merchant.controller.dto.request.MerchantLoginForm;
+import com.db8.popupcoffee.merchant.controller.dto.response.MyPageResponse;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.service.MerchantService;
+import com.db8.popupcoffee.reservation.service.ReservationService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import java.util.List;
 public class MerchantController {
 
     private final MerchantService merchantService;
+    private final ReservationService reservationService;
 
     @ModelAttribute("businessTypes")
     public List<BusinessType> getBusinessTypes() {
@@ -59,26 +62,22 @@ public class MerchantController {
         return "redirect:/";
     }
 
-    @GetMapping("/mypage")
+    @GetMapping("/myPage")
     public String getMypage(HttpSession session, Model model) {
-        MerchantSessionInfo merchantInfo = (MerchantSessionInfo) session.getAttribute(SessionUtil.MERCHANT_SESSION_KEY);
-
+        MerchantSessionInfo merchantInfo = SessionUtil.getMerchantSessionInfo(session);
         if (merchantInfo == null) {
             return "redirect:/merchants/login";
         }
-
         Merchant merchant = merchantService.getMerchantInfo(merchantInfo.id());
-        model.addAttribute("merchant", merchant);
-
         int scoreForNextGrade = merchantService.getScoreForNextGrade(merchantInfo.id());
-        model.addAttribute("scoreForNextGrade", scoreForNextGrade);
-
         int currentGradeMinScore = merchantService.getCurrentGradeMinScore(merchantInfo.id());
-        model.addAttribute("currentGradeMinScore", currentGradeMinScore);
-
         int nextGradeMinScore = merchantService.getNextGradeMinScore(merchantInfo.id());
-        model.addAttribute("nextGradeMinScore", nextGradeMinScore);
+        MyPageResponse myPageResponse = new MyPageResponse(merchant, scoreForNextGrade, currentGradeMinScore, nextGradeMinScore);
 
-        return "merchants/mypage";
+        model.addAttribute("myPageResponse", myPageResponse);
+        model.addAttribute("histories", reservationService.getReservationHistories(
+                SessionUtil.getMerchantSessionInfo(session).id()));
+
+        return "merchants/myPage";
     }
 }

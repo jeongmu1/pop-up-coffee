@@ -1,0 +1,63 @@
+.container_mypage {
+    margin-top: 20px;  /* 상단바로부터 띄우기 */
+    margin-left: 20px;  /* 사이드바로부터 띄우기 */
+    width: 60%;
+}
+
+.container_mypage h2 {
+    text-align: center;
+}
+
+
+.profile_section {
+    display: flex;  /* 프로필 사진과 업체 정보를 가로로 배치 */
+    align-items: flex-start;  /* 프로필 사진과 업체 정보를 상단에 맞춤 */
+}
+
+.profile {
+    flex: 1;
+    display: flex;
+    font-size: medium;
+    justify-content: flex-start;
+    margin-right: 20px;  /* 프로필 사진과 업체 정보 사이의 간격 */
+}
+
+.company_info {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.progress-bar {
+    /* 배경색 */
+    background-color: #f3f3f3;
+    border: none;  /* 테두리 제거 */
+    height: 20px;  /* 높이 설정 */
+    border-radius: 10px;  /* 진행바 모서리 둥글게 */
+}
+
+.progress-bar::-webkit-progress-bar {
+    border-radius: 10px;  /* 진행바 모서리 둥글게 */
+}
+
+.progress-bar::-webkit-progress-value {
+    border-radius: 10px;  /* 진행된 부분 모서리 둥글게 */
+}
+
+.white-grade::-webkit-progress-value {
+    background: #fff;
+}
+
+.green-grade::-webkit-progress-value {
+    background: #008000;
+}
+
+.purple-grade::-webkit-progress-value {
+    background: #800080;
+}
+
+.yellow-grade::-webkit-progress-value {
+    background: #ffff00;
+}
+
