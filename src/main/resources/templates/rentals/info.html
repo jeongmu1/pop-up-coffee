@@ -10,20 +10,20 @@
 </head>
 <body>
 <header class="header">
-  <nav class ="nav">
+  <nav class="nav">
     <div class="container">
-      <a href="/home" class ="left">FLIP COFFEE</a>
-      <div class ="center">
-        <a href="/about" class ="menu">ABOUT</a>
-        <a href="/menu" class ="menu">MENU</a>
-        <a href="/store" class ="menu">STORE</a>
-        <a href="/community" class ="menu">COMMUNITY</a>
-        <a href="/admin" class ="menu">MANAGER</a>
+      <a href="/home" class="left">FLIP COFFEE</a>
+      <div class="center">
+        <a href="/about" class="menu">ABOUT</a>
+        <a href="/menu" class="menu">MENU</a>
+        <a href="/store" class="menu">STORE</a>
+        <a href="/community" class="menu">COMMUNITY</a>
+        <a href="/admin" class="menu">MANAGER</a>
 
       </div>
-      <div class ="right">
-        <a href="" class ="login">로그인</a>
-        <a href="" class ="mypage">마이페이지</a>
+      <div class="right">
+        <a href="" class="login">로그인</a>
+        <a href="" class="mypage">마이페이지</a>
       </div>
       <div>
         <!--다음 등급 까지 ???점 남았습니다 표시-->
@@ -95,7 +95,18 @@
           <td th:text="${rental.remainingDeposit}"></td>
           <td th:text="${rental.rentalFee}"></td>
           <td th:text="${rental.space}"></td>
-          <td th:text="${rental.status}"></td>
+          <td style="width: 200px">
+            <form th:action="@{/rentals/status}" th:method="patch">
+              <input type="hidden" name="rentalId" th:value="${rental.id}">
+              <label>
+                <select id="status" name="status">
+                  <option th:each="status : ${statuses}" th:text="${status.message}"
+                          th:value="${status.name}" th:selected="${rental.status == status.message}"></option>
+                </select>
+              </label>
+              <input type="submit" style="all: revert;">
+            </form>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -108,7 +119,7 @@
       <div class="footer-section">
         <div class='company-info'>
           <h3>FLIP COFFEE</h3>
-          <p >(주)DB컴퍼니 | 대표자 : DB8조</p>
+          <p>(주)DB컴퍼니 | 대표자 : DB8조</p>
           <p>부산광역시 해운대구 달맞이길 35</p>
           <p>사업자등록번호 : 509-82-01524</p>
           <p>대표번호 : 1811-5821 | FAX : 02-432-1421</p>

@@ -1,6 +1,7 @@
 package com.db8.popupcoffee.rental.service;
 
 import com.db8.popupcoffee.global.util.FeeCalculator;
+import com.db8.popupcoffee.rental.controller.dto.request.ChangeStatusRequest;
 import com.db8.popupcoffee.rental.controller.dto.request.SpaceRentalRequest;
 import com.db8.popupcoffee.rental.controller.dto.response.SimpleRentalInfo;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
@@ -44,5 +45,11 @@ public class RentalService {
         spaceRentalAgreementRepository.save(SpaceRentalAgreement.of(fixedReservation,
             feeCalculator.calculateRentalFee(fixedReservation.getStartDate(),
                 fixedReservation.getEndDate())));
+    }
+
+    @Transactional
+    public void updateRentalStatus(ChangeStatusRequest request) {
+        spaceRentalAgreementRepository.findById(request.rentalId()).orElseThrow()
+            .setRentalStatus(request.status());
     }
 }
