@@ -125,6 +125,20 @@ ul {
 
 
 /* Calendar ---------------------------------------------------- */
+.day.highest {
+    position: relative;
+    background-color: red;
+}
+
+.day.high {
+    position: relative;
+    background-color: yellow;
+}
+
+.day.low {
+    position: relative;
+    background-color: green;
+}
 
 .calendar-wrap .cal_wrap .day.peak {
     background-color: #ed2a61; /* 성수기에 대한 빨간색 배경 */
