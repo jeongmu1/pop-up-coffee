@@ -6,11 +6,12 @@ import com.db8.popupcoffee.seasonality.controller.dto.request.InputDateInfoReque
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.seasonality.domain.DateInfo;
 import com.db8.popupcoffee.seasonality.repository.DateInfoRepository;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class DateInfoService {
     @Transactional
     public void inputDateInfos(InputDateInfoRequest request) {
         dateInfoRepository.deleteByDateBetween(request.startDate(), request.endDate());
-        dateInfoRepository.saveAll(request.startDate().datesUntil(request.endDate()).map(
+        dateInfoRepository.saveAll(request.startDate().datesUntil(request.endDate().plusDays(1L)).map(
             date -> request.holiday() == null ? DateInfo.builder().date(date)
                 .seasonalityLevel(request.seasonalityLevel())
                 .build()
@@ -49,6 +50,6 @@ public class DateInfoService {
     private List<LocalDate> getAllDatesInYear(int year) {
         LocalDate startOfYear = LocalDate.of(year, 1, 1);
         LocalDate endOfYear = LocalDate.of(year, 12, 31);
-        return startOfYear.datesUntil(endOfYear).toList();
+        return startOfYear.datesUntil(endOfYear.plusDays(1L)).toList();
     }
 }

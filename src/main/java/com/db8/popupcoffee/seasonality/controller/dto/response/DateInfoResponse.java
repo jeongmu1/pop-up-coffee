@@ -1,8 +1,9 @@
 package com.db8.popupcoffee.seasonality.controller.dto.response;
 
 import com.db8.popupcoffee.seasonality.domain.DateInfo;
-import java.time.LocalDate;
 import lombok.Builder;
+
+import java.time.LocalDate;
 
 @Builder
 public record DateInfoResponse(
@@ -10,7 +11,8 @@ public record DateInfoResponse(
     String seasonalityLevel,
     long rentalPrice,
     int availableSpaces,
-    boolean rentableSpace
+    boolean rentableSpace,
+    boolean holiday
 ) {
 
     public static DateInfoResponse of(DateInfo dateInfo, int availableSpaces) {
@@ -20,6 +22,7 @@ public record DateInfoResponse(
             .rentalPrice(dateInfo.getSeasonalityLevel().calculateDailyFee(dateInfo.isHoliday()))
             .availableSpaces(availableSpaces)
             .rentableSpace(availableSpaces > 0)
+            .holiday(dateInfo.isHoliday())
             .build();
     }
 }
