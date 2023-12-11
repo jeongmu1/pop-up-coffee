@@ -8,12 +8,15 @@ import lombok.Builder;
 
 @Builder
 public record ReservationHistory(
+    Long id,
     LocalDate reservedDate,
     String status,
     LocalDate rentalStartDate,
     LocalDate rentalEndDate,
     boolean charged,
     String space, // null 시 배정 중
+    String merchant,
+    String businessType,
 
     // 유동 예약 관련
     boolean flexible,
@@ -23,24 +26,32 @@ public record ReservationHistory(
 
     public static ReservationHistory from(FixedReservation fixedReservation) {
         return ReservationHistory.builder()
+            .id(fixedReservation.getId())
             .reservedDate(fixedReservation.getCreatedAt().toLocalDate())
-            .status(fixedReservation.getStatus().name())
+            .status(fixedReservation.getStatus().getMessage())
             .rentalStartDate(fixedReservation.getStartDate())
             .rentalEndDate(fixedReservation.getEndDate())
             .charged(true)
             .space(fixedReservation.getTemporalSpace() == null ? null
                 : fixedReservation.getTemporalSpace().getNumber())
             .flexible(false)
+            .merchant(fixedReservation.getMerchantContract().getMerchant().getName())
+            .businessType(fixedReservation.getMerchantContract().getMerchant().getBusinessType()
+                .getName())
             .build();
     }
 
     public static ReservationHistory from(FlexibleReservation flexibleReservation) {
         ReservationHistoryBuilder historyBuilder = ReservationHistory.builder();
         historyBuilder.reservedDate(flexibleReservation.getCreatedAt().toLocalDate())
+            .id(flexibleReservation.getId())
             .status(flexibleReservation.getStatus().name())
             .flexible(true)
             .availableStartDate(flexibleReservation.getAvailabilityStartDate())
-            .availableEndDate(flexibleReservation.getAvailabilityEndDate());
+            .availableEndDate(flexibleReservation.getAvailabilityEndDate())
+            .merchant(flexibleReservation.getMerchantContract().getMerchant().getName())
+            .businessType(flexibleReservation.getMerchantContract().getMerchant().getBusinessType()
+                .getName());
 
         FlexibleReservationStatus status = flexibleReservation.getStatus();
 

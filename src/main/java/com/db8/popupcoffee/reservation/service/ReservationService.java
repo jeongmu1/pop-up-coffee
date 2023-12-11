@@ -12,6 +12,7 @@ import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.ReservationHistory;
 import com.db8.popupcoffee.reservation.domain.DesiredDate;
+import com.db8.popupcoffee.reservation.domain.FixedReservationStatus;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.DesiredDateRepository;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
@@ -73,6 +74,7 @@ public class ReservationService {
             .map(FlexibleReservationInfo::from).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationHistory> getReservationHistories(long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
         Stream<ReservationHistory> onlyFixeds =
@@ -84,6 +86,12 @@ public class ReservationService {
 
         return Stream.concat(onlyFixeds, fromFlexibles)
             .sorted(Comparator.comparing(ReservationHistory::reservedDate).reversed()).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationHistory> findNotRentedFixedReservations() {
+        return fixedReservationRepository.findByStatusIsNot(FixedReservationStatus.FIXED).stream()
+            .map(ReservationHistory::from).toList();
     }
 
     private MerchantContract findActivatedMerchantContract(long merchantId) {

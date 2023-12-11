@@ -6,6 +6,8 @@ import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
+import com.db8.popupcoffee.settlement.domain.ProductOrder;
+import com.db8.popupcoffee.settlement.domain.Settlement;
 import com.db8.popupcoffee.space.domain.Space;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -17,6 +19,11 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,6 +77,14 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
     @Column(nullable = false)
     private SpaceRentalStatus rentalStatus = SpaceRentalStatus.BEFORE_USE;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "spaceRentalAgreement", fetch = FetchType.LAZY)
+    private List<ProductOrder> productOrders = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "spaceRentalAgreement", fetch = FetchType.LAZY)
+    private List<Settlement> settlements = new ArrayList<>();
+
     @Builder
     @SuppressWarnings("java:S107")
     public SpaceRentalAgreement(MerchantContract merchantContract, BusinessType businessType,
@@ -88,8 +103,7 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
     }
 
     public static SpaceRentalAgreement of(FixedReservation fixedReservation, long rentalFee) {
-        long durationDays = java.time.Duration.between(fixedReservation.getStartDate(),
-            fixedReservation.getEndDate()).toDays();
+        long durationDays = ChronoUnit.DAYS.between(fixedReservation.getStartDate(), fixedReservation.getEndDate());
         long deposit = durationDays * DEPOSIT_PER_DAY;
         return SpaceRentalAgreement.builder()
             .merchantContract(fixedReservation.getMerchantContract())

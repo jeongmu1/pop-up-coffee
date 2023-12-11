@@ -27,7 +27,7 @@ public class BaseOrderEntity extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentType paymentType = PaymentType.CREDIT_CART;
+    private PaymentType paymentType = PaymentType.CREDIT_CARD;
 
     private long usedPoint;
 }

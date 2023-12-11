@@ -50,6 +50,12 @@ public class ReservationController {
         return reservationService.findNonFixedFlexibleRepositories();
     }
 
+    @GetMapping("/fixed/not-rented")
+    public String getNotRentedReservations(Model model) {
+        model.addAttribute("reservations", reservationService.findNotRentedFixedReservations());
+        return "reservations/fixed/notRented";
+    }
+
     @GetMapping("/histories")
     public String getReservationHistories(Model model, HttpSession session) {
         model.addAttribute("histories", reservationService.getReservationHistories(

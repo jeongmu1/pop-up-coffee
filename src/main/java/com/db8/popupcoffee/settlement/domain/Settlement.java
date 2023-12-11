@@ -10,6 +10,7 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,8 +29,15 @@ public class Settlement extends BaseTimeEntity {
     private SpaceRentalAgreement spaceRentalAgreement;
 
     @Column(nullable = false)
-    private long refundedDeposit = 0L;
+    private long refundedDeposit;
 
     @Column(nullable = false)
     private long settledRevenue;
+
+    @Builder
+    public Settlement(SpaceRentalAgreement spaceRentalAgreement, long settledRevenue) {
+        this.spaceRentalAgreement = spaceRentalAgreement;
+        this.settledRevenue = settledRevenue;
+        refundedDeposit = spaceRentalAgreement.getRemainingRentalDeposit();
+    }
 }

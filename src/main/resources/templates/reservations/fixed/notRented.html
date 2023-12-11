@@ -76,41 +76,22 @@
         <tr>
           <th>업체명</th>
           <th>계약 기간</th>
-          <th>수익 분배율</th>
           <th>업종</th>
-          <th>보증금</th>
-          <th>잔여보증금</th>
-          <th>예약금</th>
           <th>공간번호</th>
           <th>상태</th>
-          <th>다음 상태로</th>
+          <th>공간 계약 등록</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="rental : ${rentals}">
-          <td th:text="${rental.merchant}"></td>
-          <td th:text="${rental.startDate + '~' + rental.endDate}"></td>
-          <td th:text="${rental.revenueSharePercentage}"></td>
-          <td th:text="${rental.businessType}"></td>
-          <td th:text="${rental.deposit}"></td>
-          <td th:text="${rental.remainingDeposit}"></td>
-          <td th:text="${rental.rentalFee}"></td>
-          <td th:text="${rental.space}"></td>
-          <td style="width: 200px">
-            <form th:action="@{/rentals/{rentalId}/status(rentalId=${rental.id})}"
-                  th:method="patch">
-              <label>
-                <select id="status" name="status">
-                  <option th:each="status : ${statuses}" th:text="${status.message}"
-                          th:value="${status.name}"
-                          th:selected="${rental.status == status.message}"></option>
-                </select>
-              </label>
-              <input type="submit" style="all: revert;">
-            </form>
-          </td>
-          <td>
-            <form th:action="@{/rentals/{rentalId}/status(rentalId=${rental.id})}" th:method="patch">
+        <tr th:each="reservation : ${reservations}">
+          <td th:text="${reservation.merchant}"></td>
+          <td th:text="${reservation.rentalStartDate + '~' + reservation.rentalEndDate}"></td>
+          <td th:text="${reservation.businessType}"></td>
+          <td th:text="${reservation.space}"></td>
+          <td th:text="${reservation.status}"></td>
+          <td th:if="${reservation.status == '공간 확정'}">
+            <form th:action="@{/rentals}" method="post">
+              <input type="hidden" name="fixedReservationId" th:value="${reservation.id}">
               <input type="submit" style="all: revert">
             </form>
           </td>
