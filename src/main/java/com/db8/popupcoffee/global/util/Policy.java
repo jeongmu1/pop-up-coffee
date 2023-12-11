@@ -18,4 +18,9 @@ public class Policy {
     public static final int PURPLE_MIN_SCORE = 500;
     public static final int VIP_MIN_SCORE = 1000;
     public static final int SURVEY_REWARD = 500;
+    public static final double VIP_SHARE_PERCENTAGE = 10;
+    public static final double PURPLE_SHARE_PERCENTAGE = 20;
+    public static final double GREEN_SHARE_PERCENTAGE = 25;
+    public static final double WHITE_SHARE_PERCENTAGE = 30;
+    public static final long DEPOSIT_PER_DAY = 50000;
 }
