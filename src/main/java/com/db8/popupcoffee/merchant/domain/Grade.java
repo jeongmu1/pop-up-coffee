@@ -35,7 +35,7 @@ public enum Grade {
 
     public Grade nextGrade() {
         return switch (this) {
-            case VIP -> VIP;
+            case VIP -> null;
             case PURPLE -> VIP;
             case GREEN -> PURPLE;
             case WHITE -> GREEN;
@@ -43,8 +43,12 @@ public enum Grade {
     }
 
     public int scoreForNextGrade(int gradeScore) {
-        return switch (nextGrade()) {
-            case VIP -> VIP_MIN_SCORE- gradeScore;
+        Grade nextGrade = nextGrade();
+        if (nextGrade == null) {
+            return 0;
+        }
+        return switch (nextGrade) {
+            case VIP -> VIP_MIN_SCORE - gradeScore;
             case PURPLE -> PURPLE.minimumScore - gradeScore;
             case GREEN -> GREEN.minimumScore - gradeScore;
             case WHITE -> throw new IllegalArgumentException("다음 등급이 WHITE 가 될 수 없습니다.");
@@ -74,7 +78,7 @@ public enum Grade {
         if (this.nextGrade() != null) {
             return this.nextGrade().getMinimumScore();
         } else {
-            throw new IllegalArgumentException("다음 등급이 없습니다.");
+            return this.getMinimumScore();
         }
     }
 }

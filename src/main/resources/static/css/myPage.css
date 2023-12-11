@@ -61,3 +61,53 @@
     background: #ffff00;
 }
 
+table {
+    margin: 0 auto; /* 테이블을 중앙정렬합니다 */
+}
+td {
+    border-left: 1px solid black; /* td 사이에 세로줄을 그립니다 */
+    padding: 20px; /* 안쪽 여백을 추가하여 텍스트와 선 사이의 간격을 조절합니다 */
+}
+td:first-child {
+    border-left: none; /* 첫 번째 td의 왼쪽 세로줄을 제거합니다 */
+}
+
+.inquiry-box {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px; /* 박스를 라운드 처리합니다 */
+    background-color: #8a8a8a; /* 배경색을 그레이로 설정합니다 */
+    color: white; /* 글자색을 하얀색으로 설정합니다 */
+    margin: 0 20px; /* 좌우 마진을 20px로 설정합니다 */
+}
+
+.inquiry-box a {
+    color: white; /* 링크의 글자색을 하얀색으로 설정합니다 */
+    text-decoration: none; /* 링크의 밑줄을 제거합니다 */
+}
+
+
+span {
+    display: flex;
+    justify-content: left;
+    font-size: 20px;
+}
+
+#application-status {
+    width: 100%;
+    text-align: center;
+}
+
+#application-status td {
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.historyCell{
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid black; /* 테두리를 그립니다 */
+    padding: 10px; /* 내부 패딩을 추가하여 간격을 만듭니다 */
+}

@@ -84,7 +84,7 @@
                               th:value="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.merchant().getGradeScore() - myPageResponse.currentGradeMinScore()}"
                               th:max="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.nextGradeMinScore - myPageResponse.currentGradeMinScore()}"></progress>
 
-                    <p th:text="'다음 등급까지 남은 점수 : ' + (${myPageResponse.scoreForNextGrade() < 0 ? 0 : myPageResponse.scoreForNextGrade()})" style="font-size: 10px; color: black; margin-left: 10px;"></p>
+                    <p th:text="'다음 등급까지 남은 점수 : ' + ${myPageResponse.scoreForNextGrade()}" style="font-size: 10px; color: black; margin-left: 10px;"></p>
 
                 </div>
                 <p th:text="'업종 : ' + ${myPageResponse.merchant.businessType.name}" style="font-size: 20px; color: black;"></p>
@@ -92,6 +92,34 @@
                 <p th:text="'주소명 : ' + ${myPageResponse.merchant.address}" style="font-size: 20px; color: black;"></p>
             </div>
         </div>
+        <table>
+            <tr>
+                <td th:text="'경고 횟수: ' + ${myPageResponse.merchant.warningCount}"></td>
+                <td th:text="'블랙 여부: ' + (${myPageResponse.merchant.blacklist} ? 'O' : 'X')"></td>
+                <td th:text="'공간 대여 횟수: ' + ${myPageResponse.merchant.rentCount}"></td>
+                <td>
+                    <div class="inquiry-box">
+                        <a href="<!-- 경고/블랙 문의하기 링크 -->">경고/블랙<br>문의하기</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <span>신청 현황</span>
+        <table id="application-status">
+            <tr>
+                <th>자리번호</th>
+                <th>대여기간</th>
+                <th>신청상태</th>
+            </tr>
+            <tr class="historyCell">
+                <td>히스토리 자리 테스트</td>
+                <td>대여 시작일 ~ 대여 종료일</td>
+                <td>대기중</td>
+            </tr>
+        </table>
+
+
+
     </div>
 
     <script type="text/javascript" th:inline="javascript">
