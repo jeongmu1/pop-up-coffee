@@ -5,9 +5,11 @@ import com.db8.popupcoffee.rental.controller.dto.request.ChangeStatusRequest;
 import com.db8.popupcoffee.rental.controller.dto.request.SpaceRentalRequest;
 import com.db8.popupcoffee.rental.controller.dto.response.SimpleRentalInfo;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
+import com.db8.popupcoffee.rental.domain.SpaceRentalStatus;
 import com.db8.popupcoffee.rental.repository.SpaceRentalAgreementRepository;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
+import com.db8.popupcoffee.settlement.service.SettlementService;
 import com.db8.popupcoffee.space.repository.SpaceRepository;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -24,6 +26,7 @@ public class RentalService {
     private final FixedReservationRepository fixedReservationRepository;
     private final SpaceRepository spaceRepository;
     private final FeeCalculator feeCalculator;
+    private final SettlementService settlementService;
 
     @Transactional(readOnly = true)
     public List<SimpleRentalInfo> findRentalInfos() {
@@ -48,8 +51,24 @@ public class RentalService {
     }
 
     @Transactional
-    public void updateRentalStatus(ChangeStatusRequest request) {
-        spaceRentalAgreementRepository.findById(request.rentalId()).orElseThrow()
-            .setRentalStatus(request.status());
+    public void updateRentalStatus(Long rentalId, ChangeStatusRequest request) {
+        var rental = spaceRentalAgreementRepository.findById(rentalId).orElseThrow();
+        if ((request.status().equals(SpaceRentalStatus.COMPLETED)) && (rental.getSettlements()
+            .isEmpty())) {
+            settlementService.doSettlement(rental);
+        }
+        rental.setRentalStatus(request.status());
+    }
+
+    @Transactional
+    public void updateToNextStatus(Long rentalId) {
+        var rental = spaceRentalAgreementRepository.findById(rentalId).orElseThrow();
+        SpaceRentalStatus nextStatus = rental.getRentalStatus().next();
+        if (nextStatus != null) {
+            rental.setRentalStatus(nextStatus);
+            if (nextStatus.equals(SpaceRentalStatus.COMPLETED)) {
+                settlementService.doSettlement(rental);
+            }
+        }
     }
 }

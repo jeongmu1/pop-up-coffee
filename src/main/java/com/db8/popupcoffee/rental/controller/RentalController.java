@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,9 +40,15 @@ public class RentalController {
         return "redirect:/rentals";
     }
 
-    @PatchMapping("/status")
-    public String updateRentalStatus(ChangeStatusRequest request) {
-        rentalService.updateRentalStatus(request);
+    @PatchMapping("/{rentalId}/status")
+    public String updateRentalStatus(
+        @PathVariable("rentalId") Long rentalId,
+        ChangeStatusRequest request) {
+        if (request == null || request.status() == null) {
+            rentalService.updateToNextStatus(rentalId);
+        } else {
+            rentalService.updateRentalStatus(rentalId, request);
+        }
         return "redirect:/rentals";
     }
 }

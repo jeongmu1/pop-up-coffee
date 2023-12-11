@@ -83,6 +83,7 @@
           <th>예약금</th>
           <th>공간번호</th>
           <th>상태</th>
+          <th>다음 상태로</th>
         </tr>
         </thead>
         <tbody>
@@ -96,15 +97,21 @@
           <td th:text="${rental.rentalFee}"></td>
           <td th:text="${rental.space}"></td>
           <td style="width: 200px">
-            <form th:action="@{/rentals/status}" th:method="patch">
-              <input type="hidden" name="rentalId" th:value="${rental.id}">
+            <form th:action="@{/rentals/{rentalId}/status(rentalId=${rental.id})}"
+                  th:method="patch">
               <label>
                 <select id="status" name="status">
                   <option th:each="status : ${statuses}" th:text="${status.message}"
-                          th:value="${status.name}" th:selected="${rental.status == status.message}"></option>
+                          th:value="${status.name}"
+                          th:selected="${rental.status == status.message}"></option>
                 </select>
               </label>
               <input type="submit" style="all: revert;">
+            </form>
+          </td>
+          <td>
+            <form th:action="@{/rentals/{rentalId}/status(rentalId=${rental.id})}" th:method="patch">
+              <input type="submit" style="all: revert">
             </form>
           </td>
         </tr>
