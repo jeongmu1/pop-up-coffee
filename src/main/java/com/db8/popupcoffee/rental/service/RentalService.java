@@ -8,6 +8,7 @@ import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.rental.domain.SpaceRentalStatus;
 import com.db8.popupcoffee.rental.repository.SpaceRentalAgreementRepository;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
+import com.db8.popupcoffee.reservation.domain.FixedReservationStatus;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.settlement.service.SettlementService;
 import com.db8.popupcoffee.space.repository.SpaceRepository;
@@ -45,9 +46,11 @@ public class RentalService {
     public void createSpaceRental(SpaceRentalRequest request) {
         FixedReservation fixedReservation = fixedReservationRepository.findById(
             request.fixedReservationId()).orElseThrow();
-        spaceRentalAgreementRepository.save(SpaceRentalAgreement.of(fixedReservation,
+        var rental = spaceRentalAgreementRepository.save(SpaceRentalAgreement.of(fixedReservation,
             feeCalculator.calculateRentalFee(fixedReservation.getStartDate(),
                 fixedReservation.getEndDate())));
+        fixedReservation.setSpaceRentalAgreement(rental);
+        fixedReservation.setStatus(FixedReservationStatus.FIXED);
     }
 
     @Transactional

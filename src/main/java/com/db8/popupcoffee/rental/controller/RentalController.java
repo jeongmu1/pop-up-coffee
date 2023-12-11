@@ -37,7 +37,7 @@ public class RentalController {
     @PostMapping
     public String createSpaceRental(SpaceRentalRequest spaceRentalRequest) {
         rentalService.createSpaceRental(spaceRentalRequest);
-        return "redirect:/rentals";
+        return "redirect:/reservations/fixed/not-rented";
     }
 
     @PatchMapping("/{rentalId}/status")

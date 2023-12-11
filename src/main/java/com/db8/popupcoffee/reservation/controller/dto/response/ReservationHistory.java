@@ -15,6 +15,8 @@ public record ReservationHistory(
     LocalDate rentalEndDate,
     boolean charged,
     String space, // null 시 배정 중
+    String merchant,
+    String businessType,
 
     // 유동 예약 관련
     boolean flexible,
@@ -26,13 +28,16 @@ public record ReservationHistory(
         return ReservationHistory.builder()
             .id(fixedReservation.getId())
             .reservedDate(fixedReservation.getCreatedAt().toLocalDate())
-            .status(fixedReservation.getStatus().name())
+            .status(fixedReservation.getStatus().getMessage())
             .rentalStartDate(fixedReservation.getStartDate())
             .rentalEndDate(fixedReservation.getEndDate())
             .charged(true)
             .space(fixedReservation.getTemporalSpace() == null ? null
                 : fixedReservation.getTemporalSpace().getNumber())
             .flexible(false)
+            .merchant(fixedReservation.getMerchantContract().getMerchant().getName())
+            .businessType(fixedReservation.getMerchantContract().getMerchant().getBusinessType()
+                .getName())
             .build();
     }
 
@@ -43,7 +48,10 @@ public record ReservationHistory(
             .status(flexibleReservation.getStatus().name())
             .flexible(true)
             .availableStartDate(flexibleReservation.getAvailabilityStartDate())
-            .availableEndDate(flexibleReservation.getAvailabilityEndDate());
+            .availableEndDate(flexibleReservation.getAvailabilityEndDate())
+            .merchant(flexibleReservation.getMerchantContract().getMerchant().getName())
+            .businessType(flexibleReservation.getMerchantContract().getMerchant().getBusinessType()
+                .getName());
 
         FlexibleReservationStatus status = flexibleReservation.getStatus();
 
