@@ -18,7 +18,7 @@
         <a href="/menu" class ="menu">MENU</a>
         <a href="/store" class ="menu">STORE</a>
         <a href="/community" class ="menu">COMMUNITY</a>
-        <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
+        <a th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
 
       </div>
       <div class ="right">
@@ -27,7 +27,6 @@
       </div>
       <div>
         <!--다음 등급 까지 ???점 남았습니다 표시-->
-        <canvas id="myChart"></canvas>
       </div>
     </div>
   </nav>
@@ -71,6 +70,7 @@
   </div>
 
  <!--차트 통계 관리 여기에서 부터 구현할거임.-->
+  <canvas id="myChart"></canvas>
 
 </main>
 <footer>
