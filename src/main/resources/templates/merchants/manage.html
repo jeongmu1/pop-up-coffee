@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>FLIP COFFEE</title>
     <link rel="stylesheet" th:href="@{/css/merchantsRegistration.css}">
-    <link rel="stylesheet" th:href="@{/css/myPage.css}">
+    <link rel="stylesheet" th:href="@{/css/merchantsManage.css}">
 </head>
 <body data-grade-score="${myPageResponse.merchant.gradeScore}">
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -67,8 +67,22 @@
             <li><a href="#" class="small">설문 관리</a></li>
         </ul>
     </div>
+    <span>신청 현황</span>
+    <table id="application-status">
+        <tr>
+            <th>자리번호</th>
+            <th>대여기간</th>
+            <th>신청상태</th>
+        </tr>
+        <tr class="historyCell" style="overflow: scroll; height: auto;">
+            <td>히스토리 자리 테스트</td>
+            <td>대여 시작일 ~ 대여 종료일</td>
+            <td>대기중</td>
+        </tr>
+
+    </table>
     <div class="container_mypage">
-        <h2 th:text="${myPageResponse.merchant.name} + ' 페이지'"></h2>
+        <h2 th:text="${myPageResponse.merchant.name}"></h2>
         <div class="profile_section">
             <div class="profile">
                 <img src="/css/static.image/profile.png" alt="Profile Picture">
@@ -79,12 +93,6 @@
                     <img th:if="${myPageResponse.merchant.gradeScore >= 250 && myPageResponse.merchant.gradeScore < 500}" src="/css/static.image/green_grade.png" alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
                     <img th:if="${myPageResponse.merchant.gradeScore >= 500 && myPageResponse.merchant.gradeScore < 1000}" src="/css/static.image/purple_grade.png" alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
                     <img th:if="${myPageResponse.merchant.gradeScore >= 1000}" src="/css/static.image/yellow_grade.png" alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
-
-                    <progress id="progressBar" th:class="progress-bar"
-                              th:value="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.merchant().getGradeScore() - myPageResponse.currentGradeMinScore()}"
-                              th:max="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.nextGradeMinScore - myPageResponse.currentGradeMinScore()}"></progress>
-
-                    <p th:text="'다음 등급까지 남은 점수 : ' + ${myPageResponse.scoreForNextGrade()}" style="font-size: 10px; color: black; margin-left: 10px;"></p>
 
                 </div>
                 <p th:text="'업종 : ' + ${myPageResponse.merchant.businessType.name}" style="font-size: 20px; color: black;"></p>
@@ -97,54 +105,10 @@
                 <td th:text="'경고 횟수: ' + ${myPageResponse.merchant.warningCount}"></td>
                 <td th:text="'블랙 여부: ' + (${myPageResponse.merchant.blacklist} ? 'O' : 'X')"></td>
                 <td th:text="'공간 대여 횟수: ' + ${myPageResponse.merchant.rentCount}"></td>
-                <td>
-                    <div class="inquiry-box">
-                        <a href="<!-- 경고/블랙 문의하기 링크 -->">경고/블랙<br>문의하기</a>
-                    </div>
-                </td>
             </tr>
         </table>
-        <span>신청 현황</span>
-        <table id="application-status">
-            <tr>
-                <th>자리번호</th>
-                <th>대여기간</th>
-                <th>신청상태</th>
-            </tr>
-            <tr class="historyCell" style="overflow: scroll; height: auto;">
-                <td>히스토리 자리 테스트</td>
-                <td>대여 시작일 ~ 대여 종료일</td>
-                <td>대기중</td>
-            </tr>
-
-        </table>
-
-
 
     </div>
-
-    <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function () {
-            window.onload = function() {
-                let gradeScore = $.parseJSON('[[ ${myPageResponse.merchant.gradeScore} ]]');
-                let progressBar = document.getElementById('progressBar');
-
-                console.log(gradeScore);
-
-                if (gradeScore < 250) {
-                    progressBar.classList.add('white-grade');
-                } else if (gradeScore >= 250 && gradeScore < 500) {
-                    progressBar.classList.add('green-grade');
-                } else if (gradeScore >= 500 && gradeScore < 1000) {
-                    progressBar.classList.add('purple-grade');
-                    console.log('progressBar : ' + progressBar.style);
-                } else if (gradeScore >= 1000) {
-                    progressBar.classList.add('yellow-grade');
-                }
-            };
-        })
-
-    </script>
 
 </main>
 <footer>
