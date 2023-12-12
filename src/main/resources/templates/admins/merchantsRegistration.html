@@ -65,41 +65,33 @@
       <li><a href="#" class="small">설문 관리</a></li>
     </ul>
   </div>
-  <div class="container"> <!--업체 정보 등록-->
+  <div class="real-container"> <!--업체 정보 등록-->
     <form th:action="@{/merchants}" method="post">
       <div class="form-group">
         <h1>업체 등록</h1>
-        <ul>
-          <li>
+
             <label for="name">업체명</label>
-            <input type="text" id="name" name="name">
-          </li>
-          <li>
+            <input type="text" id="name" name="name"><br>
+
             <label for="address">주소</label>
-            <input type="text" id="address" name="address">
-          </li>
-          <li>
+            <input type="text" id="address" name="address"><br>
+
             <label for="businessTypeId">업종명</label>
             <select id="businessTypeId" name="businessTypeId">
-              <option th:each="businessType : ${businessTypes}" th:value="${businessType.id}" th:text="${businessType.name}"></option>
+              <option th:each="businessType : ${businessTypes}" th:value="${businessType.id}" th:text="${businessType.name}"></option><br>
             </select>
-          </li>
-          <li>
+
             <label for="contactPhone">연락처</label>
-            <input type="tel" id="contactPhone" name="contactPhone">
-          </li>
-          <li>
+            <input type="tel" id="contactPhone" name="contactPhone"><br>
+
             <label for="username">이름</label>
-            <input type="text" id="username" name="username">
-          </li>
-          <li>
+            <input type="text" id="username" name="username"><br>
+
             <label for="password">비밀번호</label>
-            <input type="password" id="password" name="password">
-          </li>
-          <li>
+            <input type="password" id="password" name="password"><br>
+
             <button type="submit">등록</button>
-          </li>
-        </ul>
+
       </div>
     </form>
   </div>

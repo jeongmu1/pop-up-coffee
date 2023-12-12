@@ -55,6 +55,40 @@ a{
     padding-top: 17px;
 }
 /* ------------------------------ */
+.real-container {
+    width: 20%;
+    margin: auto;
+    padding-top: 2em;
+}
+.form-group h1 {
+    text-align: center;
+    color: #333;
+}
+label {
+    display: block;
+    margin-top: 1em;
+}
+input[type="text"], input[type="tel"], input[type="password"], select {
+    width: 100%;
+    padding: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 1em;
+    margin-top: 2em;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
 .main {
     display: flex;
     flex-direction: row;
