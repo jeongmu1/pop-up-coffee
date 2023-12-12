@@ -8,6 +8,7 @@ import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.repository.FlexibleReservationRepository;
 import com.db8.popupcoffee.space.controller.dto.request.UnAssignmentRequest;
+import com.db8.popupcoffee.space.controller.dto.response.SpaceInfo;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceReservations;
 import com.db8.popupcoffee.space.domain.Space;
 import com.db8.popupcoffee.space.repository.SpaceRepository;
@@ -26,6 +27,10 @@ public class SpaceService {
     private final SpaceRepository spaceRepository;
     private final FixedReservationRepository fixedReservationRepository;
     private final FlexibleReservationRepository flexibleReservationRepository;
+
+    public List<SpaceInfo> findAllSpaces() {
+        return spaceRepository.findAll().stream().map(SpaceInfo::from).toList();
+    }
 
     @Transactional(readOnly = true)
     public List<SpaceReservations> getReservationInfosOfSpaces() {
