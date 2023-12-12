@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>FLIP COFFEE</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/css/script/surveyChart.js"></script>
   <link rel="stylesheet" th:href="@{/css/surveyStats.css}">
+
 </head>
 <body>
 <header class="header">
@@ -24,6 +27,7 @@
       </div>
       <div>
         <!--다음 등급 까지 ???점 남았습니다 표시-->
+        <canvas id="myChart"></canvas>
       </div>
     </div>
   </nav>
@@ -65,6 +69,9 @@
       <li><a href="#" class="small">설문 관리</a></li>
     </ul>
   </div>
+
+ <!--차트 통계 관리 여기에서 부터 구현할거임.-->
+
 </main>
 <footer>
   <div class="footer-container">
