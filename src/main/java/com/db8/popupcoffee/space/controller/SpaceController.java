@@ -1,10 +1,12 @@
 package com.db8.popupcoffee.space.controller;
 
 import com.db8.popupcoffee.reservation.service.ReservationService;
+import com.db8.popupcoffee.space.controller.dto.request.UnAssignmentRequest;
 import com.db8.popupcoffee.space.service.SpaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,5 +24,11 @@ public class SpaceController {
             reservationService.findNonFixedFlexibleRepositories());
         model.addAttribute("spaceInfos", spaceService.getReservationInfosOfSpaces());
         return "spaces/assignment";
+    }
+
+    @DeleteMapping("/assignment")
+    public String unAssignReservation(UnAssignmentRequest request) {
+        spaceService.unAssignSpace(request);
+        return "redirect:/spaces/assignment";
     }
 }

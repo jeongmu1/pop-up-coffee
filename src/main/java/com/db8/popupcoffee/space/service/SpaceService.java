@@ -2,10 +2,12 @@ package com.db8.popupcoffee.space.service;
 
 import com.db8.popupcoffee.reservation.controller.dto.response.SimpleReservationInfo;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
+import com.db8.popupcoffee.reservation.domain.FixedReservationStatus;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.repository.FlexibleReservationRepository;
+import com.db8.popupcoffee.space.controller.dto.request.UnAssignmentRequest;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceReservations;
 import com.db8.popupcoffee.space.domain.Space;
 import com.db8.popupcoffee.space.repository.SpaceRepository;
@@ -46,5 +48,36 @@ public class SpaceService {
                 Stream.concat(fixedInfos.stream(), flexibleInfos.stream()).sorted(
                     Comparator.comparing(SimpleReservationInfo::endDate)).toList());
         }).toList();
+    }
+
+    @Transactional
+    public void unAssignSpace(UnAssignmentRequest request) {
+        if (request.fromFlexible()) {
+            unAssignFlexibleReservation(request.id());
+        } else {
+            unAssignFixedReservation(request.id());
+        }
+    }
+
+    private void unAssignFlexibleReservation(Long id) {
+        FlexibleReservation flexible = flexibleReservationRepository.findById(id).orElseThrow();
+
+        if (flexible.getStatus().equals(FlexibleReservationStatus.RESERVATION_FIXED)) {
+            throw new IllegalArgumentException("이미 확정되었습니다.");
+        }
+
+        flexible.setTemporalSpace(null);
+        flexible.setStatus(FlexibleReservationStatus.WAITING);
+    }
+
+    private void unAssignFixedReservation(Long id) {
+        FixedReservation fixed = fixedReservationRepository.findById(id).orElseThrow();
+
+        if (fixed.getStatus().equals(FixedReservationStatus.FIXED)) {
+            throw new IllegalArgumentException("이미 확정되었습니다.");
+        }
+
+        fixed.setTemporalSpace(null);
+        fixed.setStatus(FixedReservationStatus.SPACE_AWAITING);
     }
 }
