@@ -31,7 +31,7 @@ public class SpaceController {
         model.addAttribute("nonFixedFlexibles",
             reservationService.findNonFixedFlexibleRepositories());
         model.addAttribute("spaceInfos", spaceService.getReservationInfosOfSpaces());
-        return "spaces/assignment";
+        return "admins/spaceManagement";
     }
 
     @DeleteMapping("/assignment")

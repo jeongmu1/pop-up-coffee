@@ -43,10 +43,10 @@ public class SpaceService {
         return spaces.stream().map(space ->
         {
             var fixedInfos = fixedReservations.stream()
-                .filter(it -> it.getTemporalSpace().equals(space))
+                .filter(it -> it.getTemporalSpace() != null && it.getTemporalSpace().equals(space))
                 .map(SimpleReservationInfo::from).toList();
             var flexibleInfos = flexibleReservations.stream()
-                .filter(it -> it.getTemporalSpace().equals(space))
+                .filter(it -> it.getTemporalSpace() != null && it.getTemporalSpace().equals(space))
                 .map(SimpleReservationInfo::from).toList();
 
             return new SpaceReservations(space.getNumber(),
