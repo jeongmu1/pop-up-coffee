@@ -110,6 +110,7 @@ public class SurveyController {
     @GetMapping("/{surveyId}/pie-chart")
     public String showPieChart(@PathVariable Long surveyId, Model model) {
         model.addAttribute("surveyItems", surveyService.findSurveyItems(surveyId));
+        model.addAttribute("currentSurveyId", surveyId);
         return "admins/surveyStats";
     }
 }
