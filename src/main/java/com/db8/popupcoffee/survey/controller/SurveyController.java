@@ -71,6 +71,10 @@ public class SurveyController {
 
     @GetMapping("/{surveyId}")
     public String showSurvey(@PathVariable Long surveyId, Model model, HttpSession session) {
+        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
+        if(sessionInfo == null) {
+            return "redirect:/merchants/login";
+        }
         Survey survey = surveyService.getSurvey(surveyId);
         List<Integer> selectedItemCounts = surveyService.countSelectedItems(survey);
 
@@ -91,7 +95,7 @@ public class SurveyController {
         surveyService.submitResponse(surveyId, sessionInfo.id(), form);
         memberService.increasePointAndSetLastSurveyed(sessionInfo.id());
 
-        return "";
+        return "home";
     }
 
 
