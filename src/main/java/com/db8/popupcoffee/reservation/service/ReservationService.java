@@ -63,7 +63,7 @@ public class ReservationService {
             throw new IllegalArgumentException("해당 날짜에 예약 가능한 공간이 없습니다.");
         }
         var fixed = fixedReservationRepository.save(dto.toEntity(contract, businessType,
-            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate()),
+            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate(), Grade.from(contract.getMerchant().getGradeScore())),
             feeCalculator.calculateRentalDeposit(dto.startDate(), dto.endDate())));
         rentalService.createSpaceRental(fixed, availableSpaces.stream().findFirst().orElseThrow());
     }
@@ -83,7 +83,7 @@ public class ReservationService {
     public FeeInfo getFeeInfo(FixedDatesInfoDto dto) {
         Merchant merchant = merchantRepository.findById(dto.merchantId()).orElseThrow();
         int gradeScore = merchant.getGradeScore();
-        long fee = feeCalculator.calculateRentalFee(dto.start(), dto.end());
+        long fee = feeCalculator.calculateRentalFee(dto.start(), dto.end(), Grade.from(gradeScore));
         return new FeeInfo(fee, Grade.from(gradeScore).getDaysForNextGrade(gradeScore));
     }
 
@@ -146,7 +146,7 @@ public class ReservationService {
                 "해당 예약 상태에서는 결제를 진행할 수 없습니다 : " + flexible.getStatus().name());
         }
         long rentalFee = feeCalculator.calculateRentalFee(flexible.getTemporalRentalStartDate(),
-            flexible.getTemporalRentalEndDate());
+            flexible.getTemporalRentalEndDate(), Grade.from(flexible.getMerchantContract().getMerchant().getGradeScore()));
         long rentalDeposit = feeCalculator.calculateRentalDeposit(
             flexible.getTemporalRentalStartDate(), flexible.getTemporalRentalEndDate());
         var fixed = fixedReservationRepository.save(

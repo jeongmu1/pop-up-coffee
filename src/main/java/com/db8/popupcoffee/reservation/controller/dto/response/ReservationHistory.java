@@ -1,6 +1,7 @@
 package com.db8.popupcoffee.reservation.controller.dto.response;
 
 import com.db8.popupcoffee.global.util.FeeCalculator;
+import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.reservation.domain.DesiredDate;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
@@ -66,9 +67,10 @@ public record ReservationHistory(
             .merchant(flexibleReservation.getMerchantContract().getMerchant().getName())
             .businessType(flexibleReservation.getMerchantContract().getMerchant().getBusinessType()
                 .getName())
-                .duration(flexibleReservation.getDuration())
-                .deadline(flexibleReservation.getDeadline())
-                .desiredDates(flexibleReservation.getDesiredDates().stream().map(DesiredDate::getDate).toList())
+            .duration(flexibleReservation.getDuration())
+            .deadline(flexibleReservation.getDeadline())
+            .desiredDates(
+                flexibleReservation.getDesiredDates().stream().map(DesiredDate::getDate).toList())
             .charged(false);
 
         FlexibleReservationStatus status = flexibleReservation.getStatus();
@@ -78,7 +80,8 @@ public record ReservationHistory(
                     flexibleReservation.getTemporalRentalEndDate()))
                 .rentalFee(feeCalculator.calculateRentalFee(
                     flexibleReservation.getTemporalRentalStartDate(),
-                    flexibleReservation.getTemporalRentalEndDate()))
+                    flexibleReservation.getTemporalRentalEndDate(), Grade.from(
+                        flexibleReservation.getMerchantContract().getMerchant().getGradeScore())))
                 .space(flexibleReservation.getTemporalSpace().getNumber())
                 .rentalStartDate(flexibleReservation.getTemporalRentalStartDate())
                 .rentalEndDate(flexibleReservation.getTemporalRentalEndDate());

@@ -1,5 +1,6 @@
 package com.db8.popupcoffee.global.util;
 
+import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.seasonality.repository.DateInfoRepository;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -12,11 +13,11 @@ public class FeeCalculator {
 
     private final DateInfoRepository dateInfoRepository;
 
-    public long calculateRentalFee(LocalDate startDate, LocalDate endDate) {
-        return dateInfoRepository.findByDateBetween(startDate, endDate)
+    public long calculateRentalFee(LocalDate startDate, LocalDate endDate, Grade grade) {
+        return (long) (dateInfoRepository.findByDateBetween(startDate, endDate)
             .stream()
             .mapToLong(info -> info.getSeasonalityLevel().calculateDailyFee(info.isHoliday()))
-            .sum();
+            .sum() * (100 - grade.getDiscountPercentage()) / 100);
     }
 
     public long calculateRentalDeposit(LocalDate startDate, LocalDate endDate) {
