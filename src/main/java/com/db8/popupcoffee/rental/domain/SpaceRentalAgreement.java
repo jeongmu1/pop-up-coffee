@@ -20,7 +20,6 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +101,7 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
         this.rentalStatus = rentalStatus;
     }
 
-    public static SpaceRentalAgreement of(FixedReservation fixedReservation, long rentalFee) {
+    public static SpaceRentalAgreement of(FixedReservation fixedReservation, long rentalFee, Space space) {
         long durationDays = ChronoUnit.DAYS.between(fixedReservation.getStartDate(), fixedReservation.getEndDate());
         long deposit = durationDays * DEPOSIT_PER_DAY;
         return SpaceRentalAgreement.builder()
@@ -116,7 +115,7 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
             .rentalDuration(
                 new Duration(fixedReservation.getStartDate(), fixedReservation.getEndDate()))
             .creditCard(fixedReservation.getCreditCard())
-            .space(fixedReservation.getTemporalSpace())
+            .space(space)
             .rentalStatus(SpaceRentalStatus.BEFORE_USE)
             .build();
     }

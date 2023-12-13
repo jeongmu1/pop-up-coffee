@@ -2,15 +2,14 @@ package com.db8.popupcoffee.rental.service;
 
 import com.db8.popupcoffee.global.util.FeeCalculator;
 import com.db8.popupcoffee.rental.controller.dto.request.ChangeStatusRequest;
-import com.db8.popupcoffee.rental.controller.dto.request.SpaceRentalRequest;
 import com.db8.popupcoffee.rental.controller.dto.response.SimpleRentalInfo;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.rental.domain.SpaceRentalStatus;
 import com.db8.popupcoffee.rental.repository.SpaceRentalAgreementRepository;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
 import com.db8.popupcoffee.reservation.domain.FixedReservationStatus;
-import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.settlement.service.SettlementService;
+import com.db8.popupcoffee.space.domain.Space;
 import com.db8.popupcoffee.space.repository.SpaceRepository;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RentalService {
 
     private final SpaceRentalAgreementRepository spaceRentalAgreementRepository;
-    private final FixedReservationRepository fixedReservationRepository;
     private final SpaceRepository spaceRepository;
     private final FeeCalculator feeCalculator;
     private final SettlementService settlementService;
@@ -42,13 +40,10 @@ public class RentalService {
             - spaceRentalAgreementRepository.countBySpecificDate(date);
     }
 
-    @Transactional
-    public void createSpaceRental(SpaceRentalRequest request) {
-        FixedReservation fixedReservation = fixedReservationRepository.findById(
-            request.fixedReservationId()).orElseThrow();
+    public void createSpaceRental(FixedReservation fixedReservation, Space space) {
         var rental = spaceRentalAgreementRepository.save(SpaceRentalAgreement.of(fixedReservation,
             feeCalculator.calculateRentalFee(fixedReservation.getStartDate(),
-                fixedReservation.getEndDate())));
+                fixedReservation.getEndDate()), space));
         fixedReservation.setSpaceRentalAgreement(rental);
         fixedReservation.setStatus(FixedReservationStatus.FIXED);
     }

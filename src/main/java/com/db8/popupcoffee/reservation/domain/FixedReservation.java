@@ -5,7 +5,6 @@ import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
-import com.db8.popupcoffee.space.domain.Space;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embedded;
@@ -54,11 +53,6 @@ public class FixedReservation extends BaseTimeEntity {
     @Column(nullable = false)
     private long paymentAmount;
 
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Space temporalSpace;
-
     @Column(nullable = false)
     private boolean fromFlexibleReservation = false;
 
@@ -77,8 +71,7 @@ public class FixedReservation extends BaseTimeEntity {
         LocalDate endDate,
         long paymentAmount,
         CreditCard creditCard,
-        BusinessType businessType,
-        Space temporalSpace
+        BusinessType businessType
     ) {
         this.merchantContract = merchantContract;
         this.startDate = startDate;
@@ -86,6 +79,5 @@ public class FixedReservation extends BaseTimeEntity {
         this.paymentAmount = paymentAmount;
         this.creditCard = creditCard;
         this.businessType = businessType;
-        this.temporalSpace = temporalSpace;
     }
 }

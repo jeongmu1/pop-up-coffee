@@ -1,7 +1,6 @@
 package com.db8.popupcoffee.rental.controller;
 
 import com.db8.popupcoffee.rental.controller.dto.request.ChangeStatusRequest;
-import com.db8.popupcoffee.rental.controller.dto.request.SpaceRentalRequest;
 import com.db8.popupcoffee.rental.domain.SpaceRentalStatus;
 import com.db8.popupcoffee.rental.service.RentalService;
 import java.util.Arrays;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -32,12 +30,6 @@ public class RentalController {
     public String getRentalInfos(Model model) {
         model.addAttribute("rentals", rentalService.findRentalInfos());
         return "rentals/info";
-    }
-
-    @PostMapping
-    public String createSpaceRental(SpaceRentalRequest spaceRentalRequest) {
-        rentalService.createSpaceRental(spaceRentalRequest);
-        return "redirect:/reservations/fixed/not-rented";
     }
 
     @PatchMapping("/{rentalId}/status")

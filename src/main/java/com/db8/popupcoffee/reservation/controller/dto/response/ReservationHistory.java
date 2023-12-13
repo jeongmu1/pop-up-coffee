@@ -1,5 +1,6 @@
 package com.db8.popupcoffee.reservation.controller.dto.response;
 
+import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
@@ -25,6 +26,7 @@ public record ReservationHistory(
 ) {
 
     public static ReservationHistory from(FixedReservation fixedReservation) {
+        SpaceRentalAgreement rental = fixedReservation.getSpaceRentalAgreement();
         return ReservationHistory.builder()
             .id(fixedReservation.getId())
             .reservedDate(fixedReservation.getCreatedAt().toLocalDate())
@@ -32,8 +34,7 @@ public record ReservationHistory(
             .rentalStartDate(fixedReservation.getStartDate())
             .rentalEndDate(fixedReservation.getEndDate())
             .charged(true)
-            .space(fixedReservation.getTemporalSpace() == null ? null
-                : fixedReservation.getTemporalSpace().getNumber())
+            .space(rental != null ? rental.getSpace().getNumber() : null)
             .flexible(false)
             .merchant(fixedReservation.getMerchantContract().getMerchant().getName())
             .businessType(fixedReservation.getMerchantContract().getMerchant().getBusinessType()
@@ -51,19 +52,20 @@ public record ReservationHistory(
             .availableEndDate(flexibleReservation.getAvailabilityEndDate())
             .merchant(flexibleReservation.getMerchantContract().getMerchant().getName())
             .businessType(flexibleReservation.getMerchantContract().getMerchant().getBusinessType()
-                .getName());
+                .getName())
+            .charged(false);
 
         FlexibleReservationStatus status = flexibleReservation.getStatus();
 
-        if (status.equals(FlexibleReservationStatus.RESERVATION_FIXED) || status.equals(
-            FlexibleReservationStatus.SPACE_FIXED)
+        if (status.equals(FlexibleReservationStatus.RESERVATION_FIXED)
             && flexibleReservation.getFixedReservation() != null) {
 
             FixedReservation fixedReservation = flexibleReservation.getFixedReservation();
+            SpaceRentalAgreement rental = fixedReservation.getSpaceRentalAgreement();
             historyBuilder.rentalStartDate(fixedReservation.getStartDate())
                 .rentalEndDate(fixedReservation.getEndDate())
-                .charged(status.equals(FlexibleReservationStatus.RESERVATION_FIXED))
-                .space(fixedReservation.getTemporalSpace().getNumber());
+                .charged(true)
+                .space(rental.getSpace().getNumber());
         }
 
         return historyBuilder.build();

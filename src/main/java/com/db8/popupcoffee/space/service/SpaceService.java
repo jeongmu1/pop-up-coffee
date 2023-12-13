@@ -49,7 +49,8 @@ public class SpaceService {
         return spaces.stream().map(space ->
         {
             var fixedInfos = fixedReservations.stream()
-                .filter(it -> it.getTemporalSpace() != null && it.getTemporalSpace().equals(space))
+                .filter(it -> it.getSpaceRentalAgreement() != null && it.getSpaceRentalAgreement()
+                    .getSpace().equals(space))
                 .map(SimpleReservationInfo::from).toList();
             var flexibleInfos = flexibleReservations.stream()
                 .filter(it -> it.getTemporalSpace() != null && it.getTemporalSpace().equals(space))
@@ -87,7 +88,6 @@ public class SpaceService {
             flexible.setTemporalSpace(space);
         } else {
             var fixed = fixedReservationRepository.findById(request.id()).orElseThrow();
-            fixed.setTemporalSpace(space);
             fixed.setStartDate(request.startDate());
             fixed.setEndDate(request.endDate());
 
@@ -95,12 +95,6 @@ public class SpaceService {
             rental.setSpace(space);
             rental.setRentalDuration(new Duration(request.startDate(), request.endDate()));
         }
-    }
-
-    @Transactional(readOnly = true)
-    public List<SpaceInfo> findAvailableSpaceInfos(LocalDate startDate, LocalDate endDate) {
-        return spaceRepository.findAvailableSpaces(startDate, endDate).stream().map(SpaceInfo::from)
-            .toList();
     }
 
     @Transactional(readOnly = true)
@@ -121,10 +115,7 @@ public class SpaceService {
 
     private void unAssignFixedReservation(Long id) {
         FixedReservation fixed = fixedReservationRepository.findById(id).orElseThrow();
-
-        fixed.setTemporalSpace(null);
         fixed.setStatus(FixedReservationStatus.CANCELED);
-
         spaceRentalAgreementRepository.delete(fixed.getSpaceRentalAgreement());
     }
 }

@@ -8,7 +8,6 @@ import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
-import com.db8.popupcoffee.rental.controller.dto.request.SpaceRentalRequest;
 import com.db8.popupcoffee.rental.service.RentalService;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
@@ -30,11 +29,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
 
     private final FixedReservationRepository fixedReservationRepository;
@@ -58,9 +59,8 @@ public class ReservationService {
             throw new IllegalArgumentException("해당 날짜에 예약 가능한 공간이 없습니다.");
         }
         var fixed = fixedReservationRepository.save(dto.toEntity(contract, businessType,
-            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate()),
-            availableSpaces.stream().findFirst().orElseThrow()));
-        rentalService.createSpaceRental(new SpaceRentalRequest(fixed.getId()));
+            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate())));
+        rentalService.createSpaceRental(fixed, availableSpaces.stream().findFirst().orElseThrow());
     }
 
     @Transactional
@@ -110,14 +110,13 @@ public class ReservationService {
 
     @Transactional
     public void updateStatusToSpaceFixed(ReservationIdDto dto) {
-        if (dto.fromFlexible()) {
-            var flexible = flexibleReservationRepository.findById(dto.id()).orElseThrow();
-            flexible.setStatus(FlexibleReservationStatus.SPACE_FIXED);
-        } else {
-            var fixed = fixedReservationRepository.findById(dto.id()).orElseThrow();
-            fixed.setStatus(FixedReservationStatus.FIXED);
-            rentalService.createSpaceRental(new SpaceRentalRequest(fixed.getId()));
+        if (!dto.fromFlexible()) {
+            log.info("고정 예약의 상태 변경 요청");
+            throw new IllegalArgumentException("고정 예약의 상태는 이미 확정 또는 취소입니다.");
         }
+
+        var flexible = flexibleReservationRepository.findById(dto.id()).orElseThrow();
+        flexible.setStatus(FlexibleReservationStatus.SPACE_FIXED);
     }
 
     private MerchantContract findActivatedMerchantContract(long merchantId) {

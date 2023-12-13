@@ -1,7 +1,6 @@
 package com.db8.popupcoffee.space.repository.impl;
 
 import com.db8.popupcoffee.rental.domain.QSpaceRentalAgreement;
-import com.db8.popupcoffee.reservation.domain.QFixedReservation;
 import com.db8.popupcoffee.reservation.domain.QFlexibleReservation;
 import com.db8.popupcoffee.space.domain.QSpace;
 import com.db8.popupcoffee.space.domain.Space;
@@ -22,18 +21,11 @@ public class SpaceCustomRepositoryImpl implements SpaceCustomRepository {
     @Override
     public List<Space> findAvailableSpaces(LocalDate startDate, LocalDate endDate) {
         QSpace qSpace = QSpace.space;
-        QFixedReservation qFixedReservation = QFixedReservation.fixedReservation;
         QFlexibleReservation qFlexibleReservation = QFlexibleReservation.flexibleReservation;
         QSpaceRentalAgreement qSpaceRentalAgreement = QSpaceRentalAgreement.spaceRentalAgreement;
 
         // 공간을 예약한 목록을 가져오는 서브 쿼리
         List<Space> reservedSpaces = new ArrayList<>();
-        reservedSpaces.addAll(jpaQueryFactory
-            .select(qFixedReservation.temporalSpace)
-            .from(qFixedReservation)
-            .where(qFixedReservation.startDate.before(endDate)
-                .and(qFixedReservation.endDate.after(startDate)))
-            .fetch());
         reservedSpaces.addAll(jpaQueryFactory
             .select(qFlexibleReservation.temporalSpace)
             .from(qFlexibleReservation)
