@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>FLIP COFFEE</title>
-  <link rel="stylesheet" href="static/css/main.css">
+  <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 <header class="header">
@@ -29,12 +29,47 @@
   </nav>
 </header>
 <main class="main">
-<!--메인 화면 상단 이미지-->
+  <div class="sidebar">
+    <ul>
+      <li><a href="#" class="big">ABOUT US</a></li>
+      <li><a href="#" class="small">FLIP COFFEE IS</a></li>
+      <li><a href="#" class="small">BI</a></li>
+      <li><a href="#" class="small">오시는 길</a></li>
+      <li><a href="#" class="big">Menu</a></li>
+      <li><a href="#" class="small">NEW</a></li>
+      <li><a href="#" class="small">COFFEE</a></li>
+      <li><a href="#" class="small">CLOD BREW</a></li>
+      <li><a href="#" class="small">BEVERAGE</a></li>
+      <li><a href="#" class="small">FRAPRE</a></li>
+      <li><a href="#" class="small">ADE & MOJITO</a></li>
+      <li><a href="#" class="small">TEA & JUICE</a></li>
+      <li><a href="#" class="small">DESSSERT</a></li>
+      <li><a href="#" class="big">STORE</a></li>
+      <li><a href="#" class="small">확정예약</a></li>
+      <li><a href="#" class="small">유동예약</a></li>
+      <li><a href="#" class="small">신청 조회</a></li>
+      <li><a href="#" class="big">COMMUNITY</a></li>
+      <li><a href="#" class="small">공지 사항</a></li>
+      <li><a href="#" class="small">자주하는 질문</a></li>
+      <li><a href="#" class="small">고객 상담</a></li>
+      <li><a href="#" class="small">설문 조사</a></li>
+      <!-- 관리자가 로그인할 경우 생기는 부분-->
+      <li><a href="#" class="big">관리자</a></li>
+      <li><a href="#" class="small">공간 관리</a></li>
+      <li><a href="#" class="small">정책 관리</a></li>
+      <li><a href="#" class="small">경고 관리</a></li>
+      <li><a href="#" class="small">업체 관리</a></li>
+      <li><a href="#" class="small">성수기 지정</a></li>
+      <li><a href="#" class="small">통계 관리</a></li>
+      <li><a href="#" class="small">이의 신청 관리</a></li>
+      <li><a href="surveys/setting" class="small">설문 관리</a></li>
+    </ul>
+  </div>
   <div class="popup">
     <img src="static/css/static.image/popupscreen.jpg" alt="팝업 이미지." width=80% height="400">
   </div>
   <div class="rank">
-<!--    현재 월 데이터 필요 -->
+    <!--    현재 월 데이터 필요 -->
     <span>??월 매출 순위</span>
     <table>
       <tr id ="explain">

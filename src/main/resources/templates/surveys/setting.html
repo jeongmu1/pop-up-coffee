@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FLIP COFFEE</title>
-    <link rel="stylesheet" href="/css/surveySetting.css">
+    <link rel="stylesheet" th:href="@{/css/surveySetting.css}">
 </head>
 <body>
 <header class="header">
@@ -19,8 +19,8 @@
 
             </div>
             <div class ="right">
-                <a href="" class ="login">로그인</a>
-                <a href="" class ="mypage">마이페이지</a>
+                <a href="/merchants/login" class ="login">로그인</a>
+                <a href="/merchants/myPage" class ="mypage">마이페이지</a>
             </div>
             <div>
                 <!--다음 등급 까지 ???점 남았습니다 표시-->
@@ -59,11 +59,11 @@
             <li><a href="#" class="small">정책 관리</a></li>
             <li><a href="#" class="small">경고 관리</a></li>
             <li><a href="#" class="small">업체 관리</a></li>
-            <li><a href="#" class="small">성수기 지정</a></li>
+            <li><a href="/seasons/form" class="small">성수기 지정</a></li>
             <li><a href="#" class="small">통계 관리</a></li>
             <li><a href="#" class="small">정산 관리</a></li>
             <li><a href="#" class="small">이의 신청 관리</a></li>
-            <li><a href="#" class="small">설문 관리</a></li>
+            <li><a href="/surveys/setting" class="small">설문 관리</a></li>
         </ul>
     </div>
     <div>
