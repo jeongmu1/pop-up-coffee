@@ -132,7 +132,7 @@
             <form th:action="@{/reservations/flexible}" method="post">
                 <div class="oneLine">
                     <div class="option">
-                <select name="type" class="selectBox" style="width: 200px">
+                <select name="businessTypeId" class="selectBox" style="width: 200px">
                     <option>업종 선택</option>
                     <option th:each="businessType : ${businessTypes}" th:value="${businessType.id}" th:text="${businessType.name}"></option>
                 </select>
@@ -151,10 +151,10 @@
                 </div>
                 <span>필수 포함 날짜:</span>
                 <div id="items">
-                    <div class="item">
-                        <label for="date">날짜</label>
-                        <input type="date" id="date" name="desiredDates[0]">
-                    </div>
+<!--                    <div class="item">-->
+<!--                        <label for="date">날짜</label>-->
+<!--                        <input type="date" id="date" name="desiredDates[0]">-->
+<!--                    </div>-->
                 </div>
                 <button type="button" id="addItem">날짜 추가</button>
                 <input type="submit" value="예약하기">

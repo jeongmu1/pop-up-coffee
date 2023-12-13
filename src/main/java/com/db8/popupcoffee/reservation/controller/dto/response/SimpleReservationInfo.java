@@ -10,46 +10,49 @@ import lombok.Builder;
 
 @Builder
 public record SimpleReservationInfo(
-    LocalDate startDate,
-    LocalDate endDate,
-    String merchantName,
-    Long id,
-    String contactManager,
-    String contactPhone,
+        LocalDate startDate,
+        LocalDate endDate,
+        String merchantName,
+        Long id,
+        String contactManager,
+        String contactPhone,
 
-    // 유동 관련
-    boolean fromFlexible,
-    Boolean fixedDate, // null 시 Fixed
-    Long rentalDuration // null 시 무관n
+        // 유동 관련
+        boolean fromFlexible,
+        Boolean fixedDate, // null 시 Fixed
+        Long rentalDuration, // null 시 무관n,
+        String businessType
 ) {
 
     public static SimpleReservationInfo from(FlexibleReservation flexibleReservation) {
         FlexibleReservationStatus status = flexibleReservation.getStatus();
         var contact = flexibleReservation.getMerchantContract().getContact();
         return SimpleReservationInfo.builder()
-            .startDate(flexibleReservation.getTemporalRentalStartDate())
-            .endDate(flexibleReservation.getTemporalRentalEndDate())
-            .merchantName(flexibleReservation.getMerchantContract().getMerchant().getName())
-            .fromFlexible(true)
-            .fixedDate(status.equals(FlexibleReservationStatus.SPACE_FIXED) || status.equals(
-                FlexibleReservationStatus.RESERVATION_FIXED))
-            .rentalDuration(flexibleReservation.getDuration())
-            .id(flexibleReservation.getId())
-            .contactManager(contact.getContactManager())
-            .contactPhone(contact.getContactPhone())
-            .build();
+                .startDate(flexibleReservation.getTemporalRentalStartDate())
+                .endDate(flexibleReservation.getTemporalRentalEndDate())
+                .merchantName(flexibleReservation.getMerchantContract().getMerchant().getName())
+                .fromFlexible(true)
+                .fixedDate(status.equals(FlexibleReservationStatus.SPACE_FIXED) || status.equals(
+                        FlexibleReservationStatus.RESERVATION_FIXED))
+                .rentalDuration(flexibleReservation.getDuration())
+                .id(flexibleReservation.getId())
+                .contactManager(contact.getContactManager())
+                .contactPhone(contact.getContactPhone())
+                .businessType(flexibleReservation.getBusinessType().getName())
+                .build();
     }
 
     public static SimpleReservationInfo from(FixedReservation fixedReservation) {
         var contact = fixedReservation.getMerchantContract().getContact();
         return SimpleReservationInfo.builder()
-            .startDate(fixedReservation.getStartDate())
-            .endDate(fixedReservation.getEndDate())
-            .merchantName(fixedReservation.getMerchantContract().getMerchant().getName())
-            .fromFlexible(false)
-            .id(fixedReservation.getId())
-            .contactManager(contact.getContactManager())
-            .contactPhone(contact.getContactPhone())
-            .build();
+                .startDate(fixedReservation.getStartDate())
+                .endDate(fixedReservation.getEndDate())
+                .merchantName(fixedReservation.getMerchantContract().getMerchant().getName())
+                .fromFlexible(false)
+                .id(fixedReservation.getId())
+                .contactManager(contact.getContactManager())
+                .contactPhone(contact.getContactPhone())
+                .businessType(fixedReservation.getBusinessType().getName())
+                .build();
     }
 }

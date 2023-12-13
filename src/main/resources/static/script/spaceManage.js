@@ -51,6 +51,7 @@ am5.ready(function () {
                 forms: infos[i].reservations[j].fromFlexible,
                 picName: infos[i].reservations[j].contactManager,
                 picPhone: infos[i].reservations[j].contactPhone,
+                business : infos[i].reservations[j].businessType,
                 columnSettings: {
                     fill: am5.color(color)
                 }
@@ -107,7 +108,7 @@ am5.ready(function () {
     series.columns.template.setAll({
         templateField: "columnSettings",
         strokeOpacity: 0,
-        tooltipText: "업체명 : [bold]{task}:\n 대여 날짜 : [bold]{openValueX}[/] - [bold]{valueX}[/] \n 담당자명 : [bold]{picName} \n 담당자 전화번호 : [bold]{picPhone}\n"
+        tooltipText: "업체명 : [bold]{task}:\n 대여 날짜 : [bold]{openValueX}[/] - [bold]{valueX}[/] \n 담당자명 : [bold]{picName} \n 담당자 전화번호 : [bold]{picPhone}\n 업종 : [bold]{business}\n"
     });
 
     series.columns.template.events.on("click", function (ev) {
