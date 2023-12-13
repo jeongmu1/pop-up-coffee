@@ -1,6 +1,5 @@
 am5.ready(function () {
     // Create root element
-    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
     var root = am5.Root.new("chartdiv");
     root.dateFormatter.setAll({
         dateFormat: "yyyy-MM-dd",
@@ -8,13 +7,11 @@ am5.ready(function () {
     });
 
     // Set themes
-    // https://www.amcharts.com/docs/v5/concepts/themes/
     root.setThemes([
         am5themes_Animated.new(root)
     ]);
 
     // Create chart
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/
     var chart = root.container.children.push(am5xy.XYChart.new(root, {
         panX: false,
         panY: false,
@@ -25,7 +22,6 @@ am5.ready(function () {
     }));
 
     // Add legend
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
     var legend = chart.children.push(am5.Legend.new(root, {
         centerX: am5.p50,
         x: am5.p50
@@ -37,20 +33,34 @@ am5.ready(function () {
     let data = [];
     for (let i = 0; i < infos.length; i++) {
         for (let j = 0; j < infos[i].reservations.length; j++) {
-            // 주석 추가: 데이터의 날짜를 getTime() 메서드를 사용하여 변환
+            const flexibleColor = "#70d4ff";
+            const fixedColor = "#9eff62";
+            let color = "";
+
+            if (infos[i].reservations[j].fromFlexible) {
+                color = flexibleColor;
+            } else {
+                color = fixedColor;
+            }
             let object = {
                 category: infos[i].space,
                 start: new Date(infos[i].reservations[j].startDate).getTime(),
                 end: new Date(infos[i].reservations[j].endDate).getTime(),
                 task: infos[i].reservations[j].merchantName,
                 id: infos[i].reservations[j].id,
-                forms : infos[i].reservations[j].fromFlexible,
+                forms: infos[i].reservations[j].fromFlexible,
+                picName: infos[i].reservations[j].contactManager,
+                picPhone: infos[i].reservations[j].contactPhone,
+                columnSettings: {
+                    fill: am5.color(color)
+                }
             };
             data.push(object);
         }
     }
+    console.log(data)
+
     // Create axes
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
     var yRenderer = am5xy.AxisRendererY.new(root, {
         minorGridEnabled: true
     });
@@ -65,9 +75,7 @@ am5.ready(function () {
     );
 
     var categories = [];
-    // 데이터 배열 순회
     for (var i = 0; i < spaces.length; i++) {
-        // 주석 추가: 각 데이터에서 number 값을 추출하여 카테고리 배열에 추가
         categories.push({
             category: spaces[i].number
         });
@@ -87,7 +95,6 @@ am5.ready(function () {
     );
 
     // Add series
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
     var series = chart.series.push(am5xy.ColumnSeries.new(root, {
         xAxis: xAxis,
         yAxis: yAxis,
@@ -97,11 +104,10 @@ am5.ready(function () {
         sequencedInterpolation: true
     }));
 
-
     series.columns.template.setAll({
         templateField: "columnSettings",
         strokeOpacity: 0,
-        tooltipText: "{task}:\n[bold]{openValueX}[/] - [bold]{valueX}[/]"
+        tooltipText: "업체명 : [bold]{task}:\n 대여 날짜 : [bold]{openValueX}[/] - [bold]{valueX}[/] \n 담당자명 : [bold]{picName} \n 담당자 전화번호 : [bold]{picPhone}\n"
     });
 
     series.columns.template.events.on("click", function (ev) {
@@ -110,21 +116,15 @@ am5.ready(function () {
         let endDate = new Date(ev.target.dataItem.dataContext.end);
         let spaceNum = ev.target.dataItem.dataContext.category;
         let forms = ev.target.dataItem.dataContext.forms;
-        console.log(forms);
 
-        console.log(forms);
         let formattedStartDate = formatDate(startDate);
         let formattedEndDate = formatDate(endDate);
 
-        // 폼 필드에 값을 설정
         document.getElementById('company-number').value = id;
         document.getElementById('start-date').value = formattedStartDate;
         document.getElementById('end-date').value = formattedEndDate;
-        // document.getElementById('spaceNumber').value = spaceNum;
-        // document.getElementById('fromFlex').value = Boolean(forms);
         document.getElementById('hidden_company-number').value = id;
         document.getElementById('hidden_fromFlex').value = Boolean(forms);
-        // document.getElementById('hidden-from-flexible').value = Boolean(forms);
         document.getElementById('hidden-from-flexible').value = Boolean(forms);
         console.log(document.getElementById('hidden-from-flexible').value);
     });
@@ -136,27 +136,37 @@ am5.ready(function () {
 
         return year + '-' + month + '-' + day;
     }
+
     const table = document.getElementById('flexibleMerchant');
     const rows = table.getElementsByTagName('tr');
 
-    Array.from(rows).forEach((row,index) => {
-        row.addEventListener('click',() => {
+    Array.from(rows).forEach((row, index) => {
+        row.addEventListener('click', () => {
             const cells = row.getElementsByTagName('td');
             const companyName = cells[0].innerText;
+            const flexStartDate = cells[4].innerText;
+            const flexEndDate = cells[5].innerText;
 
             document.getElementById('flexible-company-number').value = companyName;
-            document.getElementById('hidden-from-flexible').value = Boolean(forms);
+            document.getElementById('flex-start-date').value = flexStartDate;
+            document.getElementById('flex-end-date').value = flexEndDate;
+
+
+            document.getElementById('hidden-flexible-company-number').value = companyName;
+            document.getElementById('hidden-flex-start-date').value = flexStartDate;
+            document.getElementById('hidden-flex-end-date').value = flexEndDate;
+
+            console.log(document.getElementById('flexible-company-number').value)
+            console.log(document.getElementById('hidden-flexible-company-number').value)
+
         });
     });
 
     series.data.setAll(data);
 
-    // Add scrollbars
     chart.set("scrollbarX", am5.Scrollbar.new(root, { orientation: "horizontal" }));
 
-    // Make stuff animate on load
-    // https://www.amcharts.com/docs/v5/concepts/animations/
     series.appear();
     chart.appear(1000, 100);
 
-}); // end am5.ready()
+});
