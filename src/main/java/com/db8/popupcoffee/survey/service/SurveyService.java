@@ -200,4 +200,8 @@ public class SurveyService {
         return nextMonthSurveyItems;
     }
 
+    public boolean hasRespondedSurvey(Long surveyId, Long memberId) {
+        return surveyResponseRepository.existsBySurveyIdAndMemberId(surveyId, memberId);
+    }
+
 }

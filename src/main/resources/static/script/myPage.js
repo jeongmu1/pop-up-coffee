@@ -5,7 +5,6 @@ function handleRowClick(row) {
     let paymentForm = document.querySelector('.mini-form-container');
 
     if (flexible.status === '확정') {
-        // 상태가 '확정'인 경우, 결제 창을 숨깁니다.
         paymentForm.style.display = 'none';
         return;
     }

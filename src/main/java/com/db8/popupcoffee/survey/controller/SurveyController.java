@@ -84,6 +84,13 @@ public class SurveyController {
         if(sessionInfo == null) {
             return "redirect:/merchants/login";
         }
+
+        boolean hasResponded = surveyService.hasRespondedSurvey(surveyId, sessionInfo.id());
+
+        if (hasResponded) {
+            throw new IllegalArgumentException("이미 이번달 설문을 참여하셨습니다.");
+        }
+
         Survey survey = surveyService.getSurvey(surveyId);
         List<SurveyItemInfo> selectedItemCounts = surveyService.countSelectedItemsForThisMonth();
 
@@ -113,4 +120,5 @@ public class SurveyController {
         model.addAttribute("currentSurveyId", surveyId);
         return "admins/surveyStats";
     }
+
 }
