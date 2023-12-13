@@ -70,7 +70,7 @@
                     <span th:if="${flexible.duration != null}" th:text="${flexible.duration}"></span>
                 </td>
                 <td th:text="${flexible.deadline}"></td>
-                <td><span th:each="date : ${flexible.desiredDates}" th:text="${date}" ></span></td>
+                <td th:text="${flexible.desiredDates}"></td>
                 <td th:text="${flexible.status}"></td>
             </tr>
         </table>
