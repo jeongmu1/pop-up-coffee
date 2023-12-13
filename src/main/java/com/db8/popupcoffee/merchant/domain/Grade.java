@@ -6,18 +6,20 @@ import lombok.Getter;
 
 @Getter
 public enum Grade {
-    WHITE(0, WHITE_SHARE_PERCENTAGE),
-    GREEN(GREEN_MIN_SCORE, GREEN_SHARE_PERCENTAGE),
-    PURPLE(PURPLE_MIN_SCORE, PURPLE_SHARE_PERCENTAGE),
-    VIP(VIP_MIN_SCORE, VIP_SHARE_PERCENTAGE);
+    WHITE(0, WHITE_SHARE_PERCENTAGE, WHITE_DISCOUNT_PERCENTAGE),
+    GREEN(GREEN_MIN_SCORE, GREEN_SHARE_PERCENTAGE, GREEN_DISCOUNT_PERCENTAGE),
+    PURPLE(PURPLE_MIN_SCORE, PURPLE_SHARE_PERCENTAGE, PURPLE_DISCOUNT_PERCENTAGE),
+    VIP(VIP_MIN_SCORE, VIP_SHARE_PERCENTAGE, VIP_DISCOUNT_PERCENTAGE);
 
     @Getter
     private final int minimumScore;
     private final double sharingPercentage;
+    private final double discountPercentage;
 
-    Grade(int minimumScore, double sharingPercentage) {
+    Grade(int minimumScore, double sharingPercentage, double discountPercentage) {
         this.minimumScore = minimumScore;
         this.sharingPercentage = sharingPercentage;
+        this.discountPercentage = discountPercentage;
     }
 
     public static Grade from(int gradeScore) {
@@ -81,4 +83,8 @@ public enum Grade {
             return this.getMinimumScore();
         }
     }
+
+
+
+
 }

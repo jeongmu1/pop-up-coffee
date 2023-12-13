@@ -22,5 +22,10 @@ public class Policy {
     public static final double PURPLE_SHARE_PERCENTAGE = 20;
     public static final double GREEN_SHARE_PERCENTAGE = 25;
     public static final double WHITE_SHARE_PERCENTAGE = 30;
+
+    public static final double VIP_DISCOUNT_PERCENTAGE = 20;
+    public static final double PURPLE_DISCOUNT_PERCENTAGE = 10;
+    public static final double GREEN_DISCOUNT_PERCENTAGE = 5;
+    public static final double WHITE_DISCOUNT_PERCENTAGE = 2;
     public static final long DEPOSIT_PER_DAY = 50000;
 }
