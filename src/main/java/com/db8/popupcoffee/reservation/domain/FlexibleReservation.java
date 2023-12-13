@@ -50,8 +50,6 @@ public class FlexibleReservation extends BaseTimeEntity {
     @Column(nullable = false)
     private FlexibleReservationStatus status = FlexibleReservationStatus.WAITING;
 
-    private Long pendingPaymentAmount;
-
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))

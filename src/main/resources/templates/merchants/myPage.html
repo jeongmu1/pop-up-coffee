@@ -5,9 +5,15 @@
     <title>FLIP COFFEE</title>
     <link rel="stylesheet" th:href="@{/css/merchantsRegistration.css}">
     <link rel="stylesheet" th:href="@{/css/myPage.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" th:src="@{/script/myPage.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        let flexibles = $.parseJSON('[[ ${flexibles} ]]');
+    </script>
 </head>
 <body data-grade-score="${myPageResponse.merchant.gradeScore}">
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
 <header class="header">
     <nav class="nav">
         <div class="container">
@@ -15,14 +21,14 @@
             <div class="center">
                 <a href="/about" class="menu">ABOUT</a>
                 <a href="/menu" class="menu">MENU</a>
-                <a href="/store" class="menu">STORE</a>
+                <a th:href="@{/reservations/fixed/form}" class="menu">STORE</a>
                 <a href="/community" class="menu">COMMUNITY</a>
                 <a th:href="@{/menu/manage}" class="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
 
             </div>
             <div class="right">
                 <a th:href="@{/merchants/login}" class="login">로그인</a>
-                <a href="" class="mypage">마이페이지</a>
+                <a href="/merchants/login" class="mypage">마이페이지</a>
             </div>
             <div>
                 <!--다음 등급 까지 ???점 남았습니다 표시-->
@@ -46,9 +52,9 @@
             <li><a href="#" class="small">ADE & MOJITO</a></li>
             <li><a href="#" class="small">TEA & JUICE</a></li>
             <li><a href="#" class="small">DESSSERT</a></li>
-            <li><a href="#" class="big">STORE</a></li>
-            <li><a href="#" class="small">확정예약</a></li>
-            <li><a href="#" class="small">유동예약</a></li>
+            <li><a th:href="@{/reservations/fixed/form}" class="big">STORE</a></li>
+            <li><a th:href="@{/reservations/fixed/form}" class="small">확정예약</a></li>
+            <li><a th:href="@{/reservations/flexible/form}" class="small">유동예약</a></li>
             <li><a href="#" class="small">신청 조회</a></li>
             <li><a href="#" class="big">COMMUNITY</a></li>
             <li><a href="#" class="small">공지 사항</a></li>
@@ -56,15 +62,16 @@
             <li><a href="#" class="small">고객 상담</a></li>
             <li><a href="#" class="small">설문 조사</a></li>
             <!-- 관리자가 로그인할 경우 생기는 부분-->
-            <li><a href="#" class="big">관리자</a></li>
-            <li><a href="#" class="small">공간 관리</a></li>
+            <li><a th:href="@{/menu/manage}" class="big">관리자</a></li>
+            <li><a th:href="@{/spaces/assignment}" class="small">공간 관리</a></li>
             <li><a href="#" class="small">정책 관리</a></li>
             <li><a href="#" class="small">경고 관리</a></li>
             <li><a href="#" class="small">업체 관리</a></li>
             <li><a href="#" class="small">성수기 지정</a></li>
-            <li><a href="#" class="small">통계 관리</a></li>
+            <li><a th:href="@{/surveys/1/pie-chart}" class="small">통계 관리</a></li>
+            <li><a href="#" class="small">정산 관리</a></li>
             <li><a href="#" class="small">이의 신청 관리</a></li>
-            <li><a href="#" class="small">설문 관리</a></li>
+            <li><a th:href="@{/surveys/setting}" class="small">설문 관리</a></li>
         </ul>
     </div>
     <div class="container_mypage">
@@ -75,19 +82,27 @@
             </div>
             <div class="company_info">
                 <div style="display: flex; align-items: center;">
-                    <img th:if="${myPageResponse.merchant.gradeScore < 250}" src="/css/static.image/white_grade.png" alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
-                    <img th:if="${myPageResponse.merchant.gradeScore >= 250 && myPageResponse.merchant.gradeScore < 500}" src="/css/static.image/green_grade.png" alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
-                    <img th:if="${myPageResponse.merchant.gradeScore >= 500 && myPageResponse.merchant.gradeScore < 1000}" src="/css/static.image/purple_grade.png" alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
-                    <img th:if="${myPageResponse.merchant.gradeScore >= 1000}" src="/css/static.image/yellow_grade.png" alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <img th:if="${myPageResponse.merchant.gradeScore < 250}" src="/css/static.image/white_grade.png"
+                         alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <img th:if="${myPageResponse.merchant.gradeScore >= 250 && myPageResponse.merchant.gradeScore < 500}"
+                         src="/css/static.image/green_grade.png" alt="Grade Picture"
+                         style="width: 20px; height: 20px; margin-right: 10px;">
+                    <img th:if="${myPageResponse.merchant.gradeScore >= 500 && myPageResponse.merchant.gradeScore < 1000}"
+                         src="/css/static.image/purple_grade.png" alt="Grade Picture"
+                         style="width: 20px; height: 20px; margin-right: 10px;">
+                    <img th:if="${myPageResponse.merchant.gradeScore >= 1000}" src="/css/static.image/yellow_grade.png"
+                         alt="Grade Picture" style="width: 20px; height: 20px; margin-right: 10px;">
 
                     <progress id="progressBar" th:class="progress-bar"
                               th:value="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.merchant().getGradeScore() - myPageResponse.currentGradeMinScore()}"
                               th:max="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.nextGradeMinScore - myPageResponse.currentGradeMinScore()}"></progress>
 
-                    <p th:text="'다음 등급까지 남은 점수 : ' + ${myPageResponse.scoreForNextGrade()}" style="font-size: 10px; color: black; margin-left: 10px;"></p>
+                    <p th:text="'다음 등급까지 남은 점수 : ' + ${myPageResponse.scoreForNextGrade()}"
+                       style="font-size: 10px; color: black; margin-left: 10px;"></p>
 
                 </div>
-                <p th:text="'업종 : ' + ${myPageResponse.merchant.businessType.name}" style="font-size: 20px; color: black;"></p>
+                <p th:text="'업종 : ' + ${myPageResponse.merchant.businessType.name}"
+                   style="font-size: 20px; color: black;"></p>
                 <p th:text="'번호 : ' + ${myPageResponse.merchant.phone}" style="font-size: 20px; color: black;"></p>
                 <p th:text="'주소명 : ' + ${myPageResponse.merchant.address}" style="font-size: 20px; color: black;"></p>
             </div>
@@ -107,80 +122,80 @@
 
 
         <div class="form-container-total">
-        <div class="mini-table-container">
-            <h2>고정 예약 신청 현황</h2>
-            <table id="application-status">
-                <tr>
-                    <th>자리번호</th>
-                    <th>대여 시작 날짜</th>
-                    <th>대여 종료 날짜</th>
-                    <th>신청상태</th>
-                </tr>
-                <tr th:each="fix : ${fixed}" class="historyCell" style="overflow: scroll; height: auto;">
-                    <td th:text="${fix.space}"></td>
-                    <td th:text="${fix.rentalStartDate}"></td>
-                    <td th:text="${fix.rentalEndDate}"></td>
-                    <td th:text="${fix.status}">대기중</td>
-                </tr>
-            </table>
-            <h2>유동 예약 신청 현황</h2>
-            <table id="application-status2">
-                <tr>
-                    <th>좌석 번호</th>
-                    <th>이용가능기간</th>
-                    <th>대여 시작 날짜</th>
-                    <th>대여 종료 날짜</th>
-                    <th>대여기간</th>
-                    <th>대여신청기간</th>
-                    <th>포함되었으면하는날짜</th>
-                    <th>상태</th>
-                </tr>
-                <tr th:each="flexible : ${flexible}">
-                    <td th:text="${flexible.space}"></td>
-                    <td th:text="${flexible.availabilityStartDate + '~' + flexible.availabilityEndDate}"></td>
-                    <td th:text="${flexible.tempStartDate}"></td>
-                    <td th:text="${flexible.tempEndDate}"></td>
-                    <td>
-                        <span th:if="${flexible.duration == null}" th:text="${'무관'}"></span>
-                        <span th:if="${flexible.duration != null}" th:text="${flexible.duration}"></span>
-                    </td>
-                    <td th:text="${flexible.deadline}"></td>
-                    <td><span th:each="date : ${flexible.desiredDates}" th:text="${date}" ></span></td>
-                    <td th:text="${flexible.status}"></td>
-                </tr>
+            <div class="mini-table-container">
+                <h2>고정 예약 신청 현황</h2>
+                <table id="application-status">
+                    <tr>
+                        <th>자리번호</th>
+                        <th>대여 시작 날짜</th>
+                        <th>대여 종료 날짜</th>
+                        <th>신청상태</th>
+                    </tr>
+                    <tr th:each="fix : ${fixed}" class="historyCell" style="overflow: scroll; height: auto;">
+                        <td th:text="${fix.space}"></td>
+                        <td th:text="${fix.rentalStartDate}"></td>
+                        <td th:text="${fix.rentalEndDate}"></td>
+                        <td th:text="${fix.status}">대기중</td>
+                    </tr>
+                </table>
+                <h2>유동 예약 신청 현황</h2>
+                <table id="application-status2">
+                    <tr>
+                        <th>자리번호</th>
+                        <th>이용가능기간</th>
+                        <th>대여 시작 날짜</th>
+                        <th>대여 종료 날짜</th>
+                        <th>대여기간</th>
+                        <th>대여신청기간</th>
+                        <th>포함되었으면하는날짜</th>
+                        <th>상태</th>
+                    </tr>
+                    <tr th:each="flexible : ${flexibles}" th:data-id="${flexible.id}" onclick="handleRowClick(this)">
+                        <td th:text="${flexible.space}"></td>
+                        <td th:text="${flexible.availableStartDate + '~' + flexible.availableEndDate}"></td>
+                        <td th:text="${flexible.rentalStartDate}"></td>
+                        <td th:text="${flexible.rentalEndDate}"></td>
+                        <td>
+                            <span th:if="${flexible.duration == null}" th:text="${'무관'}"></span>
+                            <span th:if="${flexible.duration != null}" th:text="${flexible.duration}"></span>
+                        </td>
+                        <td th:text="${flexible.deadline}"></td>
+                        <td><span th:each="date : ${flexible.desiredDates}" th:text="${date}"></span></td>
+                        <td th:text="${flexible.status}"></td>
+                    </tr>
 
-            </table>
+                </table>
 
 
-        </div>
+            </div>
             <div>
-                <form th:action="@{/reservations}" method="post">
+                <form th:action="@{/reservations/flexible/payment}" method="post">
                     <div class="mini-form-container">
+                        <input type="hidden" id="reservationId" name="reservationId">
                         <h2>대기 중인 공간 결제</h2>
 
-                        <label for="spaceNumber">공간 번호</label>
+                        <label>공간 번호</label>
+                        <span id="space"></span>
 
-                        <label for="rentalFee">대여 요금</label>
+                        <label>대여 요금</label>
+                        <span id="rentalFee"></span>
 
-                        <label for="rentalDeposit">보증금</label>
+                        <label>보증금</label>
+                        <span id="rentalDeposit"></span>
 
-                        <label for="rentalDuration">대여 기간</label>
-                        <div th:each="dateInfo : ${dateInfos}">
-                            <p th:text="'대여 시작일: ' + ${#dates.format(dateInfo.startDate, 'yyyy-MM-dd')}"></p>
-                            <p th:text="'대여 종료일: ' + ${#dates.format(dateInfo.endDate, 'yyyy-MM-dd')}"></p>
-                        </div>
+                        <label>대여 기간</label>
+                        <span id="rentalDuration"></span>
 
                         <label for="creditCardNumber">카드 번호</label>
-                        <input type="text" id="creditCardNumber" name="creditCardNumber">
+                        <input type="text" id="creditCardNumber" name="ccNumber">
 
                         <label for="creditCardExpireAt">유효기간</label>
-                        <input type="text" id="creditCardExpireAt" name="creditCardExpireAt">
+                        <input type="text" id="creditCardExpireAt" name="ccExpiration">
 
                         <label for="creditCardCvd">CVC</label>
-                        <input type="text" id="creditCardCvd" name="creditCardCvd">
+                        <input type="text" id="creditCardCvd" name="ccCvc">
 
-                        <button type="submit">결제</button>
-
+                        <input type="submit" th:text="${'결제'}">
                     </div>
                 </form>
             </div>
@@ -190,7 +205,7 @@
     </div>
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function () {
-            window.onload = function() {
+            window.onload = function () {
                 let gradeScore = $.parseJSON('[[ ${myPageResponse.merchant.gradeScore} ]]');
                 let progressBar = document.getElementById('progressBar');
 

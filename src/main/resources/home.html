@@ -13,13 +13,13 @@
       <div class ="center">
         <a href="/about" class ="menu">ABOUT</a>
         <a href="/menu" class ="menu">MENU</a>
-        <a href="/store" class ="menu">STORE</a>
+        <a th:href="@{/reservations/fixed/form}" class ="menu">STORE</a>
         <a href="/community" class ="menu">COMMUNITY</a>
         <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
 
       </div>
       <div class ="right">
-        <a href="" class ="login">로그인</a>
+        <a th:href="@{/merchants/login}" class ="login">로그인</a>
         <a href="" class ="mypage">마이페이지</a>
       </div>
       <div>
