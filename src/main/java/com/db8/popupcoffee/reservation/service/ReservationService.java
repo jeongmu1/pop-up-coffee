@@ -8,6 +8,8 @@ import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
+import com.db8.popupcoffee.rental.controller.dto.request.SpaceRentalRequest;
+import com.db8.popupcoffee.rental.service.RentalService;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.ReservationHistory;
@@ -21,6 +23,7 @@ import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.FixedDatesInfoDto;
+import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,6 +42,7 @@ public class ReservationService {
     private final FlexibleReservationRepository flexibleReservationRepository;
     private final DesiredDateRepository desiredDateRepository;
     private final BusinessTypeRepository businessTypeRepository;
+    private final RentalService rentalService;
 
     @Transactional
     public void progressFixedReservation(CreateFixedReservationDto dto) {
@@ -92,6 +96,18 @@ public class ReservationService {
     public List<ReservationHistory> findNotRentedFixedReservations() {
         return fixedReservationRepository.findByStatusIsNot(FixedReservationStatus.FIXED).stream()
             .map(ReservationHistory::from).toList();
+    }
+
+    @Transactional
+    public void updateStatusToSpaceFixed(ReservationIdDto dto) {
+        if (dto.fromFlexible()) {
+            var flexible = flexibleReservationRepository.findById(dto.id()).orElseThrow();
+            flexible.setStatus(FlexibleReservationStatus.SPACE_FIXED);
+        } else {
+            var fixed = fixedReservationRepository.findById(dto.id()).orElseThrow();
+            fixed.setStatus(FixedReservationStatus.FIXED);
+            rentalService.createSpaceRental(new SpaceRentalRequest(fixed.getId()));
+        }
     }
 
     private MerchantContract findActivatedMerchantContract(long merchantId) {

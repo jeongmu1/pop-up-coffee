@@ -23,6 +23,8 @@ public class SpaceController {
     private final ReservationService reservationService;
     private final SpaceService spaceService;
 
+    private static final String ASSIGNMENT_VIEW_REQUEST = "redirect:/spaces/assignment";
+
     @ModelAttribute("spaces")
     public List<SpaceInfo> findAllSpaces() {
         return spaceService.findAllSpaces();
@@ -39,12 +41,18 @@ public class SpaceController {
     @DeleteMapping("/assignment")
     public String unAssignReservation(ReservationIdDto request) {
         spaceService.unAssignSpace(request);
-        return "redirect:/spaces/assignment";
+        return ASSIGNMENT_VIEW_REQUEST;
     }
 
     @PatchMapping("/assignment")
     public String updateAssignment(UpdateAssignmentRequest request) {
         spaceService.updateAssignment(request);
-        return "redirect:/spaces/assignment";
+        return ASSIGNMENT_VIEW_REQUEST;
+    }
+
+    @PatchMapping("/assignment/status/fixed")
+    public String updateStatusToSpaceFixed(ReservationIdDto dto) {
+        reservationService.updateStatusToSpaceFixed(dto);
+        return ASSIGNMENT_VIEW_REQUEST;
     }
 }
