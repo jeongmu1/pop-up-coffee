@@ -74,6 +74,10 @@ table td:last-child {
     padding: 20px; /* 패딩 설정 */
 }
 
+.mini-form-container {
+    display: none;
+}
+
 .mini-table-container, .mini-form-container {
     flex: 1; /* 신청 현황과 결제 폼의 너비를 동일하게 설정 */
     background-color: #fff; /* 배경색을 흰색으로 설정 */
