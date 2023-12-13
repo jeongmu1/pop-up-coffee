@@ -22,7 +22,9 @@ public record FlexibleReservationInfo(
     List<LocalDate> desiredDates,
     Long id,
     String contactPhone,
-    String contactManager
+    String contactManager,
+    LocalDate tempStartDate,
+    LocalDate tempEndDate
 ) {
 
     public static FlexibleReservationInfo from(FlexibleReservation entity) {
@@ -41,6 +43,8 @@ public record FlexibleReservationInfo(
             .id(entity.getId())
             .contactManager(contact.getContactManager())
             .contactPhone(contact.getContactPhone())
+            .tempStartDate(entity.getTemporalRentalStartDate())
+            .tempEndDate(entity.getTemporalRentalEndDate())
             .build();
     }
 }
