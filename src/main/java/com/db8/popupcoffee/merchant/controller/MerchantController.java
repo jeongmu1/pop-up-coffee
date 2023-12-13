@@ -77,8 +77,9 @@ public class MerchantController {
         model.addAttribute("myPageResponse", myPageResponse);
         model.addAttribute("fixed", reservationService.getFixedHistories(
                 SessionUtil.getMerchantSessionInfo(session).id()));
-        model.addAttribute("nonFixedFlexibles",
-                reservationService.findAllFlexibleReservations());
+        model.addAttribute("flexible",
+                reservationService.getFlexibleHistoried(
+                        SessionUtil.getMerchantSessionInfo(session).id()));
 
         return "merchants/myPage";
     }

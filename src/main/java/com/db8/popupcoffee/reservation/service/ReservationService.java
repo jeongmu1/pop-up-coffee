@@ -97,20 +97,6 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<FlexibleReservationInfo> findAllFlexibleReservations() {
-        Iterable<FlexibleReservation> reservations = flexibleReservationRepository.findAll();
-        List<FlexibleReservationInfo> reservationInfos = new ArrayList<>();
-
-        for (FlexibleReservation reservation : reservations) {
-            reservationInfos.add(FlexibleReservationInfo.from(reservation));
-        }
-
-        return reservationInfos;
-    }
-
-
-
-    @Transactional(readOnly = true)
     public List<ReservationHistory> getReservationHistories(long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
         Stream<ReservationHistory> onlyFixeds =
@@ -183,5 +169,17 @@ public class ReservationService {
         return merchantRepository.findById(merchantId)
             .map(contractService::findActivatedContract)
             .orElseThrow();
+    }
+
+    public List<FlexibleReservationInfo> getFlexibleHistoried(Long merchantId) {
+        Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
+        List<FlexibleReservation> reservations = flexibleReservationRepository.findByMerchant(merchant);
+
+        List<FlexibleReservationInfo> reservationInfos = new ArrayList<>();
+        for (FlexibleReservation reservation : reservations) {
+            reservationInfos.add(FlexibleReservationInfo.from(reservation));
+        }
+
+        return reservationInfos;
     }
 }

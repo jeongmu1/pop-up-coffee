@@ -26,7 +26,8 @@ public record FlexibleReservationInfo(
         String contactManager,
         LocalDate tempStartDate,
         LocalDate tempEndDate,
-        String businessType
+        String businessType,
+        String space
 ) {
 
     public static FlexibleReservationInfo from(FlexibleReservation entity) {
@@ -48,6 +49,7 @@ public record FlexibleReservationInfo(
                 .tempStartDate(entity.getTemporalRentalStartDate())
                 .tempEndDate(entity.getTemporalRentalEndDate())
                 .businessType(entity.getBusinessType().getName())
+                .space(entity.getTemporalSpace() != null ? entity.getTemporalSpace().getNumber() : null)
                 .build();
     }
 }
