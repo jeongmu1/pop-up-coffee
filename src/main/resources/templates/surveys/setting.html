@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>FLIP COFFEE</title>
@@ -91,22 +91,24 @@
             <table>
                 <thead>
                 <tr>
-                    <th class="wide-cell">설문조사 항목</th>
+                    <th class="wide-cell">이번달 설문조사 항목</th>
                 </tr>
                 </thead>
                 <tbody class="tbody-container">
-                <tr th:each="survey : ${response.previousItems()}">
+                <tr th:each="item : ${response.previousItems}">
                     <td class="wide-cell">
-                        <span th:text="${survey.name}">항목명</span>
+                        <span th:text="${item.name}">항목명</span>
+                        <span class="counts" th:text="' ' + '('+ ${item.selectedCount} + ' 회 선택됨)'"></span>
                         <form method="POST" th:action="@{/surveys/addSurveyItem}">
                             <input type="hidden" th:value="${response.survey.id}" name="surveyId">
-                            <input type="hidden" th:value="${survey.name}" name="name"/>
+                            <input type="hidden" th:value="${item.name}" name="name"/>
                             <button class="table-button" type="submit">추가</button>
                         </form>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
 
             <table>
                 <thead>

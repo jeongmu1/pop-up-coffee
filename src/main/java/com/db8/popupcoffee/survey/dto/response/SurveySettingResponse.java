@@ -7,7 +7,7 @@ import com.db8.popupcoffee.survey.domain.SurveyItemSelected;
 import java.util.List;
 
 public record SurveySettingResponse(
-        List<SurveyItem> nextMonthItems, List<SurveyItem> previousItems,
+        List<SurveyItem> nextMonthItems, List<SurveyItemInfo> previousItems,
         List<SurveyItemSelected> additionalComments,
         Survey survey)
 {

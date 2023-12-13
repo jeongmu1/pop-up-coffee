@@ -126,6 +126,9 @@ ul {
     font-size: 12px;
     color : #ffffff;
 }
+.counts {
+    font-size: 10px
+}
 /*----------------------------------------------------*/
 .footer-container {
     display: flex;

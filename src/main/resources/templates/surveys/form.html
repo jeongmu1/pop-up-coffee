@@ -77,16 +77,18 @@
             </div>
             <div class="survey-form">
                 <form th:action="@{'/surveys/' + ${survey.id} + '/responses'}" method="post" id="surveyForm">
-                    <div th:each="item, stat : ${items}">
-                        <input type="checkbox" name="selectedItems" th:value="${item.id}" th:id="${'checkbox-' + item.id}" th:attr="data-name=${item.name}"> <span th:text="${item.name}"></span>
-                        <span class="counts" th:if="${selectedItemCounts[stat.index]}" th:text="' ' + ${selectedItemCounts[stat.index]} + '회 선택됨'"></span> <br>
+                    <div th:each="item : ${items}">
+                        <input type="checkbox" name="selectedItems" th:value="${item.id}" th:id="${'checkbox-' + item.id}" th:attr="data-name=${item.name}">
+                        <span th:text="${item.name}"></span>
+                        <!-- 선택된 횟수를 찾습니다. -->
+                        <span class="counts" th:each="info : ${selectedItemCounts}" th:if="${info.id == item.id}" th:text="' ' + ${info.selectedCount} + '회 선택됨'"></span> <br>
                         <input type="text" th:id="${'textarea-' + item.id.toString()}" name="noAdditionalComment" style="display: none;" placeholder="기타 업체 종류를 입력해주세요"></input>
-
                     </div>
                     <input type="reset">
                     <input id="" type="submit" value="제출">
                 </form>
             </div>
+
 
             <script>
                 window.addEventListener('DOMContentLoaded', (event) => {

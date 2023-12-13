@@ -10,6 +10,7 @@ import com.db8.popupcoffee.survey.domain.SurveyResponse;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
+import com.db8.popupcoffee.survey.dto.response.SurveyItemInfo;
 import com.db8.popupcoffee.survey.repository.SurveyItemRepository;
 import com.db8.popupcoffee.survey.repository.SurveyItemSelectedRepository;
 import com.db8.popupcoffee.survey.repository.SurveyRepository;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,12 +35,16 @@ public class SurveyService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItemsId, List<String> selectedaAdditionalComment) {
+    public void surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItemsId, List<String> selectedAdditionalComment) {
         // 설문지 생성
         Survey survey = surveySettingRequest.toEntity();
         surveyRepository.save(survey);
 
-        selectedaAdditionalComment.stream().map(comment -> SurveyItem.createItem(comment, survey)).forEach(surveyItemRepository::save);
+        // '기타' 항목을 생성하고 저장합니다.
+        SurveyItem additionalItem = SurveyItem.createItem("기타", survey);
+        surveyItemRepository.save(additionalItem);
+
+        selectedAdditionalComment.stream().map(comment -> SurveyItem.createItem(comment, survey)).forEach(surveyItemRepository::save);
 
         // 선택된 항목 설정
         List<SurveyItem> selectedItems = surveyItemRepository.findAllById(selectedItemsId);
@@ -46,7 +52,9 @@ public class SurveyService {
         surveyItemRepository.saveAll(selectedItems);
     }
 
-    public List<SurveyItem> getPreviousSurveyItems() {
+
+    @Transactional(readOnly = true)
+    public List<SurveyItemInfo> getPreviousSurveyItems() {
         YearMonth thisMonth = YearMonth.now();
 
         EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(), thisMonth.getMonthValue());
@@ -57,7 +65,7 @@ public class SurveyService {
             previousSurveyItems.addAll(lastMonthSurvey.getItems());
         }
 
-        return previousSurveyItems;
+        return previousSurveyItems.stream().map(SurveyItemInfo::from).toList();
     }
 
     public List<SurveyItemSelected> getAdditionalComments() {
@@ -70,9 +78,19 @@ public class SurveyService {
         return surveyRepository.findById(surveyId).orElseThrow(null);
     }
 
-    public List<Integer> countSelectedItems(Survey survey) {
-        List<Integer> counts = survey.getItems().stream().mapToInt(surveyItemSelectedRepository::countByItem).boxed().collect(Collectors.toList());
-        return counts;
+    @Transactional(readOnly = true)
+    public List<SurveyItemInfo> countSelectedItemsForThisMonth() {
+        YearMonth thisMonth = YearMonth.now();
+        EmbeddableYearMonth thisMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(), thisMonth.getMonthValue());
+
+        Survey thisMonthSurvey = surveyRepository.findByYearMonthOf(thisMonthYearMonth);
+        if (thisMonthSurvey == null) {
+            throw new NoSuchElementException();
+        }
+
+        return thisMonthSurvey.getItems().stream()
+                .map(SurveyItemInfo::from)
+                .toList();
     }
 
     @Transactional
@@ -88,7 +106,6 @@ public class SurveyService {
         List<SurveyItemSelected> surveyItemSelecteds = form.toSurveyItemSelecteds(surveyResponse, surveyItemRepository);
         surveyItemSelectedRepository.saveAll(surveyItemSelecteds);
     }
-
 
     @Transactional
     public void deleteSurveyItem(Long id) {

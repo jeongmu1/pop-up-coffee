@@ -1,14 +1,11 @@
 package com.db8.popupcoffee.survey.domain;
 
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -26,6 +23,10 @@ public class SurveyItem extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Survey survey;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    private List<SurveyItemSelected> surveyItemSelecteds = new ArrayList<>();
 
     public static SurveyItem createItem(String name, Survey survey) {
         SurveyItem item = new SurveyItem();
