@@ -18,11 +18,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SpaceService {
 
     private final SpaceRepository spaceRepository;
@@ -69,6 +71,7 @@ public class SpaceService {
     public void updateAssignment(UpdateAssignmentRequest request) {
         Space space = spaceRepository.findById(request.spaceId()).orElseThrow();
         if (request.fromFlexible()) {
+            log.info("request : {}", request);
             var flexible = flexibleReservationRepository.findById(request.id()).orElseThrow();
             flexible.setTemporalRentalStartDate(request.startDate());
             flexible.setTemporalRentalEndDate(request.endDate());

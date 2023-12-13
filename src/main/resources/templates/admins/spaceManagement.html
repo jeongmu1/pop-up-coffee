@@ -7,6 +7,7 @@
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
     <link rel="stylesheet" th:href="@{/css/spaceManage.css}">
+    <link rel="stylesheet" th:href="@{/css/table.css}">
     <script type="text/javascript"  th:src="@{/script/spaceManage.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -40,25 +41,95 @@
 </header>
 <main class="main">
     <div id="chartdiv"></div>
+    <div class="flexible-reservation">
+        <div class="compnay">
+        <h4>유동예약 신청 업체 목록</h4>
+        <table id="flexibleMerchant" class="table-container">
+            <thead>
+            <tr>
+                <td>예약번호</td>
+                <td>업체명</td>
+                <td>등급</td>
+                <td>이용가능기간</td>
+                <td>대여기간</td>
+                <td>마감기한</td>
+                <td>포함되었으면하는날짜</td>
+                <td>상태</td>
+                <td></td>
+            </tr>
+            </thead>
+            <tr th:each="flexible : ${nonFixedFlexibles}">
+                <td th:text="${flexible.id}"></td>
+                <td th:text="${flexible.merchantName}"></td>
+                <td th:text="${flexible.grade}"></td>
+                <td th:text="${flexible.availabilityStartDate + '~' + flexible.availabilityEndDate}"></td>
+                <td>
+                    <span th:if="${flexible.duration == null}" th:text="${'무관'}"></span>
+                    <span th:if="${flexible.duration != null}" th:text="${flexible.duration}"></span>
+                </td>
+                <td th:text="${flexible.deadline}"></td>
+                <td><span th:each="date : ${flexible.desiredDates}" th:text="${date}" ></span></td>
+                <td th:text="${flexible.status}"></td>
+            </tr>
+        </table>
+        </div>
+    </div>
     <div id="edit-form" class="manage">
-        <h2>업체 정보</h2>
         <div class="form-container">
-            <form th:action="@{/reservations/fixed}" method="post">
-                <label for="company-number">업체 번호:</label><br>
-                <input type="text" id="company-number" name="company-number" disabled><br>
+            <div class="flexForm">
+                <h2>유동 업체 정보</h2>
+            <form id="spaceTempFix" th:action="@{/spaces/assignment}" th:method="patch">
+                <label for="company-number">예약 번호</label><br>
+                <input type="text" id="flexible-company-number" name="id" readonly><br>
+                <input type="hidden" name="fromFlexible" th:value="${true}">
+                <input type="hidden" name="id">
                 <label for="start-date">시작 날짜:</label><br>
-                <input type="date" id="start-date" name="start-date"><br>
+                <input type="date" id="flex-start-date" name="startDate"><br>
                 <label for="end-date">종료 날짜:</label><br>
-                <input type="date" id="end-date" name="end-date"><br>
-                <input type="text" id="spaceNumber" name="spaceNumber" > <br>
-                <input type="hidden" id="fromFlex" name="fromFlexible"><br>
+                <input type="date" id="flex-end-date" name="endDate"><br>
+                <label>좌석 번호</label><br>
+                <select name="spaceId" class="spaceNumber">
+                    <option th:each="space : ${spaces}" th:value="${space.id}" th:text="${space.number}"></option>
+                </select>
+                <input type="submit" value="임시 확정">
+            </form>
+
+
+            <form id="spaceFix" th:action="@{/spaces/assignment/status/fixed}" th:method="patch">
+                <input type="hidden" id="hidden-flexible-company-number" name="id" readonly><br>
+                <input type="hidden" id="hidden-flex-start-date" name="startDate"><br>
+                <input type="hidden" id="hidden-flex-end-date" name="endDate"><br>
+                <input type="hidden" id="hidden-flex-spaceNumber" name="spaceId"> <br>
+                <input type="hidden" name="fromFlexible" th:value="${true}">
+                <input type="submit" value="확정">
+            </form>
+            </div>
+
+
+            <div class="fixForm">
+                <h2>고정 업체 정보</h2>
+            <form id="assign" th:action="@{/spaces/assignment}" th:method="patch">
+                <label for="company-number">업체 번호:</label><br>
+                <input type="text" id="company-number" name="id" readonly><br>
+                <label for="start-date">시작 날짜:</label><br>
+                <input type="date" id="start-date" name="startDate"><br>
+                <label for="end-date">종료 날짜:</label><br>
+                <input type="date" id="end-date" name="endDate"><br>
+                <label>좌석 번호</label><br>
+                <select name="spaceId" class="spaceNumber">
+                    <option th:each="space : ${spaces}" th:value="${space.id}" th:text="${space.number}"></option>
+                </select>
+                <input type="hidden" id="hidden-from-flexible" name="fromFlexible"><br>
                 <input type="submit" value="수정">
             </form>
-            <form th:action="@{/spaces/assignment}" th:method="delete">
+
+
+            <form id="unAssign" th:action="@{/spaces/assignment}" th:method="delete">
                 <input type="submit" value="삭제">
                 <input type="hidden" id="hidden_company-number" name="id"><br>
                 <input type="hidden" id="hidden_fromFlex" name="fromFlexible"><br>
             </form>
+            </div>
         </div>
     </div>
 </main>

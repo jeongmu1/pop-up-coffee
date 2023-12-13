@@ -67,11 +67,25 @@ a {
     justify-content: center;
     padding: 20px;
 }
-
-#external-events {
-    margin-bottom: 20px;
+.flex-form{
+    display: flex;
+    flex-direction: column;
+    margin-left: 5vw;
+}
+.fix-flex-form{
+    display: flex;
+    flex-direction: column;
+    margin-left: 5vw;
+}
+.flexible-reservation{
+    display: flex;
+    flex-direction: row;
 }
 
+.form-container{
+    display: flex;
+    flex-direction: row;
+}
 .reservation {
     border: 1px solid #333;
     padding: 8px;
@@ -82,6 +96,17 @@ a {
 #chartdiv {
     width: 100%;
     height: 500px;
+}
+
+.company {
+    display: flex;
+    flex-direction: column;
+}
+
+.companylist{
+    display: flex;
+    flex-direction: column;
+    margin-left: 5vw;
 }
 
 .main {
