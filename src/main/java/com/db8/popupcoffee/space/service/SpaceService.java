@@ -83,6 +83,12 @@ public class SpaceService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<SpaceInfo> findAvailableSpaces(LocalDate startDate, LocalDate endDate) {
+        return spaceRepository.findAvailableSpaces(startDate, endDate).stream().map(SpaceInfo::from)
+            .toList();
+    }
+
     private void unAssignFlexibleReservation(Long id) {
         FlexibleReservation flexible = flexibleReservationRepository.findById(id).orElseThrow();
 
