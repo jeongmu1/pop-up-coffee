@@ -20,8 +20,7 @@ public record SimpleReservationInfo(
         // 유동 관련
         boolean fromFlexible,
         Boolean fixedDate, // null 시 Fixed
-        Long rentalDuration, // null 시 무관n
-        List<LocalDate> desiredDates
+        Long rentalDuration // null 시 무관n
 ) {
 
     public static SimpleReservationInfo from(FlexibleReservation flexibleReservation) {
@@ -34,7 +33,6 @@ public record SimpleReservationInfo(
                 .fixedDate(status.equals(FlexibleReservationStatus.SPACE_FIXED) || status.equals(
                         FlexibleReservationStatus.RESERVATION_FIXED))
                 .rentalDuration(flexibleReservation.getDuration())
-                .desiredDates(flexibleReservation.getDesiredDates().stream().map(DesiredDate::getDate).toList())
                 .id(flexibleReservation.getId())
                 .build();
     }
