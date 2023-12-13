@@ -55,7 +55,23 @@ a{
     padding-top: 17px;
 }
 /* ------------------------------ */
-/* 차트를 css로~> */
+/* 여기에 css 추가 하면 됨. */
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    font-size: 2em;
+}
+
+#myChart {
+    width: 40%; /* 차트 너비를 조절하세요 */
+    height: 40%; /* 차트 높이를 조절하세요 */
+    max-width: 600px;
+    margin: auto;
+}
+
 /*--------------------------------*/
 .main {
     display: flex;
