@@ -23,11 +23,11 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SurveyService {
+
     private final SurveyRepository surveyRepository;
     private final SurveyItemRepository surveyItemRepository;
     private final SurveyResponseRepository surveyResponseRepository;
@@ -35,7 +35,8 @@ public class SurveyService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItemsId, List<String> selectedAdditionalComment) {
+    public void surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItemsId,
+        List<String> selectedAdditionalComment) {
         // 설문지 생성
         Survey survey = surveySettingRequest.toEntity();
         surveyRepository.save(survey);
@@ -44,7 +45,8 @@ public class SurveyService {
         SurveyItem additionalItem = SurveyItem.createItem("기타", survey);
         surveyItemRepository.save(additionalItem);
 
-        selectedAdditionalComment.stream().map(comment -> SurveyItem.createItem(comment, survey)).forEach(surveyItemRepository::save);
+        selectedAdditionalComment.stream().map(comment -> SurveyItem.createItem(comment, survey))
+            .forEach(surveyItemRepository::save);
 
         // 선택된 항목 설정
         List<SurveyItem> selectedItems = surveyItemRepository.findAllById(selectedItemsId);
@@ -57,7 +59,8 @@ public class SurveyService {
     public List<SurveyItemInfo> getPreviousSurveyItems() {
         YearMonth thisMonth = YearMonth.now();
 
-        EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(), thisMonth.getMonthValue());
+        EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(),
+            thisMonth.getMonthValue());
         Survey lastMonthSurvey = surveyRepository.findByYearMonthOf(lastMonthYearMonth);
 
         List<SurveyItem> previousSurveyItems = new ArrayList<>();
@@ -70,7 +73,8 @@ public class SurveyService {
 
     public List<SurveyItemSelected> getAdditionalComments() {
         YearMonth thisMonth = YearMonth.now();
-        EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(), thisMonth.getMonthValue());
+        EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(),
+            thisMonth.getMonthValue());
 
         // 저번 달의 설문조사 정보를 가져옵니다.
         Survey lastMonthSurvey = surveyRepository.findByYearMonthOf(lastMonthYearMonth);
@@ -79,8 +83,9 @@ public class SurveyService {
         if (lastMonthSurvey != null) {
             List<SurveyItem> lastMonthSurveyItems = lastMonthSurvey.getItems();
             return surveyItemSelectedRepository.findAll().stream()
-                    .filter(item -> lastMonthSurveyItems.contains(item.getItem()) && item.getAdditionalComment() != null)
-                    .collect(Collectors.toList());
+                .filter(item -> lastMonthSurveyItems.contains(item.getItem())
+                    && item.getAdditionalComment() != null)
+                .toList();
         } else {
             return new ArrayList<>();
         }
@@ -94,7 +99,8 @@ public class SurveyService {
     @Transactional(readOnly = true)
     public List<SurveyItemInfo> countSelectedItemsForThisMonth() {
         YearMonth thisMonth = YearMonth.now();
-        EmbeddableYearMonth thisMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(), thisMonth.getMonthValue());
+        EmbeddableYearMonth thisMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(),
+            thisMonth.getMonthValue());
 
         Survey thisMonthSurvey = surveyRepository.findByYearMonthOf(thisMonthYearMonth);
         if (thisMonthSurvey == null) {
@@ -102,8 +108,8 @@ public class SurveyService {
         }
 
         return thisMonthSurvey.getItems().stream()
-                .map(SurveyItemInfo::from)
-                .toList();
+            .map(SurveyItemInfo::from)
+            .toList();
     }
 
     @Transactional
@@ -116,7 +122,8 @@ public class SurveyService {
         surveyResponseRepository.save(surveyResponse);
 
         // 선택된 항목 저장
-        List<SurveyItemSelected> surveyItemSelecteds = form.toSurveyItemSelecteds(surveyResponse, surveyItemRepository);
+        List<SurveyItemSelected> surveyItemSelecteds = form.toSurveyItemSelecteds(surveyResponse,
+            surveyItemRepository);
         surveyItemSelectedRepository.saveAll(surveyItemSelecteds);
     }
 
@@ -130,7 +137,7 @@ public class SurveyService {
     @Transactional
     public void deleteAdditionalComment(Long id) {
         SurveyItemSelected selectedItem = surveyItemSelectedRepository.findById(id)
-                .orElseThrow(null);
+            .orElseThrow(null);
         surveyItemSelectedRepository.delete(selectedItem);
     }
 
@@ -139,13 +146,14 @@ public class SurveyService {
         YearMonth currentYearMonth = YearMonth.now();
         YearMonth nextYearMonth = currentYearMonth.plusMonths(1);
 
-        EmbeddableYearMonth nextMonthYearMonth = new EmbeddableYearMonth(nextYearMonth.getYear(), nextYearMonth.getMonth().getValue());
+        EmbeddableYearMonth nextMonthYearMonth = new EmbeddableYearMonth(nextYearMonth.getYear(),
+            nextYearMonth.getMonth().getValue());
         Survey survey = surveyRepository.findByYearMonthOf(nextMonthYearMonth);
 
         if (survey == null) {
             survey = Survey.builder()
-                    .yearMonthOf(nextMonthYearMonth)
-                    .build();
+                .yearMonthOf(nextMonthYearMonth)
+                .build();
 
             survey = surveyRepository.save(survey);
         }
@@ -165,11 +173,18 @@ public class SurveyService {
         surveyItemRepository.save(newItem);
     }
 
+    @Transactional(readOnly = true)
+    public List<SurveyItemInfo> findSurveyItems(Long surveyId) {
+        return surveyRepository.findById(surveyId).orElseThrow().getItems().stream()
+            .map(SurveyItemInfo::from).toList();
+    }
+
     public List<SurveyItem> getNextMonthSurveyItems() {
         YearMonth thisMonth = YearMonth.now();
         YearMonth nextMonth = thisMonth.plusMonths(1); // 다음 달을 구합니다.
 
-        EmbeddableYearMonth nextMonthYearMonth = new EmbeddableYearMonth(nextMonth.getYear(), nextMonth.getMonthValue());
+        EmbeddableYearMonth nextMonthYearMonth = new EmbeddableYearMonth(nextMonth.getYear(),
+            nextMonth.getMonthValue());
         Survey nextMonthSurvey = surveyRepository.findByYearMonthOf(nextMonthYearMonth);
 
         List<SurveyItem> nextMonthSurveyItems = new ArrayList<>();

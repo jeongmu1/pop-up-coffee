@@ -101,5 +101,9 @@ public class SurveyController {
         return "home";
     }
 
-
+    @GetMapping("/{surveyId}/pie-chart")
+    public String showPieChart(@PathVariable Long surveyId, Model model) {
+        model.addAttribute("surveyItems", surveyService.findSurveyItems(surveyId));
+        return "admins/surveyStats";
+    }
 }
