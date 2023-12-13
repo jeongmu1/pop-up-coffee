@@ -52,6 +52,7 @@ am5.ready(function () {
                 picName: infos[i].reservations[j].contactManager,
                 picPhone: infos[i].reservations[j].contactPhone,
                 business : infos[i].reservations[j].businessType,
+                stat : infos[i].reservations[j].status,
                 columnSettings: {
                     fill: am5.color(color)
                 }
@@ -108,7 +109,7 @@ am5.ready(function () {
     series.columns.template.setAll({
         templateField: "columnSettings",
         strokeOpacity: 0,
-        tooltipText: "업체명 : [bold]{task}:\n 대여 날짜 : [bold]{openValueX}[/] - [bold]{valueX}[/] \n 담당자명 : [bold]{picName} \n 담당자 전화번호 : [bold]{picPhone}\n 업종 : [bold]{business}\n"
+        tooltipText: "업체명 : [bold]{task}:\n 대여 날짜 : [bold]{openValueX}[/] - [bold]{valueX}[/] \n 담당자명 : [bold]{picName} \n 담당자 전화번호 : [bold]{picPhone}\n 업종 : [bold]{business}\n 상태 : [bold]{stat}\n"
     });
 
     series.columns.template.events.on("click", function (ev) {
@@ -117,6 +118,7 @@ am5.ready(function () {
         let endDate = new Date(ev.target.dataItem.dataContext.end);
         let spaceNum = ev.target.dataItem.dataContext.category;
         let forms = ev.target.dataItem.dataContext.forms;
+        let staut = ev.target.dataItem.dataContext.stat;
 
         let formattedStartDate = formatDate(startDate);
         let formattedEndDate = formatDate(endDate);
@@ -127,8 +129,25 @@ am5.ready(function () {
         document.getElementById('hidden_company-number').value = id;
         document.getElementById('hidden_fromFlex').value = Boolean(forms);
         document.getElementById('hidden-from-flexible').value = Boolean(forms);
-        console.log(document.getElementById('hidden-from-flexible').value);
+        document.getElementById('hidden-status').value = staut;
+        console.log(document.getElementById('hidden-status').value);
     });
+
+    $(function () {
+        $('#unAssign').click(function () {
+            var hiddenStatus = document.getElementById('hidden-status').value;
+
+            if (hiddenStatus === "확정") {
+                var confirmed = confirm("확정된 예약을 삭제하면 복구할 수 없습니다. \n 정말로 삭제하시겠습니까?");
+                if (!confirmed) {
+                    return false;
+                } else {
+                    alert("정상적으로 삭제되었습니다.");
+                }
+            }
+        });
+    });
+
 
     function formatDate(date) {
         var year = date.getFullYear();

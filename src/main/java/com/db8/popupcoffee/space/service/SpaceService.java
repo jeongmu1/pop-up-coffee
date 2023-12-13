@@ -124,5 +124,7 @@ public class SpaceService {
         FixedReservation fixed = fixedReservationRepository.findById(id).orElseThrow();
         fixed.setStatus(FixedReservationStatus.CANCELED);
         spaceRentalAgreementRepository.delete(fixed.getSpaceRentalAgreement());
+        fixed.setSpaceRentalAgreement(null);
+
     }
 }

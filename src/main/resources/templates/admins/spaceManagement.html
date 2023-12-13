@@ -110,6 +110,7 @@
                 <input type="hidden" id="hidden-flex-end-date" name="endDate"><br>
                 <input type="hidden" id="hidden-flex-spaceNumber" name="spaceId"> <br>
                 <input type="hidden" name="fromFlexible" th:value="${true}">
+                <input type="hidden" id="hidden-status" name="status"><br>
 
             </form>
                 </div>
@@ -136,8 +137,8 @@
             </form>
                 </div>
                 <div class="unassign">
-            <form id="unAssign" th:action="@{/spaces/assignment}" th:method="delete">
-                <input type="submit" value="삭제">
+            <form  th:action="@{/spaces/assignment}" th:method="delete">
+                <input type="submit" id="unAssign" value="삭제" />
                 <input type="hidden" id="hidden_company-number" name="id"><br>
                 <input type="hidden" id="hidden_fromFlex" name="fromFlexible"><br>
             </form>
