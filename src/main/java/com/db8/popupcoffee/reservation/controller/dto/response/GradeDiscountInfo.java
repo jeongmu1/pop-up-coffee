@@ -11,11 +11,12 @@ public record GradeDiscountInfo(
     Double nextGradeRevenueSharingPercentage,
     Long daysForNextGrade,
     Integer scoreForNextGrade,
+    Long revenueForNextGrade,
     Grade currentGrade
 ) {
 
     public static GradeDiscountInfo from(int gradeScore) {
-        Grade grade = Grade.from(gradeScore);
+        Grade grade = com.db8.popupcoffee.merchant.domain.Grade.from(gradeScore);
         Grade nextGrade = grade.nextGrade();
         GradeDiscountInfoBuilder builder = GradeDiscountInfo.builder()
             .discountPercentage(grade.getDiscountPercentage())
@@ -27,7 +28,8 @@ public record GradeDiscountInfo(
                 .nextGradeDiscountPercentage(nextGrade.getDiscountPercentage())
                 .nextGradeRevenueSharingPercentage(nextGrade.getSharingPercentage())
                 .daysForNextGrade(grade.getDaysForNextGrade(gradeScore))
-                .scoreForNextGrade(grade.scoreForNextGrade(gradeScore));
+                .scoreForNextGrade(grade.scoreForNextGrade(gradeScore))
+                .revenueForNextGrade(grade.revenueForNextGrade(gradeScore));
         }
 
         return builder.build();
