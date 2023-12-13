@@ -1,5 +1,6 @@
 package com.db8.popupcoffee.reservation.controller;
 
+import com.db8.popupcoffee.global.util.Policy;
 import com.db8.popupcoffee.global.util.SessionUtil;
 import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
@@ -51,6 +52,11 @@ public class ReservationController {
     @ModelAttribute("nonFixedFlexibles")
     public List<FlexibleReservationInfo> getNonFixedFlexibleReservations() {
         return reservationService.findNonFixedFlexibleRepositories();
+    }
+
+    @ModelAttribute("depositPerDay")
+    public Long getDepositPerDay() {
+        return Policy.DEPOSIT_PER_DAY;
     }
 
     @GetMapping("/fixed/not-rented")
