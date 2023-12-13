@@ -2,6 +2,7 @@ package com.db8.popupcoffee.global.util;
 
 import com.db8.popupcoffee.seasonality.repository.DateInfoRepository;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +12,14 @@ public class FeeCalculator {
 
     private final DateInfoRepository dateInfoRepository;
 
-    public long calculateRentalFee(LocalDate startDay, LocalDate endDay) {
-        return dateInfoRepository.findByDateBetween(startDay, endDay)
+    public long calculateRentalFee(LocalDate startDate, LocalDate endDate) {
+        return dateInfoRepository.findByDateBetween(startDate, endDate)
             .stream()
             .mapToLong(info -> info.getSeasonalityLevel().calculateDailyFee(info.isHoliday()))
             .sum();
+    }
+
+    public long calculateRentalDeposit(LocalDate startDate, LocalDate endDate) {
+        return ChronoUnit.DAYS.between(startDate, endDate.plusDays(1L)) * Policy.DEPOSIT_PER_DAY;
     }
 }
