@@ -109,9 +109,14 @@ public class SpaceService {
             var fixed = flexible.getFixedReservation();
             unAssignFixedReservation(fixed.getId());
             flexible.setStatus(FlexibleReservationStatus.CANCELED);
+            flexible.setTemporalSpace(null);
+            flexible.setTemporalRentalStartDate(null);
+            flexible.setTemporalRentalEndDate(null);
         }
 
         flexible.setTemporalSpace(null);
+        flexible.setTemporalRentalStartDate(null);
+        flexible.setTemporalRentalEndDate(null);
         flexible.setStatus(FlexibleReservationStatus.WAITING);
     }
 
