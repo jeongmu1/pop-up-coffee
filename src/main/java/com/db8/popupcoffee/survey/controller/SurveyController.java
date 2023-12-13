@@ -27,6 +27,8 @@ public class SurveyController {
     private final SurveyService surveyService;
     private final MemberService memberService;
 
+    private static final String SETTING_VIEW_REDIRECT = "redirect:/surveys/setting";
+
     @GetMapping("/setting")
     public String surveySetting(Model model) {
         Survey survey = surveyService.createSurvey();
@@ -53,20 +55,20 @@ public class SurveyController {
     public String deleteSurveyItem(Long surveyItemId) {
         surveyService.deleteSurveyItem(surveyItemId);
 
-        return "redirect:/surveys/setting";
+        return SETTING_VIEW_REDIRECT;
     }
 
     @PostMapping("/deleteAdditionalComment")
     public String deleteAdditionalComment(Long additionalCommentId) {
         surveyService.deleteAdditionalComment(additionalCommentId);
-        return "redirect:/surveys/setting";
+        return SETTING_VIEW_REDIRECT;
     }
 
     @PostMapping("/addSurveyItem")
     public String addSurveyItem(SurveyItemRequest surveyItemRequest) {
         surveyService.addItemToSurvey(surveyItemRequest);
 
-        return "redirect:/surveys/setting";
+        return SETTING_VIEW_REDIRECT;
     }
 
 
