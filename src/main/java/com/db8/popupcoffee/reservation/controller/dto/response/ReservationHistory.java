@@ -46,7 +46,7 @@ public record ReservationHistory(
         ReservationHistoryBuilder historyBuilder = ReservationHistory.builder();
         historyBuilder.reservedDate(flexibleReservation.getCreatedAt().toLocalDate())
             .id(flexibleReservation.getId())
-            .status(flexibleReservation.getStatus().name())
+            .status(flexibleReservation.getStatus().getMessage())
             .flexible(true)
             .availableStartDate(flexibleReservation.getAvailabilityStartDate())
             .availableEndDate(flexibleReservation.getAvailabilityEndDate())
