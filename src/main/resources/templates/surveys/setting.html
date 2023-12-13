@@ -118,7 +118,7 @@
                 </thead>
                 <tbody class="tbody-container">
                 <tr th:each="comment : ${response.additionalComments}">
-                    <td>
+                    <td class="wide-cell">
                         <span th:text="${comment.additionalComment}">기타 의견</span>
                         <form method="POST" th:action="@{/surveys/deleteAdditionalComment}">
                             <input type="hidden" th:value="${comment.id}" name="additionalCommentId">
@@ -141,7 +141,9 @@
         </div>
 
 
-        <button type="submit">제출하기</button>
+<!--        <form method="POST" th:action="@{/}">-->
+<!--            <button type="submit">저장</button>-->
+<!--        </form>-->
     </div>
 
 

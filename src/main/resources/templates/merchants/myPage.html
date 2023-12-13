@@ -104,7 +104,11 @@
                 </td>
             </tr>
         </table>
-        <span>신청 현황</span>
+
+
+        <div class="form-container-total">
+        <div class="mini-table-container">
+            <h2>신청 현황</h2>
         <table id="application-status">
             <tr>
                 <th>자리번호</th>
@@ -116,13 +120,43 @@
                 <td>대여 시작일 ~ 대여 종료일</td>
                 <td>대기중</td>
             </tr>
-
         </table>
+        </div>
+            <div>
+                <form th:action="@{/reservations}" method="post">
+                    <div class="mini-form-container">
+                        <h2>대기 중인 공간 결제</h2>
 
+                        <label for="spaceNumber">공간 번호</label>
+
+                        <label for="rentalFee">대여 요금</label>
+
+                        <label for="rentalDeposit">보증금</label>
+
+                        <label for="rentalDuration">대여 기간</label>
+                        <div th:each="dateInfo : ${dateInfos}">
+                            <p th:text="'대여 시작일: ' + ${#dates.format(dateInfo.startDate, 'yyyy-MM-dd')}"></p>
+                            <p th:text="'대여 종료일: ' + ${#dates.format(dateInfo.endDate, 'yyyy-MM-dd')}"></p>
+                        </div>
+
+                        <label for="creditCardNumber">카드 번호</label>
+                        <input type="text" id="creditCardNumber" name="creditCardNumber">
+
+                        <label for="creditCardExpireAt">유효기간</label>
+                        <input type="text" id="creditCardExpireAt" name="creditCardExpireAt">
+
+                        <label for="creditCardCvd">CVC</label>
+                        <input type="text" id="creditCardCvd" name="creditCardCvd">
+
+                        <button type="submit">결제</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
 
 
     </div>
-
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function () {
             window.onload = function() {

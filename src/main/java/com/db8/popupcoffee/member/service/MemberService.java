@@ -3,7 +3,10 @@ package com.db8.popupcoffee.member.service;
 import com.db8.popupcoffee.member.controller.dto.request.CreateMemberRequest;
 import com.db8.popupcoffee.member.controller.dto.request.MemberLoginForm;
 import com.db8.popupcoffee.member.domain.Member;
+import com.db8.popupcoffee.member.domain.PointHistory;
 import com.db8.popupcoffee.member.repository.MemberRepository;
+import com.db8.popupcoffee.member.repository.PointHistoryRepository;
+import com.db8.popupcoffee.member.service.dto.request.SurveyPointRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import static com.db8.popupcoffee.global.util.Policy.SURVEY_REWARD;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PointHistoryRepository pointHistoryRepository;
 
     @Transactional
     public void createMember(CreateMemberRequest form) {
@@ -32,6 +36,13 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(null);
         member.setPoint(member.getPoint() + SURVEY_REWARD);
         member.setLastSurveyed(LocalDateTime.now());
+
+        PointHistory lastPointHistory = pointHistoryRepository.findTopByMemberOrderByIdDesc(member);
+        int newCount = lastPointHistory.getChanges()+1;
+
+        PointHistory pointHistory = SurveyPointRequest.createSurveyRewardHistory(member, newCount);
+
+        pointHistoryRepository.save(pointHistory);
 
         memberRepository.save(member);
     }

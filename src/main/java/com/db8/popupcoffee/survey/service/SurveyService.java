@@ -69,10 +69,23 @@ public class SurveyService {
     }
 
     public List<SurveyItemSelected> getAdditionalComments() {
-        return surveyItemSelectedRepository.findAll().stream()
-                .filter(item -> item.getAdditionalComment() != null)
-                .collect(Collectors.toList());
+        YearMonth thisMonth = YearMonth.now();
+        EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(), thisMonth.getMonthValue());
+
+        // 저번 달의 설문조사 정보를 가져옵니다.
+        Survey lastMonthSurvey = surveyRepository.findByYearMonthOf(lastMonthYearMonth);
+
+        // 설문조사 정보가 null이 아니면 해당 설문조사의 항목 중 '기타' 항목을 필터링합니다.
+        if (lastMonthSurvey != null) {
+            List<SurveyItem> lastMonthSurveyItems = lastMonthSurvey.getItems();
+            return surveyItemSelectedRepository.findAll().stream()
+                    .filter(item -> lastMonthSurveyItems.contains(item.getItem()) && item.getAdditionalComment() != null)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
+
 
     public Survey getSurvey(Long surveyId) {
         return surveyRepository.findById(surveyId).orElseThrow(null);
