@@ -9,6 +9,7 @@ import com.db8.popupcoffee.survey.domain.SurveyItemSelected;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
+import com.db8.popupcoffee.survey.dto.response.SurveyItemInfo;
 import com.db8.popupcoffee.survey.dto.response.SurveySettingResponse;
 import com.db8.popupcoffee.survey.service.SurveyService;
 import jakarta.servlet.http.HttpSession;
@@ -29,9 +30,9 @@ public class SurveyController {
     @GetMapping("/setting")
     public String surveySetting(Model model) {
         Survey survey = surveyService.createSurvey();
-        List<SurveyItem> previousItems = surveyService.getPreviousSurveyItems();
+        List<SurveyItemInfo> previousItems = surveyService.getPreviousSurveyItems();
         List<SurveyItemSelected> additionalComments = surveyService.getAdditionalComments();
-        List<SurveyItem> nextMonthItems = surveyService.getNextMonthSurveyItems(); // 추가된 코드
+        List<SurveyItem> nextMonthItems = surveyService.getNextMonthSurveyItems();
 
         SurveySettingResponse response = new SurveySettingResponse(nextMonthItems, previousItems, additionalComments, survey);
 
@@ -76,7 +77,7 @@ public class SurveyController {
             return "redirect:/merchants/login";
         }
         Survey survey = surveyService.getSurvey(surveyId);
-        List<Integer> selectedItemCounts = surveyService.countSelectedItems(survey);
+        List<SurveyItemInfo> selectedItemCounts = surveyService.countSelectedItemsForThisMonth();
 
         model.addAttribute("survey", survey);
         model.addAttribute("items", survey.getItems());
