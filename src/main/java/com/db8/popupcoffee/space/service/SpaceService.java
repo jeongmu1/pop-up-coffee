@@ -106,7 +106,9 @@ public class SpaceService {
         FlexibleReservation flexible = flexibleReservationRepository.findById(id).orElseThrow();
 
         if (flexible.getStatus().equals(FlexibleReservationStatus.RESERVATION_FIXED)) {
-            throw new IllegalArgumentException("이미 확정되었습니다.");
+            var fixed = flexible.getFixedReservation();
+            unAssignFixedReservation(fixed.getId());
+            flexible.setStatus(FlexibleReservationStatus.CANCELED);
         }
 
         flexible.setTemporalSpace(null);

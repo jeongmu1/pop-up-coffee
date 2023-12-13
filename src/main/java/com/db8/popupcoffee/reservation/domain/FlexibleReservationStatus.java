@@ -5,11 +5,12 @@ import lombok.Getter;
 
 @Getter
 public enum FlexibleReservationStatus {
-    RESERVATION_FIXED("예약 확정"),
+    RESERVATION_FIXED("확정"),
     SPACE_FIXED("공간 확정"),
     SPACE_TEMPORARY_FIXED("임시 공간 설정"),
     WAITING("대기중"),
-    DEADLINE_MISSED("예약기간 만료");
+    DEADLINE_MISSED("예약기간 만료"),
+    CANCELED("취소됨");
 
     private final String message;
 
