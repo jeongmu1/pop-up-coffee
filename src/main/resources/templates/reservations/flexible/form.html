@@ -149,61 +149,34 @@
                         <input type="number" id="durations" name="duration"><br>
                     </div>
                 </div>
-                <div class="dates">
-                    <div class="piece">
                 <span>필수 포함 날짜:</span>
-                <input type="date" id ="dates1" name="dates1">
-                    </div>
-                    <div class="piece">
-                        <span>필수 포함 날짜:</span>
-                        <input type="date" id ="dates2" name="dates2">
-                    </div>
-                    <div class="piece">
-                        <span>필수 포함 날짜:</span>
-                        <input type="date" id ="dates3" name="dates3">
-                    </div>
-                    <div class="piece">
-                        <span>필수 포함 날짜:</span>
-                        <input type="date" id ="dates4" name="dates4">
-                    </div>
-                    <div class="piece">
-                        <span>필수 포함 날짜:</span>
-                        <input type="date" id ="dates5" name="dates5">
+                <div id="items">
+                    <div class="item">
+                        <label for="date">날짜</label>
+                        <input type="date" id="date" name="desiredDates[0]">
                     </div>
                 </div>
+                <button type="button" id="addItem">날짜 추가</button>
                 <input type="submit" value="예약하기">
             </form>
 
             <script>
-                document.querySelector('form').addEventListener('submit', function(e) {
-                    document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
-                    document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
-                    let ess = [];
-                    var date1 = document.getElementById('dates1').value;
-                    var date2 = document.getElementById('dates2').value;
-                    var date3 = document.getElementById('dates3').value;
-                    var date4 = document.getElementById('dates4').value;
-                    var date5 = document.getElementById('dates5').value;
+                document.getElementById('addItem').addEventListener('click', function() {
+                    const itemsDiv = document.getElementById('items');
+                    const newItem = document.querySelector('.item').cloneNode(true);
+                    const index = itemsDiv.children.length;
 
-                    if (date1 !== "" && !ess.includes(date1)) {
-                        ess.push(date1);
-                    }
-                    if (date2 !== "" && !ess.includes(date2)) {
-                        ess.push(date2);
-                    }
-                    if (date3 !== "" && !ess.includes(date3)) {
-                        ess.push(date3);
-                    }
-                    if (date4 !== "" && !ess.includes(date4)) {
-                        ess.push(date4);
-                    }
-                    if (date5 !== "" && !ess.includes(date5)) {
-                        ess.push(date5);
-                    }
-                    document.getElementById('hidden_dates').value = ess.join(",");
+                    newItem.querySelectorAll('select, input').forEach(input => {
+                        input.name = input.name.replace(/\[\d+]/, '[' + index + ']');
+                        input.id = input.name;
+                        input.value = '';
+                    });
 
-                    e.target.submit();
-                    alert(document.getElementById('hidden_dates').value)
+                    newItem.querySelectorAll('label').forEach(label => {
+                        label.setAttribute('for', label.htmlFor.replace(/\d+/, index));
+                    });
+
+                    itemsDiv.appendChild(newItem);
                 });
 
                 document.querySelector('form').addEventListener('submit', function(e) {

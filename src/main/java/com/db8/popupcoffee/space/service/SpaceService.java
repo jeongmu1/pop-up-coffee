@@ -7,7 +7,8 @@ import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.repository.FlexibleReservationRepository;
-import com.db8.popupcoffee.space.controller.dto.request.UnAssignmentRequest;
+import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
+import com.db8.popupcoffee.space.controller.dto.request.UpdateAssignmentRequest;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceInfo;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceReservations;
 import com.db8.popupcoffee.space.domain.Space;
@@ -17,11 +18,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SpaceService {
 
     private final SpaceRepository spaceRepository;
@@ -43,10 +46,10 @@ public class SpaceService {
         return spaces.stream().map(space ->
         {
             var fixedInfos = fixedReservations.stream()
-                .filter(it -> it.getTemporalSpace().equals(space))
+                .filter(it -> it.getTemporalSpace() != null && it.getTemporalSpace().equals(space))
                 .map(SimpleReservationInfo::from).toList();
             var flexibleInfos = flexibleReservations.stream()
-                .filter(it -> it.getTemporalSpace().equals(space))
+                .filter(it -> it.getTemporalSpace() != null && it.getTemporalSpace().equals(space))
                 .map(SimpleReservationInfo::from).toList();
 
             return new SpaceReservations(space.getNumber(),
@@ -56,12 +59,37 @@ public class SpaceService {
     }
 
     @Transactional
-    public void unAssignSpace(UnAssignmentRequest request) {
+    public void unAssignSpace(ReservationIdDto request) {
         if (request.fromFlexible()) {
             unAssignFlexibleReservation(request.id());
         } else {
             unAssignFixedReservation(request.id());
         }
+    }
+
+    @Transactional
+    public void updateAssignment(UpdateAssignmentRequest request) {
+        Space space = spaceRepository.findById(request.spaceId()).orElseThrow();
+        if (request.fromFlexible()) {
+            log.info("request : {}", request);
+            var flexible = flexibleReservationRepository.findById(request.id()).orElseThrow();
+            flexible.setTemporalRentalStartDate(request.startDate());
+            flexible.setTemporalRentalEndDate(request.endDate());
+            flexible.setStatus(FlexibleReservationStatus.SPACE_TEMPORARY_FIXED);
+            flexible.setTemporalSpace(space);
+        } else {
+            var fixed = fixedReservationRepository.findById(request.id()).orElseThrow();
+            fixed.setTemporalSpace(space);
+            fixed.setStartDate(request.startDate());
+            fixed.setEndDate(request.endDate());
+            fixed.setStatus(FixedReservationStatus.SPACE_TEMPORARY_FIXED);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<SpaceInfo> findAvailableSpaces(LocalDate startDate, LocalDate endDate) {
+        return spaceRepository.findAvailableSpaces(startDate, endDate).stream().map(SpaceInfo::from)
+            .toList();
     }
 
     private void unAssignFlexibleReservation(Long id) {

@@ -5,9 +5,11 @@ import com.db8.popupcoffee.member.controller.dto.MemberSessionInfo;
 import com.db8.popupcoffee.member.service.MemberService;
 import com.db8.popupcoffee.survey.domain.Survey;
 import com.db8.popupcoffee.survey.domain.SurveyItem;
+import com.db8.popupcoffee.survey.domain.SurveyItemSelected;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
+import com.db8.popupcoffee.survey.dto.response.SurveySettingResponse;
 import com.db8.popupcoffee.survey.service.SurveyService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -25,48 +27,47 @@ public class SurveyController {
     private final MemberService memberService;
 
     @GetMapping("/setting")
-    public String surveySetting(Model model, HttpSession session) {
-        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
-        if(sessionInfo == null) {
-            return "redirect:/login";
-        }
-
-        List<SurveyItem> surveyItemList = surveyService.findAll();
-        model.addAttribute("surveyItemList", surveyItemList);
-
-        // 전 달 설문지의 아이템들 가져오기
+    public String surveySetting(Model model) {
+        Survey survey = surveyService.createSurvey();
         List<SurveyItem> previousItems = surveyService.getPreviousSurveyItems();
-        model.addAttribute("previousItems", previousItems);
+        List<SurveyItemSelected> additionalComments = surveyService.getAdditionalComments();
+        List<SurveyItem> nextMonthItems = surveyService.getNextMonthSurveyItems(); // 추가된 코드
 
-        List<String> additionalComments = surveyService.getAdditionalComments();
-        model.addAttribute("additionalComments", additionalComments);
+        SurveySettingResponse response = new SurveySettingResponse(nextMonthItems, previousItems, additionalComments, survey);
+
+        model.addAttribute("response", response);
 
         return "surveys/setting";
     }
 
     @PostMapping("/setting")
-    public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems, List<String> selectedaAdditionalComment, HttpSession session) {
-        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
-        if(sessionInfo == null) {
-            return "redirect:/login";
-        }
-
+    public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems, List<String> selectedaAdditionalComment) {
         surveyService.surveySetting(surveySettingRequest, selectedItems, selectedaAdditionalComment);
 
-        return "";
+        return "home";
+    }
+
+
+    @PostMapping("/deleteSurveyItem")
+    public String deleteSurveyItem(Long surveyItemId) {
+        surveyService.deleteSurveyItem(surveyItemId);
+
+        return "redirect:/surveys/setting";
+    }
+
+    @PostMapping("/deleteAdditionalComment")
+    public String deleteAdditionalComment(Long additionalCommentId) {
+        surveyService.deleteAdditionalComment(additionalCommentId);
+        return "redirect:/surveys/setting";
     }
 
     @PostMapping("/addSurveyItem")
-    public String addSurveyItem(SurveyItemRequest form, HttpSession session) {
-        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
-        if(sessionInfo == null) {
-            return "redirect:/login";
-        }
+    public String addSurveyItem(SurveyItemRequest surveyItemRequest) {
+        surveyService.addItemToSurvey(surveyItemRequest);
 
-        surveyService.addSurveyItem(form);
-
-        return "";
+        return "redirect:/surveys/setting";
     }
+
 
     @GetMapping("/{surveyId}")
     public String showSurvey(@PathVariable Long surveyId, Model model, HttpSession session) {
@@ -74,7 +75,6 @@ public class SurveyController {
         if(sessionInfo == null) {
             return "redirect:/merchants/login";
         }
-
         Survey survey = surveyService.getSurvey(surveyId);
         List<Integer> selectedItemCounts = surveyService.countSelectedItems(survey);
 
@@ -95,7 +95,7 @@ public class SurveyController {
         surveyService.submitResponse(surveyId, sessionInfo.id(), form);
         memberService.increasePointAndSetLastSurveyed(sessionInfo.id());
 
-        return "";
+        return "home";
     }
 
 

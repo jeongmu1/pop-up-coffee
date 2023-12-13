@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FLIP COFFEE</title>
-    <link rel="stylesheet" href="/css/survey.css">
+    <link rel="stylesheet" href="/css/surveySetting.css">
 </head>
 <body>
 <header class="header">
@@ -66,55 +66,89 @@
             <li><a href="#" class="small">설문 관리</a></li>
         </ul>
     </div>
-    <div class="survey">
-        <div class="h3">
-            <h3>설문조사</h3>
-            <div class="plain">
-            <span class="ex" >고객님의 소중한 의견에 감사드립니다.
-                설문조사를 통해 더 나은 서비스를 제공하기 위해 노력하고 있습니다.
-                저희 업체에 들어왔으면 하는 업체 종류가 있다면, 구체적으로 어떤 종류의 업체를 원하시는지 알려주시면
-                감사하겠습니다.</span>
-            </div>
-            <div class="survey-form">
-                <form th:action="@{'/surveys/' + ${survey.id} + '/responses'}" method="post" id="surveyForm">
-                    <div th:each="item, stat : ${items}">
-                        <input type="checkbox" name="selectedItems" th:value="${item.id}" th:id="${'checkbox-' + item.id}" th:attr="data-name=${item.name}"> <span th:text="${item.name}"></span>
-                        <span class="counts" th:if="${selectedItemCounts[stat.index]}" th:text="' ' + ${selectedItemCounts[stat.index]} + '회 선택됨'"></span> <br>
-                        <input type="text" th:id="${'textarea-' + item.id.toString()}" name="noAdditionalComment" style="display: none;" placeholder="기타 업체 종류를 입력해주세요"></input>
+    <div>
+        <h2 th:text="${response.survey.yearMonthOf.yearMonth.year+ '년 '+ response.survey.yearMonthOf.yearMonth.month.getValue() + '월 설문조사 생성'}"></h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th class="wide-cell">다음 달 설문조사 항목</th>
+                </tr>
+                </thead>
+                <tbody class="tbody-container">
+                <tr th:each="item : ${response.nextMonthItems}">
+                    <td class="wide-cell">
+                        <span th:text="${item.name}">항목명</span>
+                        <form method="POST" th:action="@{/surveys/deleteSurveyItem}">
+                            <input type="hidden" th:value="${item.id}" name="surveyItemId">
+                            <button class="table-button" type="submit">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-                    </div>
-                    <input type="reset">
-                    <input id="" type="submit" value="제출">
-                </form>
-            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th class="wide-cell">설문조사 항목</th>
+                </tr>
+                </thead>
+                <tbody class="tbody-container">
+                <tr th:each="survey : ${response.previousItems()}">
+                    <td class="wide-cell">
+                        <span th:text="${survey.name}">항목명</span>
+                        <form method="POST" th:action="@{/surveys/addSurveyItem}">
+                            <input type="hidden" th:value="${response.survey.id}" name="surveyId">
+                            <input type="hidden" th:value="${survey.name}" name="name"/>
+                            <button class="table-button" type="submit">추가</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-            <script>
-                window.addEventListener('DOMContentLoaded', (event) => {
-                    const formElement = document.querySelector('.survey-form form');
-                    const otherItem = [...formElement.children].find(element => element.querySelector('span').innerText === '기타');
-                    const resetButton = formElement.querySelector('input[type="reset"]');
+            <table>
+                <thead>
+                <tr>
+                    <th>기타 항목</th>
+                </tr>
+                </thead>
+                <tbody class="tbody-container">
+                <tr th:each="comment : ${response.additionalComments}">
+                    <td>
+                        <span th:text="${comment.additionalComment}">기타 의견</span>
+                        <form method="POST" th:action="@{/surveys/deleteAdditionalComment}">
+                            <input type="hidden" th:value="${comment.id}" name="additionalCommentId">
+                            <button class="table-button" type="submit">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-                    if (otherItem) {
-                        formElement.insertBefore(otherItem, resetButton);
-                    }
-                });
 
-
-
-                document.getElementById('surveyForm').addEventListener('change', function(e) {
-                    if (e.target.name === 'selectedItems') {
-                        let textarea = document.getElementById('textarea-' + e.target.value);
-                        let itemName = e.target.dataset.name;
-                        if (itemName === '기타') {
-                            textarea.style.display = e.target.checked ? 'block' : 'none';
-                            document.getElementById('textarea-' + e.target.value).setAttribute('name', 'additionalComment');
-                        }
-                    }
-                });
-            </script>
+        <div>
+            <form method="POST" th:action="@{/surveys/addSurveyItem}">
+                <input type="hidden" th:value="${response.survey.id}" name="surveyId">
+                <input type="text" id="newItem" name="name" />
+                <button type="submit">추가</button>
+            </form>
 
         </div>
+
+
+        <button type="submit">제출하기</button>
     </div>
+
+
+
+
+
+
+
+
 </main>
 <footer>
     <div class="footer-container">

@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.header .container,
+.nav .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header .right,
+.nav .right {
+    display: flex;
+    align-items: center;
+}
+
+.right a {
+    margin-left: 20px;
+    color: black;
+    text-decoration: none;
+}
+
+.main {
+    padding: 20px 0;
+}
+
+.sidebar {
+    float: left;
+    width: 20%;
+}
+
+#application-status {
+    margin: 20px 0;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#application-status th,
+#application-status td {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.historyCell {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.container_mypage {
+    margin-top: 20px;
+}
+
+.container_mypage h2 {
+    margin-bottom: 20px;
+}
+
+.profile_section {
+    display: flex;
+}
+
+.profile {
+    width: 30%;
+}
+
+.company_info {
+    width: 70%;
+    margin-left: 20px;
+}
+
+.company_info p {
+    margin: 10px 0;
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}

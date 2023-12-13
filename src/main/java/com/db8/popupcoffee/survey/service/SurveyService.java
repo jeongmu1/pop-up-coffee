@@ -32,10 +32,6 @@ public class SurveyService {
     private final SurveyItemSelectedRepository surveyItemSelectedRepository;
     private final MemberRepository memberRepository;
 
-    public List<SurveyItem> findAll() {
-        return surveyItemRepository.findAll();
-    }
-
     @Transactional
     public void surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItemsId, List<String> selectedaAdditionalComment) {
         // 설문지 생성
@@ -52,9 +48,8 @@ public class SurveyService {
 
     public List<SurveyItem> getPreviousSurveyItems() {
         YearMonth thisMonth = YearMonth.now();
-        YearMonth lastMonth = thisMonth.minusMonths(1);
 
-        EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(lastMonth.getYear(), lastMonth.getMonthValue());
+        EmbeddableYearMonth lastMonthYearMonth = new EmbeddableYearMonth(thisMonth.getYear(), thisMonth.getMonthValue());
         Survey lastMonthSurvey = surveyRepository.findByYearMonthOf(lastMonthYearMonth);
 
         List<SurveyItem> previousSurveyItems = new ArrayList<>();
@@ -65,16 +60,10 @@ public class SurveyService {
         return previousSurveyItems;
     }
 
-    public List<String> getAdditionalComments() {
+    public List<SurveyItemSelected> getAdditionalComments() {
         return surveyItemSelectedRepository.findAll().stream()
-                .map(SurveyItemSelected::getAdditionalComment)
+                .filter(item -> item.getAdditionalComment() != null)
                 .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void addSurveyItem(SurveyItemRequest form) {
-        SurveyItem surveyItem = form.toEntity();
-        surveyItemRepository.save(surveyItem);
     }
 
     public Survey getSurvey(Long surveyId) {
@@ -101,5 +90,64 @@ public class SurveyService {
     }
 
 
+    @Transactional
+    public void deleteSurveyItem(Long id) {
+        SurveyItem item = surveyItemRepository.findById(id).orElseThrow(null);
+
+        surveyItemRepository.delete(item);
+    }
+
+    @Transactional
+    public void deleteAdditionalComment(Long id) {
+        SurveyItemSelected selectedItem = surveyItemSelectedRepository.findById(id)
+                .orElseThrow(null);
+        surveyItemSelectedRepository.delete(selectedItem);
+    }
+
+    @Transactional
+    public Survey createSurvey() {
+        YearMonth currentYearMonth = YearMonth.now();
+        YearMonth nextYearMonth = currentYearMonth.plusMonths(1);
+
+        EmbeddableYearMonth nextMonthYearMonth = new EmbeddableYearMonth(nextYearMonth.getYear(), nextYearMonth.getMonth().getValue());
+        Survey survey = surveyRepository.findByYearMonthOf(nextMonthYearMonth);
+
+        if (survey == null) {
+            survey = Survey.builder()
+                    .yearMonthOf(nextMonthYearMonth)
+                    .build();
+
+            survey = surveyRepository.save(survey);
+        }
+
+        return survey;
+    }
+
+    @Transactional
+    public void addItemToSurvey(SurveyItemRequest surveyItemRequest) {
+        Long surveyId = surveyItemRequest.surveyId();
+        String itemName = surveyItemRequest.name();
+
+        Survey survey = surveyRepository.findById(surveyId).orElseThrow(null);
+
+        SurveyItem newItem = SurveyItem.createItem(itemName, survey);
+        survey.getItems().add(newItem);
+        surveyItemRepository.save(newItem);
+    }
+
+    public List<SurveyItem> getNextMonthSurveyItems() {
+        YearMonth thisMonth = YearMonth.now();
+        YearMonth nextMonth = thisMonth.plusMonths(1); // 다음 달을 구합니다.
+
+        EmbeddableYearMonth nextMonthYearMonth = new EmbeddableYearMonth(nextMonth.getYear(), nextMonth.getMonthValue());
+        Survey nextMonthSurvey = surveyRepository.findByYearMonthOf(nextMonthYearMonth);
+
+        List<SurveyItem> nextMonthSurveyItems = new ArrayList<>();
+        if (nextMonthSurvey != null) {
+            nextMonthSurveyItems.addAll(nextMonthSurvey.getItems());
+        }
+
+        return nextMonthSurveyItems;
+    }
 
 }
