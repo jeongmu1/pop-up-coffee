@@ -14,7 +14,6 @@
     <script type="text/javascript" th:inline="javascript">
         let spaces = $.parseJSON('[[ ${spaces} ]]');
         let infos = $.parseJSON('[[ ${spaceInfos} ]]');
-        console.log(infos);
     </script>
 </head>
 <body>
@@ -51,11 +50,12 @@
                 <td>업체명</td>
                 <td>등급</td>
                 <td>이용가능기간</td>
+                <td>대여 시작 날짜</td>
+                <td>대여 종료 날짜</td>
                 <td>대여기간</td>
-                <td>마감기한</td>
+                <td>대여신청기간</td>
                 <td>포함되었으면하는날짜</td>
                 <td>상태</td>
-                <td></td>
             </tr>
             </thead>
             <tr th:each="flexible : ${nonFixedFlexibles}">
@@ -63,6 +63,8 @@
                 <td th:text="${flexible.merchantName}"></td>
                 <td th:text="${flexible.grade}"></td>
                 <td th:text="${flexible.availabilityStartDate + '~' + flexible.availabilityEndDate}"></td>
+                <td th:text="${flexible.tempStartDate}"></td>
+                <td th:text="${flexible.tempEndDate}"></td>
                 <td>
                     <span th:if="${flexible.duration == null}" th:text="${'무관'}"></span>
                     <span th:if="${flexible.duration != null}" th:text="${flexible.duration}"></span>
@@ -96,7 +98,7 @@
 
 
             <form id="spaceFix" th:action="@{/spaces/assignment/status/fixed}" th:method="patch">
-                <input type="hidden" id="hidden-flexible-company-number" name="id" readonly><br>
+                <input type="hidden" id="hidden-flexible-company-number" name="id"><br>
                 <input type="hidden" id="hidden-flex-start-date" name="startDate"><br>
                 <input type="hidden" id="hidden-flex-end-date" name="endDate"><br>
                 <input type="hidden" id="hidden-flex-spaceNumber" name="spaceId"> <br>
@@ -120,6 +122,8 @@
                     <option th:each="space : ${spaces}" th:value="${space.id}" th:text="${space.number}"></option>
                 </select>
                 <input type="hidden" id="hidden-from-flexible" name="fromFlexible"><br>
+                <span id="picName"></span>
+                <span id="picPhone"></span>
                 <input type="submit" value="수정">
             </form>
 
