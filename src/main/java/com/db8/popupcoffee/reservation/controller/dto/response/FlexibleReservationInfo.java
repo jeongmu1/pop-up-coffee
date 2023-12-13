@@ -20,11 +20,14 @@ public record FlexibleReservationInfo(
     String status,
     LocalDate deadline,
     List<LocalDate> desiredDates,
-    Long id
+    Long id,
+    String contactPhone,
+    String contactManager
 ) {
 
     public static FlexibleReservationInfo from(FlexibleReservation entity) {
         Merchant merchant = entity.getMerchantContract().getMerchant();
+        var contact = entity.getMerchantContract().getContact();
         return FlexibleReservationInfo.builder()
             .merchantName(merchant.getName())
             .gradeScore(merchant.getGradeScore())
@@ -36,6 +39,8 @@ public record FlexibleReservationInfo(
             .deadline(entity.getDeadline())
             .desiredDates(entity.getDesiredDates().stream().map(DesiredDate::getDate).toList())
             .id(entity.getId())
+            .contactManager(contact.getContactManager())
+            .contactPhone(contact.getContactPhone())
             .build();
     }
 }
