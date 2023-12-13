@@ -93,10 +93,10 @@ public class ReservationService {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
         Stream<ReservationHistory> onlyFixeds =
             fixedReservationRepository.findByMerchantAndFromFlexible(merchant, false).stream()
-                .map(ReservationHistory::from);
+                .map(ReservationHistory::of);
         Stream<ReservationHistory> fromFlexibles =
             flexibleReservationRepository.findByMerchant(merchant).stream()
-                .map(ReservationHistory::from);
+                .map(flexible -> ReservationHistory.of(flexible, feeCalculator));
 
         return Stream.concat(onlyFixeds, fromFlexibles)
             .sorted(Comparator.comparing(ReservationHistory::reservedDate).reversed()).toList();
@@ -105,7 +105,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationHistory> findNotRentedFixedReservations() {
         return fixedReservationRepository.findByStatusIsNot(FixedReservationStatus.FIXED).stream()
-            .map(ReservationHistory::from).toList();
+            .map(ReservationHistory::of).toList();
     }
 
     @Transactional
