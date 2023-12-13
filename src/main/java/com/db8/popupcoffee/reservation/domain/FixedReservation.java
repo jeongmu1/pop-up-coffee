@@ -43,7 +43,7 @@ public class FixedReservation extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FixedReservationStatus status = FixedReservationStatus.SPACE_AWAITING;
+    private FixedReservationStatus status = FixedReservationStatus.FIXED;
 
     @Column(nullable = false)
     private LocalDate startDate;

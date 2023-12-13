@@ -1,5 +1,7 @@
 package com.db8.popupcoffee.space.service;
 
+import com.db8.popupcoffee.rental.domain.Duration;
+import com.db8.popupcoffee.rental.repository.SpaceRentalAgreementRepository;
 import com.db8.popupcoffee.reservation.controller.dto.response.SimpleReservationInfo;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
 import com.db8.popupcoffee.reservation.domain.FixedReservationStatus;
@@ -30,6 +32,7 @@ public class SpaceService {
     private final SpaceRepository spaceRepository;
     private final FixedReservationRepository fixedReservationRepository;
     private final FlexibleReservationRepository flexibleReservationRepository;
+    private final SpaceRentalAgreementRepository spaceRentalAgreementRepository;
 
     public List<SpaceInfo> findAllSpaces() {
         return spaceRepository.findAll().stream().map(SpaceInfo::from).toList();
@@ -87,7 +90,10 @@ public class SpaceService {
             fixed.setTemporalSpace(space);
             fixed.setStartDate(request.startDate());
             fixed.setEndDate(request.endDate());
-            fixed.setStatus(FixedReservationStatus.SPACE_TEMPORARY_FIXED);
+
+            var rental = fixed.getSpaceRentalAgreement();
+            rental.setSpace(space);
+            rental.setRentalDuration(new Duration(request.startDate(), request.endDate()));
         }
     }
 
@@ -116,11 +122,9 @@ public class SpaceService {
     private void unAssignFixedReservation(Long id) {
         FixedReservation fixed = fixedReservationRepository.findById(id).orElseThrow();
 
-        if (fixed.getStatus().equals(FixedReservationStatus.FIXED)) {
-            throw new IllegalArgumentException("이미 확정되었습니다.");
-        }
-
         fixed.setTemporalSpace(null);
-        fixed.setStatus(FixedReservationStatus.SPACE_AWAITING);
+        fixed.setStatus(FixedReservationStatus.CANCELED);
+
+        spaceRentalAgreementRepository.delete(fixed.getSpaceRentalAgreement());
     }
 }

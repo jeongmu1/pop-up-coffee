@@ -57,9 +57,10 @@ public class ReservationService {
         if (availableSpaces.isEmpty()) {
             throw new IllegalArgumentException("해당 날짜에 예약 가능한 공간이 없습니다.");
         }
-        fixedReservationRepository.save(dto.toEntity(contract, businessType,
+        var fixed = fixedReservationRepository.save(dto.toEntity(contract, businessType,
             feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate()),
             availableSpaces.stream().findFirst().orElseThrow()));
+        rentalService.createSpaceRental(new SpaceRentalRequest(fixed.getId()));
     }
 
     @Transactional
