@@ -199,8 +199,16 @@ span {
     width: 100%;
     text-align: center;
 }
+#application-status2 {
+    width: 100%;
+    text-align: center;
+}
 
 #application-status td {
+    padding: 10px;
+    border: 1px solid black;
+}
+#application-status2 td {
     padding: 10px;
     border: 1px solid black;
 }

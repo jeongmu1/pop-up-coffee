@@ -1,5 +1,6 @@
 package com.db8.popupcoffee.reservation.controller.dto.response;
 
+import com.db8.popupcoffee.global.util.FeeCalculator;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
@@ -18,6 +19,9 @@ public record ReservationHistory(
     String space, // null 시 배정 중
     String merchant,
     String businessType,
+    // 결제 관련
+    Long rentalFee,
+    Long rentalDeposit,
 
     // 유동 예약 관련
     boolean flexible,
@@ -25,7 +29,7 @@ public record ReservationHistory(
     LocalDate availableEndDate
 ) {
 
-    public static ReservationHistory from(FixedReservation fixedReservation) {
+    public static ReservationHistory of(FixedReservation fixedReservation) {
         SpaceRentalAgreement rental = fixedReservation.getSpaceRentalAgreement();
         return ReservationHistory.builder()
             .id(fixedReservation.getId())
@@ -33,6 +37,8 @@ public record ReservationHistory(
             .status(fixedReservation.getStatus().getMessage())
             .rentalStartDate(fixedReservation.getStartDate())
             .rentalEndDate(fixedReservation.getEndDate())
+            .rentalFee(rental != null ? rental.getRentalFee() : null)
+            .rentalDeposit(rental != null ? rental.getRentalDeposit() : null)
             .charged(true)
             .space(rental != null ? rental.getSpace().getNumber() : null)
             .flexible(false)
@@ -42,7 +48,8 @@ public record ReservationHistory(
             .build();
     }
 
-    public static ReservationHistory from(FlexibleReservation flexibleReservation) {
+    public static ReservationHistory of(FlexibleReservation flexibleReservation,
+        FeeCalculator feeCalculator) {
         ReservationHistoryBuilder historyBuilder = ReservationHistory.builder();
         historyBuilder.reservedDate(flexibleReservation.getCreatedAt().toLocalDate())
             .id(flexibleReservation.getId())
@@ -56,6 +63,17 @@ public record ReservationHistory(
             .charged(false);
 
         FlexibleReservationStatus status = flexibleReservation.getStatus();
+        if (status.equals(FlexibleReservationStatus.SPACE_FIXED)) {
+            historyBuilder.rentalDeposit(feeCalculator.calculateRentalDeposit(
+                    flexibleReservation.getTemporalRentalStartDate(),
+                    flexibleReservation.getTemporalRentalEndDate()))
+                .rentalFee(feeCalculator.calculateRentalFee(
+                    flexibleReservation.getTemporalRentalStartDate(),
+                    flexibleReservation.getTemporalRentalEndDate()))
+                .space(flexibleReservation.getTemporalSpace().getNumber())
+                .rentalStartDate(flexibleReservation.getTemporalRentalStartDate())
+                .rentalEndDate(flexibleReservation.getTemporalRentalEndDate());
+        }
 
         if (status.equals(FlexibleReservationStatus.RESERVATION_FIXED)
             && flexibleReservation.getFixedReservation() != null) {
