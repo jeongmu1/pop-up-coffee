@@ -10,6 +10,7 @@ import com.db8.popupcoffee.survey.domain.SurveyResponse;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
+import com.db8.popupcoffee.survey.dto.response.SurveyInfo;
 import com.db8.popupcoffee.survey.dto.response.SurveyItemInfo;
 import com.db8.popupcoffee.survey.repository.SurveyItemRepository;
 import com.db8.popupcoffee.survey.repository.SurveyItemSelectedRepository;
@@ -33,6 +34,10 @@ public class SurveyService {
     private final SurveyResponseRepository surveyResponseRepository;
     private final SurveyItemSelectedRepository surveyItemSelectedRepository;
     private final MemberRepository memberRepository;
+
+    public List<SurveyInfo> findAllSurveyInfos() {
+        return surveyRepository.findAll().stream().map(SurveyInfo::from).toList();
+    }
 
     @Transactional
     public void surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItemsId,
