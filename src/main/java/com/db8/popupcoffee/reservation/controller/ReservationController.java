@@ -3,11 +3,13 @@ package com.db8.popupcoffee.reservation.controller;
 import com.db8.popupcoffee.global.util.SessionUtil;
 import com.db8.popupcoffee.merchant.controller.dto.MerchantSessionInfo;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
+import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.service.MerchantService;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFixedReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.request.FlexibleChargeRequest;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
+import com.db8.popupcoffee.reservation.controller.dto.response.GradeDiscountInfo;
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.service.ReservationService;
@@ -65,7 +67,10 @@ public class ReservationController {
     }
 
     @GetMapping("/fixed/form")
-    public String getFixedReservationForm() {
+    public String getFixedReservationForm(Model model, HttpSession session) {
+        Merchant merchant = merchantService.getMerchantInfo(
+            SessionUtil.getMerchantSessionInfo(session).id());
+        model.addAttribute("gradeInfo", GradeDiscountInfo.from(merchant.getGradeScore()));
         return "reservations/fixed/form";
     }
 
