@@ -25,6 +25,8 @@ import com.db8.popupcoffee.reservation.service.dto.FixedDatesInfoDto;
 import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
 import com.db8.popupcoffee.space.domain.Space;
 import com.db8.popupcoffee.space.service.SpaceService;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -89,6 +91,20 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
+    public List<FlexibleReservationInfo> findAllFlexibleReservations() {
+        Iterable<FlexibleReservation> reservations = flexibleReservationRepository.findAll();
+        List<FlexibleReservationInfo> reservationInfos = new ArrayList<>();
+
+        for (FlexibleReservation reservation : reservations) {
+            reservationInfos.add(FlexibleReservationInfo.from(reservation));
+        }
+
+        return reservationInfos;
+    }
+
+
+
+    @Transactional(readOnly = true)
     public List<ReservationHistory> getReservationHistories(long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
         Stream<ReservationHistory> onlyFixeds =
@@ -101,6 +117,16 @@ public class ReservationService {
         return Stream.concat(onlyFixeds, fromFlexibles)
             .sorted(Comparator.comparing(ReservationHistory::reservedDate).reversed()).toList();
     }
+
+    @Transactional(readOnly = true)
+    public List<ReservationHistory> getFixedHistories(long merchantId) {
+        Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
+        return fixedReservationRepository.findByMerchantAndFromFlexible(merchant, false).stream()
+                .map(ReservationHistory::from)
+                .sorted(Comparator.comparing(ReservationHistory::reservedDate).reversed())
+                .toList();
+    }
+
 
     @Transactional(readOnly = true)
     public List<ReservationHistory> findNotRentedFixedReservations() {

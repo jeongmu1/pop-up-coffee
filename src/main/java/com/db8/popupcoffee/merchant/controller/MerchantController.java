@@ -75,8 +75,10 @@ public class MerchantController {
         MyPageResponse myPageResponse = new MyPageResponse(merchant, scoreForNextGrade, currentGradeMinScore, nextGradeMinScore);
 
         model.addAttribute("myPageResponse", myPageResponse);
-        model.addAttribute("histories", reservationService.getReservationHistories(
+        model.addAttribute("fixed", reservationService.getFixedHistories(
                 SessionUtil.getMerchantSessionInfo(session).id()));
+        model.addAttribute("nonFixedFlexibles",
+                reservationService.findAllFlexibleReservations());
 
         return "merchants/myPage";
     }
