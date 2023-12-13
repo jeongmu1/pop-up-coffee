@@ -29,7 +29,6 @@ import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
 import com.db8.popupcoffee.space.domain.Space;
 import com.db8.popupcoffee.space.service.SpaceService;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -171,15 +170,9 @@ public class ReservationService {
             .orElseThrow();
     }
 
-    public List<FlexibleReservationInfo> getFlexibleHistoried(Long merchantId) {
+    public List<ReservationHistory> getFlexibleHistories(Long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
         List<FlexibleReservation> reservations = flexibleReservationRepository.findByMerchant(merchant);
-
-        List<FlexibleReservationInfo> reservationInfos = new ArrayList<>();
-        for (FlexibleReservation reservation : reservations) {
-            reservationInfos.add(FlexibleReservationInfo.from(reservation));
-        }
-
-        return reservationInfos;
+        return reservations.stream().map(flexible -> ReservationHistory.of(flexible, feeCalculator)).toList();
     }
 }

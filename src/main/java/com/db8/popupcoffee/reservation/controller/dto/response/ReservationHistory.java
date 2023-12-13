@@ -2,10 +2,13 @@ package com.db8.popupcoffee.reservation.controller.dto.response;
 
 import com.db8.popupcoffee.global.util.FeeCalculator;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
+import com.db8.popupcoffee.reservation.domain.DesiredDate;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import java.time.LocalDate;
+import java.util.List;
+
 import lombok.Builder;
 
 @Builder
@@ -26,7 +29,10 @@ public record ReservationHistory(
     // 유동 예약 관련
     boolean flexible,
     LocalDate availableStartDate,
-    LocalDate availableEndDate
+    LocalDate availableEndDate,
+    Long duration,
+    LocalDate deadline,
+    List<LocalDate> desiredDates
 ) {
 
     public static ReservationHistory of(FixedReservation fixedReservation) {
@@ -60,6 +66,9 @@ public record ReservationHistory(
             .merchant(flexibleReservation.getMerchantContract().getMerchant().getName())
             .businessType(flexibleReservation.getMerchantContract().getMerchant().getBusinessType()
                 .getName())
+                .duration(flexibleReservation.getDuration())
+                .deadline(flexibleReservation.getDeadline())
+                .desiredDates(flexibleReservation.getDesiredDates().stream().map(DesiredDate::getDate).toList())
             .charged(false);
 
         FlexibleReservationStatus status = flexibleReservation.getStatus();
