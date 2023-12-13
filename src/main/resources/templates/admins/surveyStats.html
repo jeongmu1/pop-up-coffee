@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>FLIP COFFEE</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="/css/script/surveyChart.js"></script>
   <link rel="stylesheet" th:href="@{/css/surveyStats.css}">
 </head>
 <body>
@@ -18,6 +17,7 @@
         <a href="/store" class ="menu">STORE</a>
         <a href="/community" class ="menu">COMMUNITY</a>
         <a th:href="@{/menu/manage}" class ="menu">MANAGER</a> <!--관리자 로그인시 나타나는 메뉴-->
+
       </div>
       <div class ="right">
         <a href="" class ="login">로그인</a>
@@ -66,12 +66,49 @@
       <li><a href="#" class="small">설문 관리</a></li>
     </ul>
   </div>
+<!--여기서 부터 코드 추가-->
+  <div class="chart-container">
+    <div class="chart-h1"> <!--스타일 부분 나중에 수정.-->
+      <h1>설문조사 통계 차트</h1>
+      <div class="chart-style">
+        <form th:action="@{surveys}" method="post">
+          <canvas id="myChart"></canvas>
+        </form>
+      </div>
+    </div>
+  </div>
 
- <!--차트 통계 관리 여기에서 부터 구현할거임.-->
-  <canvas id="myChart"></canvas>
-  <button onclick="actions[0].handler(myChart)">Randomize</button>
-  <button onclick="actions[1].handler(myChart)">Toggle Doughnut View</button>
+  <script>
+      fetch('/surveys/' + surveyId)
+          .then(response => response.json())
+          .then(survey => {
+              // 선택된 항목들만 필터링
+              const selectedItems = survey.items.filter(item => item.isSelected);
 
+              // 모든 항목이 선택된 횟수의 합 계산
+              const totalCounts = selectedItems.reduce((total, item) => total + item.count, 0);
+
+              const data = {
+                  labels: selectedItems.map(item => item.name), // 선택된 설문조사 항목 이름
+                  datasets: [{
+                      data: selectedItems.map(item => (item.count / totalCounts) * 100), // 각 항목이 선택된 횟수의 백분율
+                      backgroundColor: selectedItems.map((item, index) => `hsl(${index * 25}, 100%, 50%)`)
+                  }]
+              };
+
+              const options = {
+                  responsive: true,
+                  maintainAspectRatio: false
+              };
+
+              const ctx = document.getElementById('myChart').getContext('2d');
+              const myChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: data,
+                  options: options
+              });
+          });
+  </script>
 </main>
 <footer>
   <div class="footer-container">

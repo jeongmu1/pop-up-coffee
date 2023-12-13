@@ -105,27 +105,29 @@ am5.ready(function () {
     });
 
     series.columns.template.events.on("click", function (ev) {
-        var id = ev.target.dataItem.dataContext.id;
-        var startDate = new Date(ev.target.dataItem.dataContext.start);
-        var endDate = new Date(ev.target.dataItem.dataContext.end);
-        var spaceNum = ev.target.dataItem.dataContext.category;
-        var forms = ev.target.dataItem.dataContext.forms;
-
+        let id = ev.target.dataItem.dataContext.id;
+        let startDate = new Date(ev.target.dataItem.dataContext.start);
+        let endDate = new Date(ev.target.dataItem.dataContext.end);
+        let spaceNum = ev.target.dataItem.dataContext.category;
+        let forms = ev.target.dataItem.dataContext.forms;
+        console.log(forms);
 
         console.log(forms);
-        var formattedStartDate = formatDate(startDate);
-        var formattedEndDate = formatDate(endDate);
+        let formattedStartDate = formatDate(startDate);
+        let formattedEndDate = formatDate(endDate);
 
         // 폼 필드에 값을 설정
         document.getElementById('company-number').value = id;
         document.getElementById('start-date').value = formattedStartDate;
         document.getElementById('end-date').value = formattedEndDate;
-        document.getElementById('spaceNumber').value = spaceNum;
-        document.getElementById('fromFlex').value = forms;
+        // document.getElementById('spaceNumber').value = spaceNum;
+        // document.getElementById('fromFlex').value = Boolean(forms);
         document.getElementById('hidden_company-number').value = id;
         document.getElementById('hidden_fromFlex').value = Boolean(forms);
+        // document.getElementById('hidden-from-flexible').value = Boolean(forms);
+        document.getElementById('hidden-from-flexible').value = Boolean(forms);
+        console.log(document.getElementById('hidden-from-flexible').value);
     });
-
 
     function formatDate(date) {
         var year = date.getFullYear();
@@ -134,7 +136,18 @@ am5.ready(function () {
 
         return year + '-' + month + '-' + day;
     }
+    const table = document.getElementById('flexibleMerchant');
+    const rows = table.getElementsByTagName('tr');
 
+    Array.from(rows).forEach((row,index) => {
+        row.addEventListener('click',() => {
+            const cells = row.getElementsByTagName('td');
+            const companyName = cells[0].innerText;
+
+            document.getElementById('flexible-company-number').value = companyName;
+            document.getElementById('hidden-from-flexible').value = Boolean(forms);
+        });
+    });
 
     series.data.setAll(data);
 

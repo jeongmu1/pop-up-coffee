@@ -77,7 +77,8 @@ public class FixedReservation extends BaseTimeEntity {
         LocalDate endDate,
         long paymentAmount,
         CreditCard creditCard,
-        BusinessType businessType
+        BusinessType businessType,
+        Space temporalSpace
     ) {
         this.merchantContract = merchantContract;
         this.startDate = startDate;
@@ -85,5 +86,6 @@ public class FixedReservation extends BaseTimeEntity {
         this.paymentAmount = paymentAmount;
         this.creditCard = creditCard;
         this.businessType = businessType;
+        this.temporalSpace = temporalSpace;
     }
 }

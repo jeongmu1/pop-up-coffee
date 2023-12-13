@@ -18,11 +18,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SpaceService {
 
     private final SpaceRepository spaceRepository;
@@ -68,7 +70,13 @@ public class SpaceService {
     @Transactional
     public void updateAssignment(UpdateAssignmentRequest request) {
         Space space = spaceRepository.findById(request.spaceId()).orElseThrow();
+        if (spaceRepository.findAvailableSpaces(request.startDate(), request.endDate()).stream()
+            .anyMatch(s -> s.equals(space))) {
+            throw new IllegalArgumentException("해당 공간은 이용이 불가능합니다.");
+        }
+
         if (request.fromFlexible()) {
+            log.info("request : {}", request);
             var flexible = flexibleReservationRepository.findById(request.id()).orElseThrow();
             flexible.setTemporalRentalStartDate(request.startDate());
             flexible.setTemporalRentalEndDate(request.endDate());
@@ -84,9 +92,14 @@ public class SpaceService {
     }
 
     @Transactional(readOnly = true)
-    public List<SpaceInfo> findAvailableSpaces(LocalDate startDate, LocalDate endDate) {
+    public List<SpaceInfo> findAvailableSpaceInfos(LocalDate startDate, LocalDate endDate) {
         return spaceRepository.findAvailableSpaces(startDate, endDate).stream().map(SpaceInfo::from)
             .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Space> findAvailableSpaces(LocalDate startDate, LocalDate endDate) {
+        return spaceRepository.findAvailableSpaces(startDate, endDate).stream().toList();
     }
 
     private void unAssignFlexibleReservation(Long id) {
