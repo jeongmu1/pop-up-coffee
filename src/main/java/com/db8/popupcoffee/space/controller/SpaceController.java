@@ -1,7 +1,7 @@
 package com.db8.popupcoffee.space.controller;
 
 import com.db8.popupcoffee.reservation.service.ReservationService;
-import com.db8.popupcoffee.space.controller.dto.request.UnAssignmentRequest;
+import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
 import com.db8.popupcoffee.space.controller.dto.request.UpdateAssignmentRequest;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceInfo;
 import com.db8.popupcoffee.space.service.SpaceService;
@@ -37,7 +37,7 @@ public class SpaceController {
     }
 
     @DeleteMapping("/assignment")
-    public String unAssignReservation(UnAssignmentRequest request) {
+    public String unAssignReservation(ReservationIdDto request) {
         spaceService.unAssignSpace(request);
         return "redirect:/spaces/assignment";
     }

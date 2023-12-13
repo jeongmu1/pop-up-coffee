@@ -7,7 +7,7 @@ import com.db8.popupcoffee.reservation.domain.FlexibleReservation;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.repository.FlexibleReservationRepository;
-import com.db8.popupcoffee.space.controller.dto.request.UnAssignmentRequest;
+import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
 import com.db8.popupcoffee.space.controller.dto.request.UpdateAssignmentRequest;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceInfo;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceReservations;
@@ -57,7 +57,7 @@ public class SpaceService {
     }
 
     @Transactional
-    public void unAssignSpace(UnAssignmentRequest request) {
+    public void unAssignSpace(ReservationIdDto request) {
         if (request.fromFlexible()) {
             unAssignFlexibleReservation(request.id());
         } else {
