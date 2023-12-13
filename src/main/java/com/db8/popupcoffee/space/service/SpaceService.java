@@ -8,6 +8,7 @@ import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.FixedReservationRepository;
 import com.db8.popupcoffee.reservation.repository.FlexibleReservationRepository;
 import com.db8.popupcoffee.space.controller.dto.request.UnAssignmentRequest;
+import com.db8.popupcoffee.space.controller.dto.request.UpdateAssignmentRequest;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceInfo;
 import com.db8.popupcoffee.space.controller.dto.response.SpaceReservations;
 import com.db8.popupcoffee.space.domain.Space;
@@ -61,6 +62,24 @@ public class SpaceService {
             unAssignFlexibleReservation(request.id());
         } else {
             unAssignFixedReservation(request.id());
+        }
+    }
+
+    @Transactional
+    public void updateAssignment(UpdateAssignmentRequest request) {
+        Space space = spaceRepository.findById(request.spaceId()).orElseThrow();
+        if (request.fromFlexible()) {
+            var flexible = flexibleReservationRepository.findById(request.id()).orElseThrow();
+            flexible.setTemporalRentalStartDate(request.startDate());
+            flexible.setTemporalRentalEndDate(request.endDate());
+            flexible.setStatus(FlexibleReservationStatus.SPACE_TEMPORARY_FIXED);
+            flexible.setTemporalSpace(space);
+        } else {
+            var fixed = fixedReservationRepository.findById(request.id()).orElseThrow();
+            fixed.setTemporalSpace(space);
+            fixed.setStartDate(request.startDate());
+            fixed.setEndDate(request.endDate());
+            fixed.setStatus(FixedReservationStatus.SPACE_TEMPORARY_FIXED);
         }
     }
 
