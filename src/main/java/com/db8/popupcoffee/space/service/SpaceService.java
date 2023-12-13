@@ -75,7 +75,7 @@ public class SpaceService {
     public void updateAssignment(UpdateAssignmentRequest request) {
         Space space = spaceRepository.findById(request.spaceId()).orElseThrow();
         if (spaceRepository.findAvailableSpaces(request.startDate(), request.endDate()).stream()
-            .anyMatch(s -> s.equals(space))) {
+            .noneMatch(s -> s.equals(space))) {
             throw new IllegalArgumentException("해당 공간은 이용이 불가능합니다.");
         }
 
