@@ -33,12 +33,13 @@ public record CreateFixedReservationDto(
     }
 
     public FixedReservation toEntity(MerchantContract contract, BusinessType businessType,
-        long paymentAmount) {
+        long rentalFee, long rentalDeposit) {
         return FixedReservation.builder()
             .merchantContract(contract)
             .startDate(startDate)
             .endDate(endDate)
-            .paymentAmount(paymentAmount)
+            .rentalFee(rentalFee)
+            .rentalDeposit(rentalDeposit)
             .creditCard(creditCard)
             .businessType(businessType)
             .build();

@@ -2,6 +2,7 @@ package com.db8.popupcoffee.reservation.service;
 
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.contract.service.ContractService;
+import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.global.util.FeeCalculator;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.domain.Grade;
@@ -9,10 +10,12 @@ import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
 import com.db8.popupcoffee.rental.service.RentalService;
+import com.db8.popupcoffee.reservation.controller.dto.request.FlexibleChargeRequest;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
 import com.db8.popupcoffee.reservation.controller.dto.response.ReservationHistory;
 import com.db8.popupcoffee.reservation.domain.DesiredDate;
+import com.db8.popupcoffee.reservation.domain.FixedReservation;
 import com.db8.popupcoffee.reservation.domain.FixedReservationStatus;
 import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import com.db8.popupcoffee.reservation.repository.DesiredDateRepository;
@@ -61,15 +64,18 @@ public class ReservationService {
             throw new IllegalArgumentException("해당 날짜에 예약 가능한 공간이 없습니다.");
         }
         var fixed = fixedReservationRepository.save(dto.toEntity(contract, businessType,
-            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate())));
+            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate()),
+            feeCalculator.calculateRentalDeposit(dto.startDate(), dto.endDate())));
         rentalService.createSpaceRental(fixed, availableSpaces.stream().findFirst().orElseThrow());
     }
 
     @Transactional
     public void progressFlexibleReservation(CreateFlexibleReservationDto dto) {
         MerchantContract contract = findActivatedMerchantContract(dto.merchantId());
+        BusinessType businessType = businessTypeRepository.findById(dto.businessTypeId())
+            .orElseThrow();
         FlexibleReservation reservation = flexibleReservationRepository.save(
-            dto.toEntity(contract));
+            dto.toEntity(contract, businessType));
         desiredDateRepository.saveAll(
             dto.desiredDates().stream().map(date -> new DesiredDate(date, reservation)).toList());
     }
@@ -144,6 +150,33 @@ public class ReservationService {
 
         var flexible = flexibleReservationRepository.findById(dto.id()).orElseThrow();
         flexible.setStatus(FlexibleReservationStatus.SPACE_FIXED);
+    }
+
+    @Transactional
+    public void processPayment(FlexibleChargeRequest request) {
+        var flexible = flexibleReservationRepository.findById(request.reservationId())
+            .orElseThrow();
+        if (!flexible.getStatus().equals(FlexibleReservationStatus.SPACE_FIXED)) {
+            throw new IllegalArgumentException(
+                "해당 예약 상태에서는 결제를 진행할 수 없습니다 : " + flexible.getStatus().name());
+        }
+        long rentalFee = feeCalculator.calculateRentalFee(flexible.getTemporalRentalStartDate(),
+            flexible.getTemporalRentalEndDate());
+        long rentalDeposit = feeCalculator.calculateRentalDeposit(
+            flexible.getTemporalRentalStartDate(), flexible.getTemporalRentalEndDate());
+        var fixed = fixedReservationRepository.save(
+            FixedReservation.of(
+                flexible,
+                CreditCard.builder().
+                    creditCardNumber(request.ccNumber())
+                    .creditCardExpireAt(request.ccExpiration())
+                    .creditCardCvc(request.ccCvc())
+                    .build(),
+                rentalFee,
+                rentalDeposit));
+        flexible.setFixedReservation(fixed);
+        flexible.setStatus(FlexibleReservationStatus.RESERVATION_FIXED);
+        rentalService.createSpaceRental(fixed, flexible.getTemporalSpace());
     }
 
     private MerchantContract findActivatedMerchantContract(long merchantId) {

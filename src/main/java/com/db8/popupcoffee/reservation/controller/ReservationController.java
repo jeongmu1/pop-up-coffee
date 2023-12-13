@@ -6,6 +6,7 @@ import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.service.MerchantService;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFixedReservationRequest;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFlexibleReservationRequest;
+import com.db8.popupcoffee.reservation.controller.dto.request.FlexibleChargeRequest;
 import com.db8.popupcoffee.reservation.controller.dto.response.FlexibleReservationInfo;
 import com.db8.popupcoffee.seasonality.controller.dto.response.DateInfoResponse;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
@@ -103,5 +104,11 @@ public class ReservationController {
     @GetMapping("/space")
     public String getSpaceAssignmentForm() {
         return "admins/spaceManagement";
+    }
+
+    @PostMapping("/flexible/payment")
+    public String processPayment(FlexibleChargeRequest request) {
+        reservationService.processPayment(request);
+        return "redirect:/merchants/myPage";
     }
 }

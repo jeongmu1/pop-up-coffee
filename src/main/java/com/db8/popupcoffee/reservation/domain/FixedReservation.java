@@ -51,7 +51,10 @@ public class FixedReservation extends BaseTimeEntity {
     private LocalDate endDate;
 
     @Column(nullable = false)
-    private long paymentAmount;
+    private long rentalFee;
+
+    @Column(nullable = false)
+    private long rentalDeposit;
 
     @Column(nullable = false)
     private boolean fromFlexibleReservation = false;
@@ -65,19 +68,42 @@ public class FixedReservation extends BaseTimeEntity {
     private BusinessType businessType;
 
     @Builder
+    @SuppressWarnings("java:S107")
     public FixedReservation(
         MerchantContract merchantContract,
         LocalDate startDate,
         LocalDate endDate,
-        long paymentAmount,
+        long rentalFee,
+        long rentalDeposit,
         CreditCard creditCard,
-        BusinessType businessType
+        BusinessType businessType,
+        boolean fromFlexibleReservation
     ) {
         this.merchantContract = merchantContract;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.paymentAmount = paymentAmount;
+        this.rentalFee = rentalFee;
+        this.rentalDeposit = rentalDeposit;
         this.creditCard = creditCard;
         this.businessType = businessType;
+        this.fromFlexibleReservation = fromFlexibleReservation;
+    }
+
+    public static FixedReservation of(
+        FlexibleReservation flexibleReservation,
+        CreditCard creditCard,
+        long rentalFee,
+        long rentalDeposit
+    ) {
+        return FixedReservation.builder()
+            .merchantContract(flexibleReservation.getMerchantContract())
+            .startDate(flexibleReservation.getTemporalRentalStartDate())
+            .endDate(flexibleReservation.getTemporalRentalEndDate())
+            .rentalFee(rentalFee)
+            .rentalDeposit(rentalDeposit)
+            .creditCard(creditCard)
+            .businessType(flexibleReservation.getBusinessType())
+            .fromFlexibleReservation(true)
+            .build();
     }
 }

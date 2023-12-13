@@ -2,6 +2,7 @@ package com.db8.popupcoffee.reservation.domain;
 
 import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
+import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.space.domain.Space;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -24,7 +25,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.ToString.Exclude;
 
 @Entity
 @Getter
@@ -69,9 +69,14 @@ public class FlexibleReservation extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate deadline;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "flexibleReservation", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @Exclude
     private List<DesiredDate> desiredDates = new ArrayList<>();
+
+    @ToString.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private BusinessType businessType;
 
     @Builder
     public FlexibleReservation(
@@ -79,12 +84,14 @@ public class FlexibleReservation extends BaseTimeEntity {
         LocalDate availabilityStartDate,
         LocalDate availabilityEndDate,
         Long duration,
-        LocalDate deadline
+        LocalDate deadline,
+        BusinessType businessType
     ) {
         this.merchantContract = merchantContract;
         this.availabilityStartDate = availabilityStartDate;
         this.availabilityEndDate = availabilityEndDate;
         this.duration = duration;
         this.deadline = deadline;
+        this.businessType = businessType;
     }
 }
