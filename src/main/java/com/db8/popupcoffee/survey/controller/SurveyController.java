@@ -9,6 +9,7 @@ import com.db8.popupcoffee.survey.domain.SurveyItemSelected;
 import com.db8.popupcoffee.survey.dto.request.SurveyItemRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveyResponseRequest;
 import com.db8.popupcoffee.survey.dto.request.SurveySettingRequest;
+import com.db8.popupcoffee.survey.dto.response.SurveyInfo;
 import com.db8.popupcoffee.survey.dto.response.SurveyItemInfo;
 import com.db8.popupcoffee.survey.dto.response.SurveySettingResponse;
 import com.db8.popupcoffee.survey.service.SurveyService;
@@ -28,6 +29,11 @@ public class SurveyController {
     private final MemberService memberService;
 
     private static final String SETTING_VIEW_REDIRECT = "redirect:/surveys/setting";
+
+    @ModelAttribute("surveys")
+    public List<SurveyInfo> getSurveyInfos() {
+        return surveyService.findAllSurveyInfos();
+    }
 
     @GetMapping("/setting")
     public String surveySetting(Model model) {
