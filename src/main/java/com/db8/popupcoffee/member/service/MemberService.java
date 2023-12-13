@@ -37,16 +37,8 @@ public class MemberService {
         member.setPoint(member.getPoint() + SURVEY_REWARD);
         member.setLastSurveyed(LocalDateTime.now());
 
-        PointHistory lastPointHistory = pointHistoryRepository.findTopByMemberOrderByIdDesc(member);
-        int newCount = lastPointHistory.getChanges()+1;
-
-        PointHistory pointHistory = SurveyPointRequest.createSurveyRewardHistory(member, newCount);
-
+        PointHistory pointHistory = SurveyPointRequest.createSurveyRewardHistory(member);
         pointHistoryRepository.save(pointHistory);
-
-        memberRepository.save(member);
     }
-
-
 
 }
