@@ -116,17 +116,17 @@
                     <th>대여 종료 날짜</th>
                     <th>신청상태</th>
                 </tr>
-                <tr th:each="history : ${fixed}" class="historyCell" style="overflow: scroll; height: auto;">
-                    <td th:text="${history.space}"></td>
-                    <td th:text="${history.rentalStartDate}"></td>
-                    <td th:text="${history.rentalEndDate}"></td>
-                    <td th:text="${history.status}">대기중</td>
+                <tr th:each="fix : ${fixed}" class="historyCell" style="overflow: scroll; height: auto;">
+                    <td th:text="${fix.space}"></td>
+                    <td th:text="${fix.rentalStartDate}"></td>
+                    <td th:text="${fix.rentalEndDate}"></td>
+                    <td th:text="${fix.status}">대기중</td>
                 </tr>
             </table>
             <h2>유동 예약 신청 현황</h2>
             <table id="application-status2">
                 <tr>
-                    <!--공간번호 td-->
+                    <th>좌석 번호</th>
                     <th>이용가능기간</th>
                     <th>대여 시작 날짜</th>
                     <th>대여 종료 날짜</th>
@@ -135,7 +135,8 @@
                     <th>포함되었으면하는날짜</th>
                     <th>상태</th>
                 </tr>
-                <tr th:each="flexible : ${nonFixedFlexibles}">
+                <tr th:each="flexible : ${flexible}">
+                    <td th:text="${flexible.space}"></td>
                     <td th:text="${flexible.availabilityStartDate + '~' + flexible.availabilityEndDate}"></td>
                     <td th:text="${flexible.tempStartDate}"></td>
                     <td th:text="${flexible.tempEndDate}"></td>
