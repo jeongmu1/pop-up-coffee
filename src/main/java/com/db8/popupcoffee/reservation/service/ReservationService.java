@@ -121,10 +121,11 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationHistory> getFixedHistories(long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
-        return fixedReservationRepository.findByMerchantAndFromFlexible(merchant, false).stream()
-                .map(ReservationHistory::from)
-                .sorted(Comparator.comparing(ReservationHistory::reservedDate).reversed())
-                .toList();
+        Stream<ReservationHistory> onlyFixeds =
+                fixedReservationRepository.findByMerchantAndFromFlexible(merchant, false).stream()
+                        .map(ReservationHistory::of);
+
+        return onlyFixeds.toList();
     }
 
 
