@@ -70,7 +70,8 @@ public class SpaceService {
     @Transactional
     public void updateAssignment(UpdateAssignmentRequest request) {
         Space space = spaceRepository.findById(request.spaceId()).orElseThrow();
-        if (!isAvailable(space, request.startDate(), request.endDate())) {
+        if (spaceRepository.findAvailableSpaces(request.startDate(), request.endDate()).stream()
+            .anyMatch(s -> s.equals(space))) {
             throw new IllegalArgumentException("해당 공간은 이용이 불가능합니다.");
         }
 
@@ -91,14 +92,14 @@ public class SpaceService {
     }
 
     @Transactional(readOnly = true)
-    public List<SpaceInfo> findAvailableSpaces(LocalDate startDate, LocalDate endDate) {
+    public List<SpaceInfo> findAvailableSpaceInfos(LocalDate startDate, LocalDate endDate) {
         return spaceRepository.findAvailableSpaces(startDate, endDate).stream().map(SpaceInfo::from)
             .toList();
     }
 
-    private boolean isAvailable(Space space, LocalDate startDate, LocalDate endDate) {
-        return spaceRepository.findAvailableSpaces(startDate, endDate).stream()
-            .anyMatch(s -> s.equals(space));
+    @Transactional(readOnly = true)
+    public List<Space> findAvailableSpaces(LocalDate startDate, LocalDate endDate) {
+        return spaceRepository.findAvailableSpaces(startDate, endDate).stream().toList();
     }
 
     private void unAssignFlexibleReservation(Long id) {

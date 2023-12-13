@@ -6,6 +6,7 @@ import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.reservation.controller.dto.request.CreateFixedReservationRequest;
 import com.db8.popupcoffee.reservation.domain.FixedReservation;
+import com.db8.popupcoffee.space.domain.Space;
 import java.time.LocalDate;
 import lombok.Builder;
 
@@ -33,7 +34,7 @@ public record CreateFixedReservationDto(
     }
 
     public FixedReservation toEntity(MerchantContract contract, BusinessType businessType,
-        long paymentAmount) {
+        long paymentAmount, Space temporalSpace) {
         return FixedReservation.builder()
             .merchantContract(contract)
             .startDate(startDate)
@@ -41,6 +42,7 @@ public record CreateFixedReservationDto(
             .paymentAmount(paymentAmount)
             .creditCard(creditCard)
             .businessType(businessType)
+            .temporalSpace(temporalSpace)
             .build();
     }
 }

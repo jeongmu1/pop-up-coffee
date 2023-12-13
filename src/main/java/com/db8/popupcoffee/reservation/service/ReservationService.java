@@ -24,6 +24,8 @@ import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.FixedDatesInfoDto;
 import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
+import com.db8.popupcoffee.space.domain.Space;
+import com.db8.popupcoffee.space.service.SpaceService;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -43,14 +45,21 @@ public class ReservationService {
     private final DesiredDateRepository desiredDateRepository;
     private final BusinessTypeRepository businessTypeRepository;
     private final RentalService rentalService;
+    private final SpaceService spaceService;
 
     @Transactional
     public void progressFixedReservation(CreateFixedReservationDto dto) {
         MerchantContract contract = findActivatedMerchantContract(dto.merchantId());
         BusinessType businessType = businessTypeRepository.findById(dto.businessTypeId())
             .orElseThrow();
+        List<Space> availableSpaces = spaceService.findAvailableSpaces(dto.startDate(),
+            dto.endDate());
+        if (availableSpaces.isEmpty()) {
+            throw new IllegalArgumentException("해당 날짜에 예약 가능한 공간이 없습니다.");
+        }
         fixedReservationRepository.save(dto.toEntity(contract, businessType,
-            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate())));
+            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate()),
+            availableSpaces.stream().findFirst().orElseThrow()));
     }
 
     @Transactional
