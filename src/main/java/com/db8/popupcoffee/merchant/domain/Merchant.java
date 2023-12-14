@@ -58,6 +58,9 @@ public class Merchant extends BaseTimeEntity {
     @Embedded
     private AuthenticationInfo authenticationInfo;
 
+    @Column(nullable = false)
+    private boolean firstRentalOvered = false;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "merchant", fetch = FetchType.LAZY)
     private List<MerchantContract> merchantContracts = new ArrayList<>();

@@ -99,6 +99,7 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
         this.creditCard = creditCard;
         this.space = space;
         this.rentalStatus = rentalStatus;
+        this.remainingRentalDeposit = rentalDeposit;
     }
 
     public static SpaceRentalAgreement of(FixedReservation fixedReservation, long rentalFee, Space space) {
