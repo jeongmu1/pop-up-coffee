@@ -8,6 +8,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script type="text/javascript" th:inline="javascript">
     let dateInfos = $.parseJSON('[[ ${dateInfos} ]]');
+    let setInfos = $.parseJSON('[[ ${gradeInfo} ]]');
+    let depositInfos = $.parseJSON('[[ ${depositPerDay} ]]');
+    // let depositPerDay = $.parseJSON(''}`)
   </script>
   <script type="text/javascript"  th:src="@{/script/common.js}"></script>
 </head>
@@ -126,9 +129,17 @@
             <label id="check_out_day"></label>
           </p>
           <p>
-            <span>총 금액</span>
+            <span>대여 금액</span>
             <label id="totalRentalPrice"></label>
           </p>
+          <p>
+            <span>보증금</span>
+            <label id="deposit"></label>
+          </p>
+            <span>결제 금액</span>
+            <label id="payfinalPrice"></label><br>
+            <label id="nextFeelDay"></label><br>
+<!--            <label id="revenueShare"></label><br>-->
         </div>
       </div>
     </div>
@@ -148,8 +159,8 @@
 
       <script>
         document.querySelector('form').addEventListener('submit', function(e) {
-          a = document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
-          b = document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
+          document.getElementById('hidden_check_in_day').value = document.getElementById('check_in_day').textContent;
+         document.getElementById('hidden_check_out_day').value = document.getElementById('check_out_day').textContent;
           console.log(a)
           console.log(b)
         });

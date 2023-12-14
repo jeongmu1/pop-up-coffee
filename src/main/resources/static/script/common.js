@@ -201,6 +201,7 @@ function addClassSelectDay() {
     if (checkInDate !== "" && checkOutDate !== "") {
         let total_price = 0;
         let selected_dates = []; // 선택된 날짜를 저장할 배열을 만듭니다.
+        let nextGradeDay =0;
 
         $('.day').each(function () {
             const data_day = $(this).data('day');
@@ -218,15 +219,22 @@ function addClassSelectDay() {
                 }
             });
         });
+        let depositPrice = 0
+        depositPrice = selected_dates.length * depositInfos;
 
+        let salePrice = 0
+        salePrice = (total_price - (total_price * (setInfos.discountPercentage / 100))) + depositPrice ;
+        nextGradeDay = setInfos.daysForNextGrade - selected_dates.length;
         $('.checkIn').find('.check_in_out_p').html('대여 시작일');
         $('.checkOut').find('.check_in_out_p').html('대여 종료일');
 
         // 총 가격을 HTML에 표시합니다.
         $('#totalRentalPrice').html(total_price + '원');
+        $('#payfinalPrice').html(salePrice + '원');
+        $('#deposit').html(depositPrice + '원');
+        $('#nextFeelDay').html(nextGradeDay + '일만 더 예약하시면' + setInfos.nextGradeDiscountPercentage + "%" + "더 할인된 가격으로 예약이 가능합니다.");
+        // $('#revenueShare').html('현재 수익분배율은' + setInfos.revenueSharingPercentage +'%이지만 다음 등급의 수익분배율은 ' + setInfos.nextGradeRevenueSharingPercentage +'%입니다.');
 
-        // 선택된 날짜를 콘솔에 출력합니다. 필요에 따라 이 부분을 수정하시면 됩니다.
-        console.log(selected_dates);
     }
 }
 
@@ -441,6 +449,8 @@ function getDateRange(startDate, endDate) {
     const end = new Date(endDate);
     const dateRange = [];
 
+
+
     // 날짜 차이 계산
     const diffTime = Math.abs(end - start);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -451,10 +461,10 @@ function getDateRange(startDate, endDate) {
         currentDate.setDate(start.getDate() + i);
         dateRange.push(formatDate(currentDate));
     }
+    console.log(dateRange);
 
     return dateRange;
 }
-
 
 $(document).ready(function () {
     // Your existing code for calendar initialization

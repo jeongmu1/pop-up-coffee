@@ -41,6 +41,10 @@ a{
     font-size: 45px;
 }
 
+button{
+    width: 5vw;
+    height: 5vh;
+}
 .center{
     padding-top: 9px;
 }
