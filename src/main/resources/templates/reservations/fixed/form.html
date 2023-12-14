@@ -9,6 +9,7 @@
   <script type="text/javascript" th:inline="javascript">
     let dateInfos = $.parseJSON('[[ ${dateInfos} ]]');
     let setInfos = $.parseJSON('[[ ${gradeInfo} ]]');
+    let depositInfos = $.parseJSON('[[ ${depositPerDay} ]]');
     // let depositPerDay = $.parseJSON(''}`)
   </script>
   <script type="text/javascript"  th:src="@{/script/common.js}"></script>
@@ -128,13 +129,17 @@
             <label id="check_out_day"></label>
           </p>
           <p>
-            <span>총 금액</span>
+            <span>대여 금액</span>
             <label id="totalRentalPrice"></label>
           </p>
+          <p>
+            <span>보증금</span>
+            <label id="deposit"></label>
+          </p>
             <span>결제 금액</span>
-            <label id="payfinalPrice"></label>
-            <label id="nextFeelDay"></label>
-            <p>현재 수익 분배율은 이 정도지만 다음 등급의 수익 분배율은 이 정도입니다.</p>
+            <label id="payfinalPrice"></label><br>
+            <label id="nextFeelDay"></label><br>
+<!--            <label id="revenueShare"></label><br>-->
         </div>
       </div>
     </div>

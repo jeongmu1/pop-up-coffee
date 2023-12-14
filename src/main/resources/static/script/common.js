@@ -219,23 +219,22 @@ function addClassSelectDay() {
                 }
             });
         });
+        let depositPrice = 0
+        depositPrice = selected_dates.length * depositInfos;
 
         let salePrice = 0
-        salePrice = total_price - (total_price * (setInfos.discountPercentage / 100));
+        salePrice = (total_price - (total_price * (setInfos.discountPercentage / 100))) + depositPrice ;
         nextGradeDay = setInfos.daysForNextGrade - selected_dates.length;
-        console.log(nextGradeDay);
-        console.log(selected_dates.length);
-        console.log(setInfos.daysForNextGrade);
-        console.log(setInfos.scoreForNextGrade);
-        console.log(setInfos.revenueForNextGrade);
-        console.log(setInfos.currentGrade);
         $('.checkIn').find('.check_in_out_p').html('대여 시작일');
         $('.checkOut').find('.check_in_out_p').html('대여 종료일');
 
         // 총 가격을 HTML에 표시합니다.
         $('#totalRentalPrice').html(total_price + '원');
         $('#payfinalPrice').html(salePrice + '원');
+        $('#deposit').html(depositPrice + '원');
         $('#nextFeelDay').html(nextGradeDay + '일만 더 예약하시면' + setInfos.nextGradeDiscountPercentage + "%" + "더 할인된 가격으로 예약이 가능합니다.");
+        // $('#revenueShare').html('현재 수익분배율은' + setInfos.revenueSharingPercentage +'%이지만 다음 등급의 수익분배율은 ' + setInfos.nextGradeRevenueSharingPercentage +'%입니다.');
+
     }
 }
 
