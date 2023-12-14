@@ -121,14 +121,19 @@
             <div class="checkInOutInfo">
                 <div>
                     <p>
-                        <span>대여 시작일</span>
+                        <span>대여 가능 시작일</span>
                         <label id="check_in_day"></label>
                     </p>
                     <p class="space">~</p>
                     <p>
-                        <span>대여 종료일</span>
+                        <span>대여 가능 종료일</span>
                         <label id="check_out_day"></label>
                     </p>
+
+                    <span>현재 매출 수수료</span>
+                    <label th:text="${gradeInfo.revenueSharingPercentage + '%'}"></label><br>
+                    <span style="color: gray; font-size: 10pt">다음 등급의 매출 수수료</span>
+                    <label style="color: gray; font-size: 10pt" th:text="${gradeInfo.nextGradeRevenueSharingPercentage + '%'}"></label><br>
                 </div>
             </div>
         </div>

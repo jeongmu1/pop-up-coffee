@@ -217,8 +217,9 @@ function addClassSelectDay() {
             });
         });
 
-        $('.checkIn').find('.check_in_out_p').html('대여 시작일');
-        $('.checkOut').find('.check_in_out_p').html('대여 종료일');
+        $('.checkIn').find('.check_in_out_p').html('대여 가능 시작일');
+        $('.checkOut').find('.check_in_out_p').html('대여 가능 종료일');
+
 
         // 총 가격을 HTML에 표시합니다.
         $('#totalRentalPrice').html(total_price + '원');

@@ -64,6 +64,13 @@ public class ReservationController {
         return Policy.DEPOSIT_PER_DAY;
     }
 
+    @ModelAttribute("gradeInfo")
+    public GradeDiscountInfo getGradeDiscountInfo(HttpSession session) {
+        Merchant merchant = merchantService.getMerchantInfo(
+            SessionUtil.getMerchantSessionInfo(session).id());
+        return GradeDiscountInfo.from(merchant.getGradeScore());
+    }
+
     @GetMapping("/fixed/not-rented")
     public String getNotRentedReservations(Model model) {
         model.addAttribute("reservations", reservationService.findNotRentedFixedReservations());
@@ -78,10 +85,7 @@ public class ReservationController {
     }
 
     @GetMapping("/fixed/form")
-    public String getFixedReservationForm(Model model, HttpSession session) {
-        Merchant merchant = merchantService.getMerchantInfo(
-            SessionUtil.getMerchantSessionInfo(session).id());
-        model.addAttribute("gradeInfo", GradeDiscountInfo.from(merchant.getGradeScore()));
+    public String getFixedReservationForm() {
         return "reservations/fixed/form";
     }
 

@@ -232,7 +232,13 @@ function addClassSelectDay() {
         $('#totalRentalPrice').html(total_price + '원');
         $('#payfinalPrice').html(salePrice + '원');
         $('#deposit').html(depositPrice + '원');
-        $('#nextFeelDay').html(nextGradeDay + '일만 더 예약하시면' + setInfos.nextGradeDiscountPercentage + "%" + "더 할인된 가격으로 예약이 가능합니다.");
+        let nextFeelDay = $('#nextFeelDay');
+        if (nextGradeDay > 0) {
+            nextFeelDay.html(nextGradeDay + '일만 더 예약하시면' + (setInfos.nextGradeDiscountPercentage - setInfos.discountPercentage) + "%" + "더 할인된 가격으로 예약이 가능합니다.");
+            nextFeelDay.css('display', '')
+        } else {
+            nextFeelDay.css('display', 'none')
+        }
         // $('#revenueShare').html('현재 수익분배율은' + setInfos.revenueSharingPercentage +'%이지만 다음 등급의 수익분배율은 ' + setInfos.nextGradeRevenueSharingPercentage +'%입니다.');
 
     }
