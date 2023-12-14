@@ -55,9 +55,6 @@ public class Merchant extends BaseTimeEntity {
 
     private LocalDateTime lastGradeScoreChanged;
 
-    @Column(nullable = false)
-    private int rentCount = 0;
-
     @Embedded
     private AuthenticationInfo authenticationInfo;
 

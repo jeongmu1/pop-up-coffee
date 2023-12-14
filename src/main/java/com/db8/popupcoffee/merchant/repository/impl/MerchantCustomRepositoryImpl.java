@@ -5,6 +5,7 @@ import com.db8.popupcoffee.merchant.domain.QMerchant;
 import com.db8.popupcoffee.merchant.repository.MerchantCustomRepository;
 import com.db8.popupcoffee.merchant.repository.dto.MerchantRanking;
 import com.db8.popupcoffee.rental.domain.QSpaceRentalAgreement;
+import com.db8.popupcoffee.settlement.domain.ProductOrderStatus;
 import com.db8.popupcoffee.settlement.domain.QProductOrder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,7 +34,7 @@ public class MerchantCustomRepositoryImpl implements MerchantCustomRepository {
             .from(merchant)
             .join(merchant.merchantContracts, merchantContract)
             .join(merchantContract.spaceRentalAgreements, spaceRentalAgreement)
-            .join(spaceRentalAgreement.productOrders, productOrder)
+            .join(spaceRentalAgreement.productOrders, productOrder).where(productOrder.status.eq(ProductOrderStatus.COMPLETED))
             .groupBy(merchant.name, merchant.businessType.name)
             .orderBy(productOrder.totalPayment.sum().desc())
             .fetch();

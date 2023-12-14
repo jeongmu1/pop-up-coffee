@@ -95,7 +95,7 @@ public class ReservationController {
         MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
         reservationService.progressFixedReservation(
             CreateFixedReservationDto.of(sessionInfo.id(), form));
-        return "redirect:/reservations";
+        return "redirect:/";
     }
 
     @GetMapping("/flexible/form")
@@ -109,7 +109,7 @@ public class ReservationController {
         MerchantSessionInfo sessionInfo = SessionUtil.getMerchantSessionInfo(session);
         reservationService.progressFlexibleReservation(
             CreateFlexibleReservationDto.of(sessionInfo.id(), form));
-        return "redirect:/reservations";
+        return "redirect:/";
     }
 
     @GetMapping("/space")

@@ -97,7 +97,7 @@
                               th:value="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.merchant().getGradeScore() - myPageResponse.currentGradeMinScore()}"
                               th:max="${myPageResponse.merchant.gradeScore >= 1000 ? myPageResponse.nextGradeMinScore : myPageResponse.nextGradeMinScore - myPageResponse.currentGradeMinScore()}"></progress>
 
-                    <p th:text="'다음 등급까지 남은 점수 : ' + ${myPageResponse.scoreForNextGrade()}"
+                    <p th:text=" '다음 등급까지 남은 점수 : ' + ${myPageResponse.scoreForNextGrade()}"
                        style="font-size: 10px; color: black; margin-left: 10px;"></p>
 
                 </div>
