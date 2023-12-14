@@ -29,6 +29,6 @@ public class ContractController {
     @PostMapping
     public String createContract(CreateContractRequest createContractRequest) {
         contractService.processContract(createContractRequest);
-        return "redirect:/contracts";
+        return "redirect:/";
     }
 }

@@ -28,6 +28,8 @@ public class MerchantController {
     private final MerchantService merchantService;
     private final ReservationService reservationService;
 
+    private static final String REDIRECT_TO_HOME = "redirect:/";
+
     @ModelAttribute("businessTypes")
     public List<BusinessType> getBusinessTypes() {
         return merchantService.findBusinessTypes();
@@ -41,7 +43,7 @@ public class MerchantController {
     @PostMapping
     public String createMerchant(CreateMerchantRequest form) {
         merchantService.createMerchant(form);
-        return "redirect:/merchants";
+        return REDIRECT_TO_HOME;
     }
 
     @GetMapping("/login")
@@ -53,13 +55,13 @@ public class MerchantController {
     public String progressLogin(MerchantLoginForm form, HttpSession session) {
         Merchant merchant = merchantService.findMerchant(form);
         session.setAttribute(SessionUtil.MERCHANT_SESSION_KEY, MerchantSessionInfo.from(merchant));
-        return "redirect:/";
+        return REDIRECT_TO_HOME;
     }
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.setAttribute(SessionUtil.MERCHANT_SESSION_KEY, null);
-        return "redirect:/";
+        return REDIRECT_TO_HOME;
     }
 
     @GetMapping("/myPage")
