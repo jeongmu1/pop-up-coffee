@@ -18,6 +18,7 @@ import com.db8.popupcoffee.reservation.service.dto.CreateFixedReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.CreateFlexibleReservationDto;
 import com.db8.popupcoffee.reservation.service.dto.FixedDatesInfoDto;
 import com.db8.popupcoffee.seasonality.service.DateInfoService;
+import com.db8.popupcoffee.space.controller.dto.request.ReservationIdDto;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,13 +66,6 @@ public class ReservationController {
         return Policy.DEPOSIT_PER_DAY;
     }
 
-    @ModelAttribute("gradeInfo")
-    public GradeDiscountInfo getGradeDiscountInfo(HttpSession session) {
-        Merchant merchant = merchantService.getMerchantInfo(
-            SessionUtil.getMerchantSessionInfo(session).id());
-        return GradeDiscountInfo.from(merchant.getGradeScore());
-    }
-
     @GetMapping("/fixed/not-rented")
     public String getNotRentedReservations(Model model) {
         model.addAttribute("reservations", reservationService.findNotRentedFixedReservations());
@@ -85,7 +80,10 @@ public class ReservationController {
     }
 
     @GetMapping("/fixed/form")
-    public String getFixedReservationForm() {
+    public String getFixedReservationForm(Model model, HttpSession session) {
+        Merchant merchant = merchantService.getMerchantInfo(
+            SessionUtil.getMerchantSessionInfo(session).id());
+        model.addAttribute("gradeInfo", GradeDiscountInfo.from(merchant.getGradeScore()));
         return "reservations/fixed/form";
     }
 
@@ -108,7 +106,10 @@ public class ReservationController {
     }
 
     @GetMapping("/flexible/form")
-    public String getFlexibleReservationForm() {
+    public String getFlexibleReservationForm(Model model, HttpSession session) {
+        Merchant merchant = merchantService.getMerchantInfo(
+            SessionUtil.getMerchantSessionInfo(session).id());
+        model.addAttribute("gradeInfo", GradeDiscountInfo.from(merchant.getGradeScore()));
         return "reservations/flexible/form";
     }
 
@@ -130,5 +131,11 @@ public class ReservationController {
     public String processPayment(FlexibleChargeRequest request) {
         reservationService.processPayment(request);
         return "redirect:/merchants/myPage";
+    }
+
+    @PatchMapping("/cancel")
+    public String cancelReservation(ReservationIdDto dto) {
+        reservationService.cancelReservation(dto);
+        return "redirect:/spaces/assignment";
     }
 }

@@ -57,6 +57,7 @@
                 <td>대여신청기간</td>
                 <td>포함되었으면하는날짜</td>
                 <td>상태</td>
+                <td>취소</td>
             </tr>
             </thead>
             <tr th:each="flexible : ${nonFixedFlexibles}">
@@ -74,6 +75,13 @@
                 <td th:text="${flexible.deadline}"></td>
                 <td th:text="${flexible.desiredDates}"></td>
                 <td th:text="${flexible.status}"></td>
+                <td>
+                    <form th:action="@{/reservations/cancel}" th:method="patch">
+                        <input type="hidden" name="id" th:value="${flexible.id}">
+                        <input type="hidden" name="fromFlexible" th:value="${true}">
+                        <input type="submit" value="취소">
+                    </form>
+                </td>
             </tr>
         </table>
         </div>

@@ -10,6 +10,7 @@ import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
+import com.db8.popupcoffee.rental.domain.SpaceRentalStatus;
 import com.db8.popupcoffee.rental.service.RentalService;
 import com.db8.popupcoffee.reservation.controller.dto.request.FlexibleChargeRequest;
 import com.db8.popupcoffee.reservation.controller.dto.response.FeeInfo;
@@ -79,7 +80,8 @@ public class ReservationService {
         FlexibleReservation reservation = flexibleReservationRepository.save(
             dto.toEntity(contract, businessType));
         desiredDateRepository.saveAll(
-            dto.desiredDates().stream().filter(Objects::nonNull).map(date -> new DesiredDate(date, reservation)).toList());
+            dto.desiredDates().stream().filter(Objects::nonNull)
+                .map(date -> new DesiredDate(date, reservation)).toList());
     }
 
     @Transactional(readOnly = true)
@@ -121,7 +123,6 @@ public class ReservationService {
 
         return onlyFixeds.toList();
     }
-
 
     @Transactional(readOnly = true)
     public List<ReservationHistory> findNotRentedFixedReservations() {
@@ -168,6 +169,32 @@ public class ReservationService {
         flexible.setFixedReservation(fixed);
         flexible.setStatus(FlexibleReservationStatus.RESERVATION_FIXED);
         rentalService.createSpaceRental(fixed, flexible.getTemporalSpace());
+    }
+
+    @Transactional
+    public void cancelReservation(ReservationIdDto dto) {
+        if (dto.fromFlexible()) {
+            var flexible = flexibleReservationRepository.findById(dto.id()).orElseThrow();
+            flexible.setTemporalRentalStartDate(null);
+            flexible.setTemporalRentalStartDate(null);
+            flexible.setTemporalSpace(null);
+            flexible.setStatus(FlexibleReservationStatus.CANCELED);
+
+            if (flexible.getFixedReservation() != null) {
+                cancelFixedReservation(flexible.getFixedReservation());
+            }
+        } else {
+            cancelFixedReservation(fixedReservationRepository.findById(dto.id()).orElseThrow());
+        }
+    }
+
+    private void cancelFixedReservation(FixedReservation fixedReservation) {
+        if (fixedReservation.getStatus().equals(FixedReservationStatus.FIXED)) {
+            var rental = fixedReservation.getSpaceRentalAgreement();
+            rental.setRentalStatus(SpaceRentalStatus.CANCELED);
+            rental.setSpace(null);
+        }
+        fixedReservation.setStatus(FixedReservationStatus.CANCELED);
     }
 
     private MerchantContract findActivatedMerchantContract(long merchantId) {

@@ -69,7 +69,7 @@ public class SpaceRentalAgreement extends BaseTimeEntity {
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Space space;
 
     @Enumerated(EnumType.STRING)
