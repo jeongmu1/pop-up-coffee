@@ -1,5 +1,6 @@
 package com.db8.popupcoffee.merchant.domain;
 
+import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.global.domain.AuthenticationInfo;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -10,7 +11,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,6 +60,10 @@ public class Merchant extends BaseTimeEntity {
 
     @Embedded
     private AuthenticationInfo authenticationInfo;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "merchant", fetch = FetchType.LAZY)
+    private List<MerchantContract> merchantContracts = new ArrayList<>();
 
     @Builder
     public Merchant(

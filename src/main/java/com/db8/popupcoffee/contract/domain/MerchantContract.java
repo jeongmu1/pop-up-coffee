@@ -3,6 +3,7 @@ package com.db8.popupcoffee.contract.domain;
 import com.db8.popupcoffee.global.domain.BaseTimeEntity;
 import com.db8.popupcoffee.global.domain.Contact;
 import com.db8.popupcoffee.merchant.domain.Merchant;
+import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.settlement.domain.SettlementAccount;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -12,7 +13,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,4 +47,8 @@ public class MerchantContract extends BaseTimeEntity {
 
     @Embedded
     private SettlementAccount settlementAccount;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "merchantContract", fetch = FetchType.LAZY)
+    private List<SpaceRentalAgreement> spaceRentalAgreements = new ArrayList<>();
 }

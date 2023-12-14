@@ -7,13 +7,16 @@ import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
 import com.db8.popupcoffee.merchant.repository.BusinessTypeRepository;
 import com.db8.popupcoffee.merchant.repository.MerchantRepository;
+import com.db8.popupcoffee.merchant.repository.dto.MerchantRanking;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MerchantService {
 
     private final MerchantRepository merchantRepository;
@@ -65,7 +68,9 @@ public class MerchantService {
         return currentGrade.getNextGradeMinScore();
     }
 
-
-
-
+    public List<MerchantRanking> getRankedMerchantRevenues() {
+        List<MerchantRanking> merchantRankings = merchantRepository.findMerchantsOrderByRevenue();
+        log.info("merchantRankings : {}", merchantRankings);
+        return merchantRankings;
+    }
 }
