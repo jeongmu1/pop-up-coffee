@@ -1,6 +1,7 @@
 package com.db8.popupcoffee.rental.service;
 
 import com.db8.popupcoffee.global.util.FeeCalculator;
+import com.db8.popupcoffee.global.util.Policy;
 import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.rental.controller.dto.request.ChangeStatusRequest;
 import com.db8.popupcoffee.rental.controller.dto.response.SimpleRentalInfo;
@@ -43,9 +44,13 @@ public class RentalService {
 
     public void createSpaceRental(FixedReservation fixedReservation, Space space) {
         var merchant = fixedReservation.getMerchantContract().getMerchant();
-        var rental = spaceRentalAgreementRepository.save(SpaceRentalAgreement.of(fixedReservation,
-            feeCalculator.calculateRentalFee(fixedReservation.getStartDate(),
-                fixedReservation.getEndDate(), Grade.from(merchant.getGradeScore())), space));
+        long fee = feeCalculator.calculateRentalFee(fixedReservation.getStartDate(),
+            fixedReservation.getEndDate(), Grade.from(merchant.getGradeScore()));
+        if (fixedReservation.isFromFlexibleReservation()) {
+            fee = (long) (fee * (100 - Policy.FLEXIBLE_RESERVATION_DISCOUNT_PERCENTAGE) / 100);
+        }
+        var rental = spaceRentalAgreementRepository.save(
+            SpaceRentalAgreement.of(fixedReservation, fee, space));
         fixedReservation.setSpaceRentalAgreement(rental);
         fixedReservation.setStatus(FixedReservationStatus.FIXED);
     }

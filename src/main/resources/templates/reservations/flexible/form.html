@@ -73,6 +73,10 @@
         </ul>
     </div>
     <div class="fix">
+        <div style="display: grid; place-items: center; height: 10px">
+            <h3>유동 예약</h3><br>
+            <span th:text="${'유동 예약은 기존 대여료에서 ' + flexibleDiscountPercentage + '% 할인된 가격에 제공됩니다.'}"></span>
+        </div>
         <div class="calendar-wrap">
             <div class="calendar-middle-wrap">
                 <div class="cal_nav">
@@ -151,10 +155,10 @@
                 </div>
                 <span>필수 포함 날짜:</span>
                 <div id="items">
-<!--                    <div class="item">-->
-<!--                        <label for="date">날짜</label>-->
-<!--                        <input type="date" id="date" name="desiredDates[0]">-->
-<!--                    </div>-->
+                    <div class="item">
+                        <label for="date">날짜</label>
+                        <input type="date" id="date" name="desiredDates[0]">
+                    </div>
                 </div>
                 <button type="button" id="addItem">날짜 추가</button>
                 <input type="submit" value="예약하기">

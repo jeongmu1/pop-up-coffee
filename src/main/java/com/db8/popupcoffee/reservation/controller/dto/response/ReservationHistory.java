@@ -10,6 +10,8 @@ import com.db8.popupcoffee.reservation.domain.FlexibleReservationStatus;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.db8.popupcoffee.global.util.Policy.*;
+
 import lombok.Builder;
 
 @Builder
@@ -78,10 +80,11 @@ public record ReservationHistory(
             historyBuilder.rentalDeposit(feeCalculator.calculateRentalDeposit(
                     flexibleReservation.getTemporalRentalStartDate(),
                     flexibleReservation.getTemporalRentalEndDate()))
-                .rentalFee(feeCalculator.calculateRentalFee(
+                .rentalFee((long) ((feeCalculator.calculateRentalFee(
                     flexibleReservation.getTemporalRentalStartDate(),
                     flexibleReservation.getTemporalRentalEndDate(), Grade.from(
                         flexibleReservation.getMerchantContract().getMerchant().getGradeScore())))
+                    * (100 - FLEXIBLE_RESERVATION_DISCOUNT_PERCENTAGE) / 100))
                 .space(flexibleReservation.getTemporalSpace().getNumber())
                 .rentalStartDate(flexibleReservation.getTemporalRentalStartDate())
                 .rentalEndDate(flexibleReservation.getTemporalRentalEndDate());

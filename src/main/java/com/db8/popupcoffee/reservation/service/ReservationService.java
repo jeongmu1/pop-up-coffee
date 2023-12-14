@@ -4,6 +4,7 @@ import com.db8.popupcoffee.contract.domain.MerchantContract;
 import com.db8.popupcoffee.contract.service.ContractService;
 import com.db8.popupcoffee.global.domain.CreditCard;
 import com.db8.popupcoffee.global.util.FeeCalculator;
+import com.db8.popupcoffee.global.util.Policy;
 import com.db8.popupcoffee.merchant.domain.BusinessType;
 import com.db8.popupcoffee.merchant.domain.Grade;
 import com.db8.popupcoffee.merchant.domain.Merchant;
@@ -31,6 +32,7 @@ import com.db8.popupcoffee.space.service.SpaceService;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +65,8 @@ public class ReservationService {
             throw new IllegalArgumentException("해당 날짜에 예약 가능한 공간이 없습니다.");
         }
         var fixed = fixedReservationRepository.save(dto.toEntity(contract, businessType,
-            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate(), Grade.from(contract.getMerchant().getGradeScore())),
+            feeCalculator.calculateRentalFee(dto.startDate(), dto.endDate(),
+                Grade.from(contract.getMerchant().getGradeScore())),
             feeCalculator.calculateRentalDeposit(dto.startDate(), dto.endDate())));
         rentalService.createSpaceRental(fixed, availableSpaces.stream().findFirst().orElseThrow());
     }
@@ -76,7 +79,7 @@ public class ReservationService {
         FlexibleReservation reservation = flexibleReservationRepository.save(
             dto.toEntity(contract, businessType));
         desiredDateRepository.saveAll(
-            dto.desiredDates().stream().map(date -> new DesiredDate(date, reservation)).toList());
+            dto.desiredDates().stream().filter(Objects::nonNull).map(date -> new DesiredDate(date, reservation)).toList());
     }
 
     @Transactional(readOnly = true)
@@ -113,8 +116,8 @@ public class ReservationService {
     public List<ReservationHistory> getFixedHistories(long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
         Stream<ReservationHistory> onlyFixeds =
-                fixedReservationRepository.findByMerchantAndFromFlexible(merchant, false).stream()
-                        .map(ReservationHistory::of);
+            fixedReservationRepository.findByMerchantAndFromFlexible(merchant, false).stream()
+                .map(ReservationHistory::of);
 
         return onlyFixeds.toList();
     }
@@ -145,8 +148,11 @@ public class ReservationService {
             throw new IllegalArgumentException(
                 "해당 예약 상태에서는 결제를 진행할 수 없습니다 : " + flexible.getStatus().name());
         }
-        long rentalFee = feeCalculator.calculateRentalFee(flexible.getTemporalRentalStartDate(),
-            flexible.getTemporalRentalEndDate(), Grade.from(flexible.getMerchantContract().getMerchant().getGradeScore()));
+        long rentalFee =
+            (long) (feeCalculator.calculateRentalFee(flexible.getTemporalRentalStartDate(),
+                flexible.getTemporalRentalEndDate(),
+                Grade.from(flexible.getMerchantContract().getMerchant().getGradeScore())) * (100
+                - Policy.FLEXIBLE_RESERVATION_DISCOUNT_PERCENTAGE) / 100);
         long rentalDeposit = feeCalculator.calculateRentalDeposit(
             flexible.getTemporalRentalStartDate(), flexible.getTemporalRentalEndDate());
         var fixed = fixedReservationRepository.save(
@@ -172,7 +178,9 @@ public class ReservationService {
 
     public List<ReservationHistory> getFlexibleHistories(Long merchantId) {
         Merchant merchant = merchantRepository.findById(merchantId).orElseThrow();
-        List<FlexibleReservation> reservations = flexibleReservationRepository.findByMerchant(merchant);
-        return reservations.stream().map(flexible -> ReservationHistory.of(flexible, feeCalculator)).toList();
+        List<FlexibleReservation> reservations = flexibleReservationRepository.findByMerchant(
+            merchant);
+        return reservations.stream().map(flexible -> ReservationHistory.of(flexible, feeCalculator))
+            .toList();
     }
 }

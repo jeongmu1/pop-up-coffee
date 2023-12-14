@@ -4,9 +4,11 @@ function handleRowClick(row) {
 
     let paymentForm = document.querySelector('.mini-form-container');
 
-    if (flexible.status === '확정') {
+    if (flexible.status !== '공간 확정') {
         paymentForm.style.display = 'none';
         return;
+    } else {
+        paymentForm.style.display = '';
     }
 
     console.log(flexible);

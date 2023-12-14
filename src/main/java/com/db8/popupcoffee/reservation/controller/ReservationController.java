@@ -49,6 +49,11 @@ public class ReservationController {
         return merchantService.findBusinessTypes();
     }
 
+    @ModelAttribute("flexibleDiscountPercentage")
+    public double getFlexibleDiscountPercentage() {
+        return Policy.FLEXIBLE_RESERVATION_DISCOUNT_PERCENTAGE;
+    }
+
     @ModelAttribute("nonFixedFlexibles")
     public List<FlexibleReservationInfo> getNonFixedFlexibleReservations() {
         return reservationService.findNonFixedFlexibleRepositories();
