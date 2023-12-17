@@ -10,7 +10,9 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -18,6 +20,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class BaseOrderEntity extends BaseTimeEntity {
 
     @ToString.Exclude
@@ -29,5 +33,5 @@ public class BaseOrderEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private PaymentType paymentType = PaymentType.CREDIT_CARD;
 
-    private long usedPoint;
+    private long usedPoint = 0;
 }

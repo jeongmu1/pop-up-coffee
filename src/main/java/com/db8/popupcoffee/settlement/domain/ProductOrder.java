@@ -1,6 +1,8 @@
 package com.db8.popupcoffee.settlement.domain;
 
 import com.db8.popupcoffee.global.domain.BaseOrderEntity;
+import com.db8.popupcoffee.global.domain.PaymentType;
+import com.db8.popupcoffee.member.domain.Member;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -12,6 +14,7 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,4 +40,16 @@ public class ProductOrder extends BaseOrderEntity {
     private long totalPayment;
 
     private String refundReason;
+
+    @Builder
+    public ProductOrder(Member member,
+        PaymentType paymentType, long usedPoint,
+        SpaceRentalAgreement spaceRentalAgreement, ProductOrderStatus status, long totalPayment,
+        String refundReason) {
+        super(member, paymentType, usedPoint);
+        this.spaceRentalAgreement = spaceRentalAgreement;
+        this.status = status;
+        this.totalPayment = totalPayment;
+        this.refundReason = refundReason;
+    }
 }

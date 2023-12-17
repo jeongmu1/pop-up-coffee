@@ -2,12 +2,14 @@ package com.db8.popupcoffee.member.service;
 
 import com.db8.popupcoffee.member.controller.dto.request.CreateMemberRequest;
 import com.db8.popupcoffee.member.controller.dto.request.MemberLoginForm;
+import com.db8.popupcoffee.member.controller.dto.response.SimpleMemberInfo;
 import com.db8.popupcoffee.member.domain.Member;
 import com.db8.popupcoffee.member.domain.PointHistory;
 import com.db8.popupcoffee.member.repository.MemberRepository;
 import com.db8.popupcoffee.member.repository.PointHistoryRepository;
 import com.db8.popupcoffee.member.service.dto.request.SurveyPointRequest;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,13 @@ import static com.db8.popupcoffee.global.util.Policy.SURVEY_REWARD;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final PointHistoryRepository pointHistoryRepository;
+
+    public List<SimpleMemberInfo> findAllMembers() {
+        return memberRepository.findAll().stream().map(SimpleMemberInfo::from).toList();
+    }
 
     @Transactional
     public void createMember(CreateMemberRequest form) {
@@ -28,7 +35,8 @@ public class MemberService {
 
     @Transactional
     public Member findMember(MemberLoginForm form) {
-        return memberRepository.findMemberByAuthenticationInfo(form.toAuthenticationInfo()).orElseThrow(null);
+        return memberRepository.findMemberByAuthenticationInfo(form.toAuthenticationInfo())
+            .orElseThrow(null);
     }
 
     @Transactional
