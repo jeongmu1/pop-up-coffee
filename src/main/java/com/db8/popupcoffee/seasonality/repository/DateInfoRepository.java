@@ -9,5 +9,5 @@ public interface DateInfoRepository extends ListCrudRepository<DateInfo, Long> {
 
     List<DateInfo> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
-    void deleteByDateBetween(LocalDate start, LocalDate end);
+    List<DateInfo> deleteByDateBetween(LocalDate start, LocalDate end);
 }
