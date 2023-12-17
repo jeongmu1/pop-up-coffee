@@ -136,7 +136,7 @@ public class SurveyController {
         return "admins/surveyStats";
     }
 
-    @GetMapping("/pie-chart")
+    @GetMapping("/result/pie-chart")
     public String showCurrentPieChart() {
         long id = surveyService.findSurveyIdOfCurrentDate();
         return "redirect:/surveys/" + id + "/pie-chart";
