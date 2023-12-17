@@ -29,4 +29,5 @@ public class Policy {
     public static final double WHITE_DISCOUNT_PERCENTAGE = 2;
     public static final long DEPOSIT_PER_DAY = 50000;
     public static final double FLEXIBLE_RESERVATION_DISCOUNT_PERCENTAGE = 10;
+    public static final double ORDER_POINT_SAVING_RATE = 10;
 }

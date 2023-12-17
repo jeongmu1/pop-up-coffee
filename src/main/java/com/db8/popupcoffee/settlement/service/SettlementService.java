@@ -1,7 +1,10 @@
 package com.db8.popupcoffee.settlement.service;
 
+import com.db8.popupcoffee.global.util.Policy;
 import com.db8.popupcoffee.member.domain.Member;
+import com.db8.popupcoffee.member.domain.PointHistory;
 import com.db8.popupcoffee.member.repository.MemberRepository;
+import com.db8.popupcoffee.member.repository.PointHistoryRepository;
 import com.db8.popupcoffee.rental.domain.SpaceRentalAgreement;
 import com.db8.popupcoffee.rental.repository.SpaceRentalAgreementRepository;
 import com.db8.popupcoffee.settlement.controller.dto.request.OrderForm;
@@ -24,6 +27,7 @@ public class SettlementService {
     private final MemberRepository memberRepository;
     private final SpaceRentalAgreementRepository spaceRentalAgreementRepository;
     private final ProductOrderRepository productOrderRepository;
+    private final PointHistoryRepository pointHistoryRepository;
 
     @Transactional
     public void doSettlement(SpaceRentalAgreement rental) {
@@ -46,6 +50,15 @@ public class SettlementService {
         if (member.getPoint() - orderForm.usedPoint() < 0) {
             throw new IllegalArgumentException("포인트 부족");
         }
+
+        int pointChanges = (int) ((orderForm.totalPayment() - orderForm.usedPoint())
+            * Policy.ORDER_POINT_SAVING_RATE);
+        member.setPoint(
+            member.getPoint() + pointChanges);
+
+        pointHistoryRepository.save(
+            PointHistory.builder().changes(pointChanges).reason("주문에 의한 적립").member(member)
+                .build());
 
         productOrderRepository.save(ProductOrder.builder()
             .member(member)
