@@ -204,4 +204,9 @@ public class SurveyService {
         return surveyResponseRepository.existsBySurveyIdAndMemberId(surveyId, memberId);
     }
 
+    public Long findSurveyIdOfCurrentDate() {
+        YearMonth yearMonth = YearMonth.now();
+        return surveyRepository.findByYearMonthOf(
+            new EmbeddableYearMonth(yearMonth.getYear(), yearMonth.getMonthValue())).getId();
+    }
 }

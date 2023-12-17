@@ -25,10 +25,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/surveys")
 public class SurveyController {
+
     private final SurveyService surveyService;
     private final MemberService memberService;
 
     private static final String SETTING_VIEW_REDIRECT = "redirect:/surveys/setting";
+    private static final String LOGIN_REDIRECT = "redirect:/merchants/login";
 
     @ModelAttribute("surveys")
     public List<SurveyInfo> getSurveyInfos() {
@@ -42,7 +44,8 @@ public class SurveyController {
         List<SurveyItemSelected> additionalComments = surveyService.getAdditionalComments();
         List<SurveyItem> nextMonthItems = surveyService.getNextMonthSurveyItems();
 
-        SurveySettingResponse response = new SurveySettingResponse(nextMonthItems, previousItems, additionalComments, survey);
+        SurveySettingResponse response = new SurveySettingResponse(nextMonthItems, previousItems,
+            additionalComments, survey);
 
         model.addAttribute("response", response);
 
@@ -50,8 +53,10 @@ public class SurveyController {
     }
 
     @PostMapping("/setting")
-    public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems, List<String> selectedaAdditionalComment) {
-        surveyService.surveySetting(surveySettingRequest, selectedItems, selectedaAdditionalComment);
+    public String surveySetting(SurveySettingRequest surveySettingRequest, List<Long> selectedItems,
+        List<String> selectedaAdditionalComment) {
+        surveyService.surveySetting(surveySettingRequest, selectedItems,
+            selectedaAdditionalComment);
 
         return "home";
     }
@@ -81,8 +86,8 @@ public class SurveyController {
     @GetMapping("/{surveyId}")
     public String showSurvey(@PathVariable Long surveyId, Model model, HttpSession session) {
         MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
-        if(sessionInfo == null) {
-            return "redirect:/merchants/login";
+        if (sessionInfo == null) {
+            return LOGIN_REDIRECT;
         }
 
         boolean hasResponded = surveyService.hasRespondedSurvey(surveyId, sessionInfo.id());
@@ -101,17 +106,27 @@ public class SurveyController {
         return "surveys/form";
     }
 
+    @GetMapping()
+    public String showCurrentSurvey(Model model, HttpSession session) {
+        MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
+        if (sessionInfo == null) {
+            return LOGIN_REDIRECT;
+        }
+        long id = surveyService.findSurveyIdOfCurrentDate();
+        return "redirect:/surveys/" + id;
+    }
 
     @PostMapping("/{surveyId}/responses")
-    public String submitResponse(@PathVariable Long surveyId, @ModelAttribute SurveyResponseRequest form, HttpSession session) {
+    public String submitResponse(@PathVariable Long surveyId,
+        @ModelAttribute SurveyResponseRequest form, HttpSession session) {
         MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
-        if(sessionInfo == null) {
-            return "redirect:/merchants/login";
+        if (sessionInfo == null) {
+            return LOGIN_REDIRECT;
         }
         surveyService.submitResponse(surveyId, sessionInfo.id(), form);
         memberService.increasePointAndSetLastSurveyed(sessionInfo.id());
 
-        return "home";
+        return "redirect:/";
     }
 
     @GetMapping("/{surveyId}/pie-chart")
