@@ -107,7 +107,7 @@ public class SurveyController {
     }
 
     @GetMapping()
-    public String showCurrentSurvey(Model model, HttpSession session) {
+    public String showCurrentSurvey(HttpSession session) {
         MemberSessionInfo sessionInfo = SessionUtil.getMemberSessionInfo(session);
         if (sessionInfo == null) {
             return LOGIN_REDIRECT;
@@ -136,4 +136,9 @@ public class SurveyController {
         return "admins/surveyStats";
     }
 
+    @GetMapping("/pie-chart")
+    public String showCurrentPieChart() {
+        long id = surveyService.findSurveyIdOfCurrentDate();
+        return "redirect:/surveys/" + id + "/pie-chart";
+    }
 }
